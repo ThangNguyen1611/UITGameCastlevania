@@ -2,6 +2,7 @@
 
 Brick::Brick(float posX, float posY, int brickType)
 {
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_BRICK));
 	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::BRICK);
 	this->sprite = new Sprite(texture, MaxFrameRate);
 	tag = EntityType::BRICK;
@@ -27,8 +28,9 @@ void Brick::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 void Brick::Render()
 {
-	sprite->Draw(posX, posY);
-	RenderBoundingBox();
+	animationSet->at(0)->Render(direction, posX, posY);
+	//sprite->Draw(posX, posY);
+	//RenderBoundingBox();
 }
 
 void Brick::GetBoundingBox(float &l, float &t, float &r, float &b)

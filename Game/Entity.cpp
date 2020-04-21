@@ -36,7 +36,7 @@ void Entity::RenderBoundingBox()
 
 	Texture2d* bbox = Texture2dManager::GetInstance()->GetTexture(EntityType::BBOX);
 	D3DXVECTOR3 origin((float)texture->getFrameWidth() / 2, (float)texture->getFrameHeight() / 2, 0);
-	Game::GetInstance()->Draw(posX, posY, bbox->GetTexture(), rect.left, rect.top, rect.right, rect.bottom, origin, bbARGB);
+	Game::GetInstance()->OldDraw(posX, posY, bbox->GetTexture(), rect.left, rect.top, rect.right, rect.bottom, origin, bbARGB);
 }
 
 

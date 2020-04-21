@@ -188,7 +188,7 @@ void Game::ProcessKeyboard()
 	}
 }
 
-void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, D3DXVECTOR3 origin, int alpha)
+void Game::OldDraw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, D3DXVECTOR3 origin, int alpha)
 {
 	D3DXVECTOR3 p(floor(x - Camera::GetInstance()->GetCamPosX()), floor(y - Camera::GetInstance()->GetCamPosY()), 0);
 	RECT r;
@@ -197,6 +197,40 @@ void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top,
 	r.right = right;
 	r.bottom = bottom;
 	spriteHandler->Draw(texture, &r, &origin, &p, D3DCOLOR_ARGB(alpha, 255, 255, 255));
+}
+
+void Game::Draw(int direction, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
+{
+	D3DXVECTOR3 pos(floor(x - Camera::GetInstance()->GetCamPosX()), floor(y - Camera::GetInstance()->GetCamPosY()), 0);
+	RECT r;
+	r.left = left;
+	r.top = top;
+	r.right = right;
+	r.bottom = bottom;
+	D3DXVECTOR3 origin = D3DXVECTOR3(pos.x + (right - left) / 2, pos.y + (bottom - top) / 2, 0);
+
+	D3DXMATRIX oldtrans;
+	D3DXMATRIX newtrans;
+
+	D3DXVECTOR2 scalingCenter = D3DXVECTOR2(pos.x + (right - left) / 2, pos.y + (bottom - top) / 2);
+
+	D3DXVECTOR2 scaling;
+	if (direction > 0)
+	{
+		scaling = D3DXVECTOR2(-1, 1);
+	}
+	else
+	{
+		scaling = D3DXVECTOR2(1, 1);
+	}
+
+	D3DXMatrixTransformation2D(&newtrans, &scalingCenter, 0, &scaling, NULL, 0, NULL);
+	spriteHandler->GetTransform(&oldtrans);
+	spriteHandler->SetTransform(&newtrans);
+
+	spriteHandler->Draw(texture, &r, &origin, &pos, D3DCOLOR_ARGB(alpha, 255, 255, 255));
+
+	spriteHandler->SetTransform(&oldtrans);
 }
 
 bool Game::IsCollidingAABB(

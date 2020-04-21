@@ -9,6 +9,9 @@
 #include "Sprite.h"
 #include "Texture2dManager.h"
 
+#include "Textures.h"
+#include "Animations.h"
+
 using namespace std;
 
 class Entity;
@@ -46,6 +49,7 @@ protected:
 	bool isDead;
 	Texture2d* texture;
 	Sprite* sprite;
+	LPANIMATION_SET animationSet;
 
 	int state;
 	int bbARGB;
@@ -58,6 +62,8 @@ public:
 	virtual void Render() = 0;
 
 	void RenderBoundingBox();
+
+	void SetAnimationSet(LPANIMATION_SET aniSet) { animationSet = aniSet; }
 
 	void SetState(int STATE) { this->state = STATE; }
 	int GetState() { return state; }

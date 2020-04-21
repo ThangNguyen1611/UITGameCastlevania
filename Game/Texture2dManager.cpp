@@ -54,7 +54,6 @@ void Texture2dManager::LoadContent()
 	//Effective
 	AddTexture(EntityType::FIREEFFECT, new Texture2d("Resources/Effects/Fire.png", 4, 43, 44, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::HITEFFECT, new Texture2d("Resources/Effects/Hit.png", 2, 16, 20, D3DCOLOR_ARGB(255, 255, 0, 255)));
-	AddTexture(EntityType::BUBBLESEFFECT, new Texture2d("Resources/Effects/Bubbles.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::BRICKEXPLODEEFFECT, new Texture2d("Resources/Effects/BrickExplode.png", 2, 13, 23, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::ADDSCOREEFFECT, new Texture2d("Resources/Effects/Score.png", 8, 38, 18, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
@@ -63,9 +62,9 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::ZOMBIE, new Texture2d("Resources/Enemies/Zombie.png", 2, 32, 64, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::DARKENBAT, new Texture2d("Resources/Enemies/DarkenBat.png", 4, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::KNIGHT, new Texture2d("Resources/Enemies/Knight.png", 3, 40, 80, D3DCOLOR_ARGB(255, 116, 116, 116)));
+	AddTexture(EntityType::GHOST, new Texture2d("Resources/Enemies/Ghost.png", 2, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::RAVEN, new Texture2d("Resources/Enemies/Raven.png", 4, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::HUNCHMAN, new Texture2d("Resources/Enemies/Hunchman.png", 2, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
-	AddTexture(EntityType::GHOST, new Texture2d("Resources/Enemies/Ghost.png", 2, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::EAGLE, new Texture2d("Resources/Enemies/Eagle.png", 2, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 
@@ -82,13 +81,11 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::UPGRADEMORNINGSTAR, new Texture2d("Resources/Items/UpgradeMS.png", 1, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::CRYSTALBALL, new Texture2d("Resources/Items/CrystalBall.png", 2, 28, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::INVIPOTION, new Texture2d("Resources/Items/InviPotion.png", 1, 30, 37, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::ITEMDAGGER, new Texture2d("Resources/Items/Dagger.png", 1, 32, 18, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::STOPWATCH, new Texture2d("Resources/Items/StopWatch.png", 1, 30, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::CROSS, new Texture2d("Resources/Items/Cross.png", 1, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
-	AddTexture(EntityType::AXE, new Texture2d("Resources/Items/Axe.png", 1, 30, 28, D3DCOLOR_ARGB(255, 255, 0, 255)));
-	AddTexture(EntityType::ITEMBOOMERANG, new Texture2d("Resources/Items/Boomerang.png", 1, 30, 28, D3DCOLOR_ARGB(255, 255, 0, 255)));
-	AddTexture(EntityType::WATERPOTION, new Texture2d("Resources/Items/WaterPotion.png", 1, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
-	AddTexture(EntityType::ITEMDAGGER, new Texture2d("Resources/Items/Dagger.png", 1, 32, 18, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::CROWN, new Texture2d("Resources/Items/Crown.png", 2, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::ITEMEXTRASHOT, new Texture2d("Resources/Items/ExtraShot.png", 2, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::ITEMBOOMERANG, new Texture2d("Resources/Items/Boomerang.png", 1, 30, 28, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 }

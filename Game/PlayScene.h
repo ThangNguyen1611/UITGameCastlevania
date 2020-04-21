@@ -71,7 +71,8 @@ protected:
 	Camera* camera;
 	Map* map;
 
-	int idStage;
+	int idStage; 
+	LPCWSTR texturesFilePath;
 
 	int counterZombie;
 	bool isTimeToSpawnZombie;
@@ -88,12 +89,17 @@ protected:
 	int easterEgg_Stage2_1;	//bien dem khi pha gach stage 2-1
 	int easterEgg_Stage2_2;
 
+	void _ParseSection_TEXTURES(string line);
+	void _ParseSection_SPRITES(string line);
+	void _ParseSection_ANIMATIONS(string line);
+	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
 
 public:
 	PlayScene();
 
 	void LoadBaseObjects();
+	void LoadTextures();
 	void ChooseMap(int whatStage);	//Co the thay bien int thanh EntityType
 	virtual void Load();
 	virtual void Update(DWORD dt);
