@@ -1,29 +1,24 @@
 #pragma once
 #include "Scene.h"
-#include "Texture2dManager.h"
-#include "Sprite.h"
+#include "Textures.h"
+#include "Animations.h"
 #include "Timer.h"
 
 #define SIMON_WALKING_SPEED				0.15f
 
-#define SIMON_ANI_IDLE_START			0
-#define SIMON_ANI_WALKING_BEGIN			1
-#define SIMON_ANI_WALKING_END			3
-#define SIMON_ANI_IDLE_END				9
-
-#define SIMON_TRANS_SPEED				120
+#define SIMON_STATE_IDLE				0
+#define SIMON_STATE_WALKING				1
+#define SIMON_STATE_IDLE_END			2
 
 #define SIMON_BEGIN_WALK_DELAY			1500
 #define SIMON_END_WALK_DELAY			2000
 
 class IntroScene : public Scene
 {
-	Texture2d* screenTexture;
-	Sprite* screenSprite;
+	LPSPRITE introSceneSpr;
+	LPANIMATION_SET simonAniSet;
 
-	//Co the lam 1 class cho introSimon ke thua Entity, nhung that su chi can 4 thuoc tinh nay de lam introSimon
-	Texture2d* introSimonTexture;
-	Sprite* introSimonSprite;
+	int simonState;
 	float introSimonPosX, introSimonPosY;
 
 	//Phase 1
@@ -42,6 +37,11 @@ class IntroScene : public Scene
 	bool isAllowToPlayPhase3;
 
 	bool triggerPlay;
+
+	void _ParseSection_TEXTURES(string line);
+	void _ParseSection_SPRITES(string line);
+	void _ParseSection_ANIMATIONS(string line);
+	void _ParseSection_ANIMATION_SETS(string line);
 public:
 	IntroScene();
 
@@ -50,6 +50,7 @@ public:
 	void Render();
 	void Unload();
 
+	void LoadTextures();
 	friend class IntroScenceKeyHandler;
 };
 

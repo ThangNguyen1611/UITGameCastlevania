@@ -16,13 +16,12 @@ class UI
 {
 	float posX, posY;
 
-	Texture2d* UITexture;
-	Sprite* UISprite;
+	LPANIMATION_SET UIanimationSet;
 
 	Text text;
 	HealthBar* playerHB;
 	HealthBar* bossHB;
-	Sprite* playerSubWeaponSprite;
+	LPANIMATION_SET playerSubWeaponAnimationSet;
 public:
 	UI(int initPlayerHealth = 16, int initBossHealth = 16);
 	~UI();

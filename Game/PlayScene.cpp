@@ -1,5 +1,20 @@
 #include "PlayScene.h"
 
+#define STAGE1_ROWMAP			12
+#define STAGE1_COLUMNMAP		48
+
+#define STAGE2_1_ROWMAP			12
+#define STAGE2_1_COLUMNMAP		17
+
+#define STAGE2_2_ROWMAP			12
+#define STAGE2_2_COLUMNMAP		33
+
+#define STAGE3_1_ROWMAP			12
+#define STAGE3_1_COLUMNMAP		48
+
+#define STAGE3_2_ROWMAP			12
+#define STAGE3_2_COLUMNMAP		48
+
 PlayScene::PlayScene() : Scene()
 {
 	keyHandler = new PlayScenceKeyHandler(this);
@@ -32,7 +47,8 @@ void PlayScene::ChooseMap(int whatMap)
 	{
 		idStage = STAGE_1;
 		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(MAPSTAGE1);
+		map->LoadMap(STAGE_1, ToLPCWSTR("Resources/TileMap/TilesetStage1Text.txt"), STAGE1_ROWMAP, STAGE1_COLUMNMAP, 
+			ToLPCWSTR("Resources/TileMap/TilesetStage1.png"), 4, 17);
 		player->ReceiveCurrentStage(idStage);
 
 		sceneFilePath = ToLPCWSTR("Resources/Scene/scene1.txt");
@@ -43,7 +59,8 @@ void PlayScene::ChooseMap(int whatMap)
 	{
 		idStage = STAGE_2_1;
 		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(MAPSTAGE2_1);
+		map->LoadMap(STAGE_2_1, ToLPCWSTR("Resources/TileMap/TilesetStage2-1Text.txt"), STAGE2_1_ROWMAP, STAGE2_1_COLUMNMAP,
+			ToLPCWSTR("Resources/TileMap/TilesetStage2.png"), 4, 7);
 		player->ReceiveCurrentStage(idStage);
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
@@ -65,7 +82,8 @@ void PlayScene::ChooseMap(int whatMap)
 	{
 		idStage = STAGE_2_2;
 		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(MAPSTAGE2_2);
+		map->LoadMap(STAGE_2_2, ToLPCWSTR("Resources/TileMap/TilesetStage2-2Text.txt"), STAGE2_2_ROWMAP, STAGE2_2_COLUMNMAP,
+			ToLPCWSTR("Resources/TileMap/TilesetStage2.png"), 4, 7);
 		player->ReceiveCurrentStage(idStage);
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
@@ -80,7 +98,8 @@ void PlayScene::ChooseMap(int whatMap)
 	{
 		idStage = STAGE_3_1;
 		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(MAPSTAGE3_1);
+		map->LoadMap(STAGE_3_1, ToLPCWSTR("Resources/TileMap/TilesetStage3-1Text.txt"), STAGE3_1_ROWMAP, STAGE3_1_COLUMNMAP,
+			ToLPCWSTR("Resources/TileMap/TilesetStage3.png"), 5, 12);
 		player->ReceiveCurrentStage(idStage);
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
@@ -93,7 +112,8 @@ void PlayScene::ChooseMap(int whatMap)
 	{
 		idStage = STAGE_3_2;
 		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(MAPSTAGE3_2);
+		map->LoadMap(STAGE_3_2, ToLPCWSTR("Resources/TileMap/TilesetStage3-2Text.txt"), STAGE3_2_ROWMAP, STAGE3_2_COLUMNMAP,
+			ToLPCWSTR("Resources/TileMap/TilesetStage3.png"), 5, 12);
 		player->ReceiveCurrentStage(idStage);
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
@@ -353,38 +373,6 @@ void PlayScene::WeaponCollision()
 			if (player->GetPlayerMainWeapon()->IsCollidingObject(listObjects[i]))	//Main weapon va cham voi obj
 			{
 				WeaponInteractObj(i, true);
-				//old
-				/*switch (listObjects[i]->GetType())
-				{
-				case EntityType::BAT:
-					listObjects[i]->AddHealth(-1);
-					player->AddScore(500);
-					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-					listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-					break;
-				case EntityType::ZOMBIE:
-					listObjects[i]->AddHealth(-1);
-					player->AddScore(100);
-					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-					listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-					counterZombie--;
-					if (counterZombie == 0)
-					{
-						spawningZombieTimer->Start();
-						triggerSpawnZombie = true;
-						isTimeToSpawnZombie = false;
-					}
-					break;
-				case EntityType::TORCH:
-					listObjects[i]->AddHealth(-1);
-					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-					listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-				default:
-					break;
-				}*/
 			}
 			else
 				if (player->GetPlayerSupWeapon() != NULL //Dong nay de dam bao dong ben duoi khong bi break
@@ -512,7 +500,7 @@ void PlayScene::PlayerGotGate()
 					{
 						Unload();
 						ChooseMap(STAGE_2_1);
-						player->SetPosition(50, 365);
+						player->SetPosition(100, 365);
 						player->SetVx(0);
 						player->SetVy(0);
 						player->SetState(PLAYER_STATE_IDLE);
@@ -817,7 +805,7 @@ void PlayScene::Update(DWORD dt)
 
 void PlayScene::Render()
 {
-	//map->Draw();
+	map->Draw();
 	for (int i = 0; i < listObjects.size(); i++)
 		listObjects[i]->Render();
 	for (int i = 0; i < listEffects.size(); i++)
@@ -825,7 +813,9 @@ void PlayScene::Render()
 	for (int i = 0; i < listItems.size(); i++)
 		listItems[i]->Render();
 	player->Render();
-	gameUI->Render(idStage, SCENEGAME_GAMETIMEMAX - gameTime->GetTime(), player);
+
+	int realIdStage = idStage / 500;
+	gameUI->Render(realIdStage, SCENEGAME_GAMETIMEMAX - gameTime->GetTime(), player);
 }
 
 void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
@@ -845,7 +835,7 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_2:	//test jump stage
 		playScene->Unload();
-		playScene->ChooseMap(playScene->idStage + 1);
+		playScene->ChooseMap(playScene->idStage + 500);
 		if (playScene->idStage == STAGE_2_1)
 		{
 			simon->SetPosition(400, 150);
@@ -895,9 +885,12 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		simon->SetState(PLAYER_STATE_JUMP);
 		break;
 	case DIK_X:
-		if (simon->IsDeadYet() || simon->IsHurting() || simon->IsUpgrading() || Game::GetInstance()->IsKeyDown(DIK_UP) || simon->IsPassingStage() || simon->IsProcessingAuto())	//Up + X khong Whip duoc nua
+		if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsHurting() || simon->IsUpgrading() || Game::GetInstance()->IsKeyDown(DIK_UP) || simon->IsPassingStage() || simon->IsProcessingAuto())	//Up + X khong Whip duoc nua
 			return;
-		simon->SetState(PLAYER_STATE_ATTACK);
+		if(!simon->IsSitting())
+			simon->SetState(PLAYER_STATE_ATTACK);
+		else
+			simon->SetState(PLAYER_STATE_SITTING_ATTACK);
 		break;
 	}
 }
@@ -924,7 +917,10 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 		{
 			if (simon->GetPlayerSupWeaponType() != EntityType::NONE)	//Neu chua nhat duoc vu khi phu thi khong attack
 			{
-				simon->SetState(PLAYER_STATE_SUPWEAPON_ATTACK);
+				if (!simon->IsSitting())
+					simon->SetState(PLAYER_STATE_SUPWEAPON_ATTACK);
+				else
+					simon->SetState(PLAYER_STATE_SUPWEAPON_SIT_ATTACK);
 			}
 		}
 		else
@@ -943,7 +939,10 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 									DebugOut(L"Reach Stair \n");
 									simon->SetDirection(listObjects[i]->GetDirection());
 									DebugOut(L"Up Stair \n");
-									simon->SetState(PLAYER_STATE_GOING_UP_STAIRS);
+									simon->SetDirectionY(1);
+									simon->SetOnStair(true);
+									simon->SetVy(PLAYER_ON_STAIRS_SPEED_Y * -simon->GetDirectionY());
+									simon->SetState(PLAYER_STATE_WALKING);
 									simon->KnownTargetMovement(listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), PLAYER_ON_STAIRS_SPEED_X, PLAYER_ON_STAIRS_SPEED_Y, listObjects[i]->GetDirection(), 1);
 								}
 							}
@@ -959,7 +958,10 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 								{
 									DebugOut(L"Reach Stair \n");
 									DebugOut(L"Up Stair \n");
-									simon->SetState(PLAYER_STATE_GOING_UP_STAIRS);
+									simon->SetDirectionY(1);
+									simon->SetOnStair(true);
+									simon->SetVy(PLAYER_ON_STAIRS_SPEED_Y * -simon->GetDirectionY());
+									simon->SetState(PLAYER_STATE_WALKING);
 								}
 							}
 						}
@@ -979,7 +981,10 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 										DebugOut(L"Reach Stair \n");
 										simon->SetDirection(-listObjects[i]->GetDirection());
 										DebugOut(L"Down Stair \n");
-										simon->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
+										simon->SetDirectionY(-1);
+										simon->SetOnStair(true);
+										simon->SetState(PLAYER_STATE_WALKING);
+										simon->SetVy(PLAYER_ON_STAIRS_SPEED_Y * -simon->GetDirectionY());
 										simon->KnownTargetMovement(listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), PLAYER_ON_STAIRS_SPEED_X, PLAYER_ON_STAIRS_SPEED_Y, -listObjects[i]->GetDirection(), -1);
 									}
 								}
@@ -995,7 +1000,10 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 									{
 										DebugOut(L"Reach Stair \n");
 										DebugOut(L"Down Stair \n");
-										simon->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
+										simon->SetDirectionY(-1);
+										simon->SetOnStair(true);
+										simon->SetVy(PLAYER_ON_STAIRS_SPEED_Y * -simon->GetDirectionY());
+										simon->SetState(PLAYER_STATE_WALKING);
 									}
 								}
 							}
@@ -1022,9 +1030,15 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 		else simon->SetState(PLAYER_STATE_IDLE);
 
 		if (Game::GetInstance()->IsKeyDown(DIK_RIGHT))
-			simon->SetState(PLAYER_STATE_WALKING_RIGHT);
+		{
+			simon->SetDirection(1);
+			simon->SetState(PLAYER_STATE_WALKING);
+		}
 		else if (Game::GetInstance()->IsKeyDown(DIK_LEFT))
-			simon->SetState(PLAYER_STATE_WALKING_LEFT);
+		{
+			simon->SetDirection(-1);
+			simon->SetState(PLAYER_STATE_WALKING);
+		}
 		else simon->SetState(PLAYER_STATE_IDLE);
 	//}
 	/*else
@@ -1281,7 +1295,7 @@ void PlayScene::LoadTextures()
 
 	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
-	DebugOut(L"[INFO] Done loading TEXTURES resources %s\n", sceneFilePath);
+	DebugOut(L"[INFO] Done loading TEXTURES resources %s\n", texturesFilePath);
 }
 
 void PlayScene::Load()

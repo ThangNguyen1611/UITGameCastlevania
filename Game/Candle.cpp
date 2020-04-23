@@ -2,8 +2,7 @@
 
 Candle::Candle(float posX, float posY, int id)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::CANDLE);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_CANDLE));
 	tag = EntityType::CANDLE;
 
 	this->posX = posX;
@@ -22,25 +21,6 @@ void Candle::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		isDead = true;
 		return;
 	}
-
-	int currentFrame = sprite->GetCurrentFrame();
-	if (!isDead) {
-		if (currentFrame < CANDLE_ANI_BEGIN) {
-			sprite->SelectFrame(CANDLE_ANI_BEGIN);
-			sprite->SetCurrentTotalTime(dt);
-		}
-		else {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-			if (sprite->GetCurrentTotalTime() >= CANDLE_BURN_SPEED) {
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - CANDLE_BURN_SPEED);
-				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
-			}
-
-			if (sprite->GetCurrentFrame() > CANDLE_ANI_END) {
-				sprite->SelectFrame(CANDLE_ANI_BEGIN);
-			}
-		}
-	}
 }
 
 void Candle::Render()
@@ -48,7 +28,7 @@ void Candle::Render()
 	if (isDead)
 		return;
 
-	sprite->Draw(posX, posY);
+	animationSet->at(0)->Render(-direction, posX, posY);
 
 	RenderBoundingBox();
 }

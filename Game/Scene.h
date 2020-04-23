@@ -8,6 +8,7 @@ class Scene
 protected:
 	KeyboardHandler *keyHandler;
 	LPCWSTR sceneFilePath;
+	LPCWSTR texturesFilePath;
 public:
 	Scene();
 

@@ -1,0 +1,55 @@
+# Id	FilePath			R	G	B
+[TEXTURES]
+
+100	Resources/Scene/TitleScene.png	255	0	255
+101	Resources/Scene/TitleBat.png	255	0	255
+102	Resources/Scene/StartText.png	255	0	255
+
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+
+# TitleScene
+250	0	0	514	450	100
+
+# TitleBat
+251	0	0	144	112	101
+252	144	0	288	112	101
+253	288	0	432	112	101
+254	432	0	576	112	101
+255	576	0	720	112	101
+256	0	112	144	224	101
+257	144	112	288	224	101
+258	288	112	432	224	101
+259	432	112	576	224	101
+260	576	112	720	224	101
+261	0	224	144	336	101
+262	144	224	288	336	101
+263	288	224	432	336	101
+264	432	224	576	336	101
+265	576	224	720	336	101
+
+# StartText
+266	0	0	214	30	102
+267	214	0	428	30	102
+
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+
+# TitleBat
+151	251	150	252	150	253	150	254	150	255	150	256	150	257	150	258	150	259	150	260	150	261	150	262	150	263	150	264	150	265	150
+
+# StartText
+152	266	300	267	300
+
+# id	ani1	ani2	ani3
+# id tuan theo define
+[ANIMATION_SETS]
+
+# TitleBat
+101	151
+
+# StartText
+102	152
+

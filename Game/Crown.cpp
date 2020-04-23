@@ -2,17 +2,14 @@
 
 Crown::Crown(float posX, float posY)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::CROWN);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_CROWN));
 	tag = EntityType::CROWN;
 
 	this->posX = posX;
 	this->posY = posY;
 
-	timeDisplayed = 0;
-	timeDisplayMax = CROWN_TIMEDISPLAYMAX;
-	timeDelayDisplayed = 0;
-	timeDelayDisplayMax = CROWN_TIMEDELAYMAX;
+	displayTimer = new Timer(CROWN_TIMEDISPLAYMAX);
+	displayTimer->Start();
 	isShowDone = false;
 }
 
@@ -22,36 +19,10 @@ void Crown::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
 	//Do kha nang moc. tu dat' len nen khong the dung lai item::update
 
-	//thoat khoi tinh trang doi
-	timeDelayDisplayed += dt;
-	if (timeDelayDisplayed < timeDelayDisplayMax)
-	{
-		return;
-	}
-	timeDisplayed += dt;
-	if (timeDisplayed >= timeDisplayMax)	//xong trach nhiem
+	if (isDone) return;
+	if (!isDone && displayTimer->IsTimeUp())
 	{
 		isDone = true;
-		return;
-	}
-
-	int currentFrame = sprite->GetCurrentFrame();
-	if (currentFrame < CROWN_ANI_BEGIN)
-	{
-		sprite->SelectFrame(CROWN_ANI_BEGIN);
-		sprite->SetCurrentTotalTime(dt);
-	}
-	else {
-		sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-		if (sprite->GetCurrentTotalTime() >= CROWN_TWINKLE_SPEED)
-		{
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - CROWN_TWINKLE_SPEED);
-			sprite->SelectFrame(currentFrame + 1);
-		}
-
-		if (sprite->GetCurrentFrame() > CROWN_ANI_END) {
-			sprite->SelectFrame(CROWN_ANI_BEGIN);
-		}
 	}
 
 	Entity::Update(dt);
@@ -72,7 +43,6 @@ void Crown::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 		CalcPotentialCollisions(&bricks, coEvents);
 
-		// No collision occured, proceed normally
 		if (coEvents.size() == 0)
 		{
 			posY += dy;
@@ -83,7 +53,6 @@ void Crown::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-			// block 
 			posX += min_tx * dx + nx * 0.1f;
 			posY += min_ty * dy + ny * 0.1f;
 

@@ -4,13 +4,12 @@
 
 #define BOOMERANG_SPEED_X		0.25f
 
+#define BOOMERANG_BBOX_WIDTH	28
+#define BOOMERANG_BBOX_HEIGHT	28
+
 #define BOOMERANG_MAX_DISTANCE	300
 
-#define MAX_BOOMERANG_DELAY		220		//2 times simon's ani attack
-
-#define BOOMERANG_ANI_BEGIN		0
-#define BOOMERANG_ANI_END		2
-#define BOOMERANG_SWITCH_SPEED	120
+#define MAX_BOOMERANG_DELAY		260		//2 times simon's ani attack
 
 class Boomerang : public Weapon
 {
@@ -22,6 +21,7 @@ public:
 	Boomerang(LPGAMEENTITY owner);
 	~Boomerang();
 
+	void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects = NULL);
 	void Render();
 

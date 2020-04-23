@@ -4,11 +4,6 @@
 #define TORCH_BBOX_WIDTH		32
 #define TORCH_BBOX_HEIGHT		64
 
-#define TORCH_ANI_BEGIN			0
-#define TORCH_ANI_END			1
-
-#define TORCH_BURN_SPEED		100
-
 class Torch : public Entity
 {
 	int idTorch; //dung de xac dinh item rot stage 1

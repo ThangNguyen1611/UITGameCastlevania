@@ -26,9 +26,10 @@ public:
 	void Add(int spriteId, DWORD time = 0);
 	void Render(int direction, float x, float y, int alpha = 255);
 
+	LPANIMATION_FRAME GetAnimationCurrentFrame(int id) { return frames[id]; }
 	void RenderAt(int currentFrameID, int direction, float x, float y, int alpha = 255);
-	void ResetcurrentFrame() { currentFrame = -1; }
-	int GetcurrentFrame() { return currentFrame; }
+	void ResetCurrentFrame() { currentFrame = -1; }
+	int GetCurrentFrame() { return currentFrame; }
 	void StartAnimation() { startFrameTime = GetTickCount(); }
 	bool IsRenderOver(DWORD a);
 };

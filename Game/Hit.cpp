@@ -2,11 +2,11 @@
 
 Hit::Hit(float posX, float posY)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::HITEFFECT);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_HITEFFECT));
 	this->posX = posX;
 	this->posY = posY;
 	isDone = false;
+	animationSet->at(0)->StartAnimation();
 }
 
 Hit::~Hit(){}
@@ -17,21 +17,8 @@ void Hit::Update(DWORD dt)
 	{
 		return;
 	}
-
-	int currentFrame = sprite->GetCurrentFrame();
-	if (currentFrame < HIT_ANI_BEGIN) {
-		sprite->SelectFrame(HIT_ANI_BEGIN);
-		sprite->SetCurrentTotalTime(dt);
-	}
-	else {
-		sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-		if (sprite->GetCurrentTotalTime() >= HIT_TIME_OF_PER_EFFECT) {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - HIT_TIME_OF_PER_EFFECT);
-			sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
-		}
-
-		if (sprite->GetCurrentFrame() > HIT_ANI_END) {
-			isDone = true;
-		}
+	if (animationSet->at(0)->IsRenderOver(SPARKLE_DISPLAY))
+	{
+		isDone = true;
 	}
 }

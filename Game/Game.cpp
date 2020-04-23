@@ -207,30 +207,24 @@ void Game::Draw(int direction, float x, float y, LPDIRECT3DTEXTURE9 texture, int
 	r.top = top;
 	r.right = right;
 	r.bottom = bottom;
-	D3DXVECTOR3 origin = D3DXVECTOR3(pos.x + (right - left) / 2, pos.y + (bottom - top) / 2, 0);
+	D3DXVECTOR3 origin((float)(right - left) / 2, (float)(bottom - top) / 2, 0);
 
-	D3DXMATRIX oldtrans;
-	D3DXMATRIX newtrans;
-
-	D3DXVECTOR2 scalingCenter = D3DXVECTOR2(pos.x + (right - left) / 2, pos.y + (bottom - top) / 2);
+	D3DXMATRIX oldMatrix;
+	D3DXMATRIX newMatrix;
 
 	D3DXVECTOR2 scaling;
 	if (direction > 0)
-	{
 		scaling = D3DXVECTOR2(-1, 1);
-	}
 	else
-	{
 		scaling = D3DXVECTOR2(1, 1);
-	}
 
-	D3DXMatrixTransformation2D(&newtrans, &scalingCenter, 0, &scaling, NULL, 0, NULL);
-	spriteHandler->GetTransform(&oldtrans);
-	spriteHandler->SetTransform(&newtrans);
+	D3DXMatrixTransformation2D(&newMatrix, &D3DXVECTOR2(pos.x, pos.y), 0, &scaling, NULL, 0, NULL);
+	spriteHandler->GetTransform(&oldMatrix);
+	spriteHandler->SetTransform(&newMatrix);
 
 	spriteHandler->Draw(texture, &r, &origin, &pos, D3DCOLOR_ARGB(alpha, 255, 255, 255));
 
-	spriteHandler->SetTransform(&oldtrans);
+	spriteHandler->SetTransform(&oldMatrix);
 }
 
 bool Game::IsCollidingAABB(

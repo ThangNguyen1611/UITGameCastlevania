@@ -34,9 +34,12 @@ void Entity::RenderBoundingBox()
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
 
-	Texture2d* bbox = Texture2dManager::GetInstance()->GetTexture(EntityType::BBOX);
+	/*Texture2d* bbox = Texture2dManager::GetInstance()->GetTexture(EntityType::BBOX);
 	D3DXVECTOR3 origin((float)texture->getFrameWidth() / 2, (float)texture->getFrameHeight() / 2, 0);
-	Game::GetInstance()->OldDraw(posX, posY, bbox->GetTexture(), rect.left, rect.top, rect.right, rect.bottom, origin, bbARGB);
+	Game::GetInstance()->OldDraw(posX, posY, bbox->GetTexture(), rect.left, rect.top, rect.right, rect.bottom, origin, bbARGB);*/
+
+	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(0);
+	Game::GetInstance()->Draw(direction, l, t, bbox, rect.left, rect.top, rect.right, rect.bottom, bbARGB);
 }
 
 
@@ -62,15 +65,21 @@ LPCOLLISIONEVENT Entity::SweptAABBEx(LPGAMEENTITY coO)
 	float dy = this->dy - sdy;
 
 	GetBoundingBox(ml, mt, mr, mb);
-
+	
 	//		STARRRR
 	//Do BBox theo logic SweptAABB la xet cac rect voi origin la goc trai tren
 	//Nhu vay logic se ap dung cho Draw voi origin la goc trai tren
 	//Su dung origin la tam textTexture -> xet cac rect lech theo huong tam textTexture
 	Game::SweptAABB(
-		ml - (float)texture->getFrameWidth() / 2, mt - (float)texture->getFrameHeight() / 2, mr - (float)texture->getFrameWidth() / 2, mb - (float)texture->getFrameHeight() / 2,
+		ml - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
+		mt - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
+		mr - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
+		mb - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
 		dx, dy,
-		sl - (float)coO->texture->getFrameWidth() / 2, st - (float)coO->texture->getFrameHeight() / 2, sr - (float)coO->texture->getFrameWidth(), sb - (float)coO->texture->getFrameHeight() / 2,
+		sl - (float)coO->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
+		st - (float)coO->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
+		sr - (float)coO->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth(),
+		sb - (float)coO->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
 		t, nx, ny
 	);
 
@@ -144,8 +153,14 @@ bool Entity::IsCollidingObject(Entity* Obj)
 
 	//Check AABB first
 	if (Game::GetInstance()->IsCollidingAABB(
-		ml - (float)texture->getFrameWidth() / 2, mt - (float)texture->getFrameHeight() / 2, mr - (float)texture->getFrameWidth() / 2, mb - (float)texture->getFrameHeight() / 2,
-		sl - (float)Obj->texture->getFrameWidth() / 2, st - (float)Obj->texture->getFrameHeight() / 2, sr - (float)Obj->texture->getFrameWidth(), sb - (float)Obj->texture->getFrameHeight() / 2))
+		ml - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
+		mt - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
+		mr - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
+		mb - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
+		sl - (float)Obj->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
+		st - (float)Obj->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
+		sr - (float)Obj->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth(),
+		sb - (float)Obj->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2))
 		return true;
 
 	//Swept AABB later

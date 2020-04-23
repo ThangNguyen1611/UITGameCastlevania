@@ -2,8 +2,7 @@
 
 Knight::Knight(float posX, float posY, int directionX, float maxAmplitudeX)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::KNIGHT);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_KNIGHT));
 	tag = EntityType::KNIGHT;
 
 	this->posX = posX;
@@ -30,26 +29,6 @@ void Knight::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		return;
 	}
 
-	int currentFrame = sprite->GetCurrentFrame();
-	if (!isDead) {
-		if (currentFrame < KNIGHT_ANI_WALKING_BEGIN)
-		{
-			sprite->SelectFrame(KNIGHT_ANI_WALKING_BEGIN);
-			sprite->SetCurrentTotalTime(dt);
-		}
-		else {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-			if (sprite->GetCurrentTotalTime() >= KNIGHT_SWAPLEG_SPEED)
-			{
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - KNIGHT_SWAPLEG_SPEED);
-				sprite->SelectFrame(currentFrame + 1);
-			}
-
-			if (sprite->GetCurrentFrame() > KNIGHT_ANI_WALKING_END) {
-				sprite->SelectFrame(KNIGHT_ANI_WALKING_BEGIN);
-			}
-		}
-	}
 	Entity::Update(dt);
 	vY += KNIGHT_GRAVITY * dt;
 
@@ -130,12 +109,8 @@ void Knight::Render()
 	if (isDead)
 		return;
 
-	if (direction == 1) {
-		sprite->DrawFlipVertical(posX, posY, 255);
-	}
-	else {
-		sprite->Draw(posX, posY, 255);
-	}
+	animationSet->at(state)->Render(direction, posX, posY);
+
 	RenderBoundingBox();
 }
 

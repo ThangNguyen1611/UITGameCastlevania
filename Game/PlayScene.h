@@ -72,7 +72,6 @@ protected:
 	Map* map;
 
 	int idStage; 
-	LPCWSTR texturesFilePath;
 
 	int counterZombie;
 	bool isTimeToSpawnZombie;

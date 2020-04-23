@@ -2,8 +2,7 @@
 
 Dagger::Dagger()
 {
-	texture = Texture2dManager::GetInstance()->GetTexture(EntityType::DAGGER);
-	sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_DAGGER));
 	tag = EntityType::DAGGER;
 	ownerPosX = 0;
 	timeDelayed = 0;
@@ -44,24 +43,23 @@ void Dagger::Render()
 	}
 	if (isDone)
 		return;
-	if (direction == -1) //Right direction
-	{
-		sprite->DrawFlipVertical(posX, posY);
-	}
-	else 
-	{
-		sprite->Draw(posX, posY);
-	}
+
+	animationSet->at(0)->Render(-direction, posX, posY);
 
 	RenderBoundingBox();
 	
 }
 
+void Dagger::GetBoundingBox(float &left, float &top, float &right, float &bottom)
+{
+	left = posX;
+	top = posY;
+	right = posX + DAGGER_BBOX_WIDTH;
+	bottom = posY + DAGGER_BBOX_HEIGHT;
+}
+
 bool Dagger::CheckIsOutCamera(float posX)
 {
-	//Dieu nay thuc te hon trong game
-	//Trong game la con trong ban kinh camera thi isdone = false
-	//Nhung thuc te thi o ngoai dau co cai camera nao ? ma la khoang cach nhat dinh dua vao nguoi nem 
 	if (vX > 0)	//Walking Right
 	{
 		if (this->posX - posX >= (SCREEN_WIDTH / 2))

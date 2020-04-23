@@ -2,18 +2,15 @@
 
 SmallHeart::SmallHeart(float posX, float posY)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::SMALLHEART);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_SMALLHEART));
 	tag = EntityType::SMALLHEART;
 
 	this->posX = posX;
 	this->posY = posY;
 	tempX = posX;
 
-	timeDisplayed = 0;
-	timeDisplayMax = SMALLHEART_TIMEDISPLAYMAX;
-	timeDelayDisplayed = 0;
-	timeDelayDisplayMax = SMALLHEART_TIMEDELAYMAX;
+	displayTimer = new Timer(SMALLHEART_TIMEDISPLAYMAX);
+	displayTimer->Start();
 	//Dat vX o day de vi kh co state va co the dung yen khi gap mat dat
 	vX = SMALLHEART_SPEED_X * direction;
 }
@@ -22,17 +19,10 @@ SmallHeart::~SmallHeart(){}
 
 void SmallHeart::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	//Khong dung lai Item::Update duoc do khac nhau
-	timeDelayDisplayed += dt;
-	if (timeDelayDisplayed < timeDelayDisplayMax)
-	{
-		return;
-	}
-	timeDisplayed += dt;
-	if (timeDisplayed >= timeDisplayMax)	//xong trach nhiem
+	if (isDone) return;
+	if (!isDone && displayTimer->IsTimeUp())
 	{
 		isDone = true;
-		return;
 	}
 
 	if (posX - tempX >= SMALLHEART_AMPLITUDE_VERTICAL)

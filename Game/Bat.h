@@ -8,14 +8,8 @@
 #define BAT_BBOX_WIDTH				32
 #define BAT_BBOX_HEIGHT				32
 
-#define BAT_STATE_FLYING			100
-#define BAT_STATE_DIE				200
-
-#define BAT_ANI_FLYING_BEGIN		1
-#define BAT_ANI_FLYING_END			3
-
-#define BAT_FLAPPING_SPEED			130 
-
+#define BAT_STATE_FLYING			1
+#define BAT_STATE_DIE				-1
 class Bat : public Entity
 {
 	int directionY;

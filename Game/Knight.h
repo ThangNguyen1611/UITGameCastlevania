@@ -7,13 +7,8 @@
 #define KNIGHT_BBOX_WIDTH				40
 #define KNIGHT_BBOX_HEIGHT				80
 
-#define KNIGHT_STATE_WALKING			100
-#define KNIGHT_STATE_DIE				200
-
-#define KNIGHT_ANI_WALKING_BEGIN		0
-#define KNIGHT_ANI_WALKING_END			2
-
-#define KNIGHT_SWAPLEG_SPEED			200 
+#define KNIGHT_STATE_WALKING			0
+#define KNIGHT_STATE_DIE				-1
 
 class Knight : public Entity
 {

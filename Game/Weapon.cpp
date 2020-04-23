@@ -26,22 +26,8 @@ void Weapon::Render()
 {
 	if (isDone)
 		return;
-	if (direction == 1) {
-		sprite->DrawFlipVertical(posX, posY);
-	}
-	else {
-		sprite->Draw(posX, posY);
-	}
-	
+	animationSet->at(0)->Render(direction, posX, posY);
 	RenderBoundingBox();
-}
-
-void Weapon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
-{
-	left = posX;
-	top = posY;
-	right = posX + texture->getFrameWidth();
-	bottom = posY + texture->getFrameHeight();
 }
 
 bool Weapon::IsCollidingObject(Entity* Obj)

@@ -9,14 +9,8 @@
 #define DARKBAT_BBOX_HEIGHT				32
 
 #define DARKBAT_STATE_INACTIVE			0
-#define DARKBAT_STATE_FLYING			100
-#define DARKBAT_STATE_DIE				200
-
-#define DARKBAT_ANI_INACTIVE			0
-#define DARKBAT_ANI_FLYING_BEGIN		1
-#define DARKBAT_ANI_FLYING_END			3
-
-#define DARKBAT_FLAPPING_SPEED			130 
+#define DARKBAT_STATE_FLYING			1
+#define DARKBAT_STATE_DIE				-1
 
 class DarkenBat : public Entity
 {

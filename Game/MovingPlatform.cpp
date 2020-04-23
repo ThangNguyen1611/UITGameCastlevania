@@ -2,8 +2,7 @@
 
 MovingPlatform::MovingPlatform(float posX, float posY)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::MOVINGPLATFORM);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_MOVINGFLATFORM));
 	tag = EntityType::MOVINGPLATFORM;
 
 	this->posX = posX;
@@ -62,7 +61,7 @@ void MovingPlatform::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 void MovingPlatform::Render()
 {
-	sprite->Draw(posX, posY);
+	animationSet->at(0)->Render(-direction, posX, posY);
 	RenderBoundingBox();
 }
 

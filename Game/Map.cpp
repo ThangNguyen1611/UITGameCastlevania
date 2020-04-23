@@ -1,61 +1,46 @@
 #include "Map.h"
 
-Map::Map(){}	//Khong tao texture, sprite o day vi dung type map o LoadMap se tien loi hoi
+Map::Map(){}	
 
 Map::~Map(){}
 
-void Map::LoadMap(EntityType typeMap)
+void Map::LoadMap(int id,
+	LPCWSTR mapFilePath,
+	int RowMap,
+	int ColumnMap,
+	LPCWSTR mapFileTexture,
+	int RowTile,
+	int ColumnTile,
+	int TileFrameWidth,
+	int TileFrameHeight)
 {
-	tileMapTexture = Texture2dManager::GetInstance()->GetTexture(typeMap);
-	tileMapSprite = new Sprite(tileMapTexture, MaxFrameRate);
+	idMap = id;
+	this->mapFilePath = mapFilePath;
+	this->RowMap = RowMap;
+	this->ColumnMap = ColumnMap;
 
-	switch (typeMap)
+	CTextures * mapTexture = CTextures::GetInstance();
+	mapTexture->Add(idMap, mapFileTexture, D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 tex = mapTexture->Get(idMap);
+
+	int TilesetRow = RowTile;
+	int TilesetColumn = ColumnTile;
+
+	FrameWidthTexture = TileFrameWidth;
+	FrameHeightTexture = TileFrameHeight;
+
+	int idSpriteIns = 0;
+	for (UINT i = 0; i < TilesetRow; i++)
 	{
-	case MAPSTAGE1:
-	{
-		mapFilePath = ToLPCWSTR("Resources/TileMap/TilesetStage1Text.txt");
-		RowMap = STAGE1_ROWMAP;
-		ColumnMap = STAGE1_COLUMNMAP;
-		Load();
-		break; 
+		for (UINT j = 0; j < TilesetColumn; j++)
+		{
+			int idSprite = idMap + idSpriteIns;
+			tileMapSprite->Add(idSprite, FrameWidthTexture * j, FrameHeightTexture * i, FrameWidthTexture * (j + 1), FrameHeightTexture * (i + 1), tex);
+			idSpriteIns++;
+		}
 	}
-	case MAPSTAGE2_1:
-	{
-		mapFilePath = ToLPCWSTR("Resources/TileMap/TilesetStage2-1Text.txt");
-		RowMap = STAGE2_1_ROWMAP;
-		ColumnMap = STAGE2_1_COLUMNMAP;
-		Load();
-		break;
-	}
-	case MAPSTAGE2_2:
-	{
-		mapFilePath = ToLPCWSTR("Resources/TileMap/TilesetStage2-2Text.txt");
-		RowMap = STAGE2_2_ROWMAP;
-		ColumnMap = STAGE2_2_COLUMNMAP;
-		Load();
-		break;
-	}
-	case MAPSTAGE3_1:
-	{
-		mapFilePath = ToLPCWSTR("Resources/TileMap/TilesetStage3-1Text.txt");
-		RowMap = STAGE3_1_ROWMAP;
-		ColumnMap = STAGE3_1_COLUMNMAP;
-		Load();
-		break;
-	}
-	case MAPSTAGE3_2:
-	{
-		mapFilePath = ToLPCWSTR("Resources/TileMap/TilesetStage3-2Text.txt");
-		RowMap = STAGE3_2_ROWMAP;
-		ColumnMap = STAGE3_2_COLUMNMAP;
-		Load();
-		break;
-	}
-	default:
-		break;
-	}
-	FrameWidthTexture = tileMapTexture->getFrameWidth();
-	FrameHeightTexture = tileMapTexture->getFrameHeight();
+
+	Load();
 }
 
 void Map::Load()
@@ -103,7 +88,7 @@ void Map::Draw()
 			float tileMapPosX = (float)FrameWidthTexture * (j - firstColumn) + Camera::GetInstance()->GetCamPosX() - (float)((int)Camera::GetInstance()->GetCamPosX() % FrameWidthTexture) + originX;
 			float tileMapPosY = (float)FrameHeightTexture * i + BLACKBOARDHEIGHT + originY ;
 
-			tileMapSprite->Draw1Frame(TileMap[i][j], tileMapPosX, tileMapPosY);
+			tileMapSprite->Get(TileMap[i][j] + idMap)->Draw(-1, tileMapPosX, tileMapPosY);
 		}
 	}
 }

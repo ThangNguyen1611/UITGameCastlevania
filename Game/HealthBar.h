@@ -1,6 +1,5 @@
 #pragma once
-#include "Texture2dManager.h"
-#include "Sprite.h"
+#include "Animations.h"
 
 #include <vector>
 
@@ -12,7 +11,7 @@ class HealthBar
 {
 	float posX, posY; 
 	int currentOwnerHealth, maxOwnerHealth;
-	std::vector<Sprite*> health;
+	std::vector<LPANIMATION_SET> health;
 	bool isAllies;
 public:
 	HealthBar(int maxHealth, bool isAllies);

@@ -2,8 +2,7 @@
 
 Player::Player(float posX, float posY) 
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::PLAYER);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_PLAYER));
 	tag = EntityType::PLAYER;
 	this->posX = posX;
 	this->posY = posY;
@@ -40,6 +39,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	if (health <= 0 && !isRespawning)
 	{
 		live -= 1;
+		SetState(PLAYER_STATE_DIE);
 		if (live <= 0)
 		{
 			isDead = true;
@@ -85,146 +85,31 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 #pragma endregion
 
-#pragma region Sprite Logic
-
-	int currentFrame = sprite->GetCurrentFrame();
-	if (isDead || isRespawning)
+	if (animationSet->at(PLAYER_STATE_SUPWEAPON_ATTACK)->GetCurrentFrame() == 0 || animationSet->at(PLAYER_STATE_SUPWEAPON_SIT_ATTACK)->GetCurrentFrame() == 0)
 	{
-		sprite->SelectFrame(PLAYER_ANI_DIE);
+		if (supWeapon != NULL)
+		{
+			if (supWeapon->GetType() == EntityType::DAGGER)
+			{
+				Dagger* dagger = dynamic_cast<Dagger*>(supWeapon);
+				dagger->ResetDelay();
+			}
+			else if (supWeapon->GetType() == EntityType::BOOMERANG)
+			{
+				Boomerang* boomerang = dynamic_cast<Boomerang*>(supWeapon);
+				boomerang->ResetDelay();
+			}
+		}
 	}
-	else
-		if (isUpgrading)
-		{
-			if (currentFrame < PLAYER_ANI_UPGRADING_BEGIN) //Can be bug here
-			{
-				sprite->SelectFrame(PLAYER_ANI_UPGRADING_BEGIN);
-				sprite->SetCurrentTotalTime(dt);
-			}
-			else 
-			{
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-				if (sprite->GetCurrentTotalTime() >= PLAYER_UPGRADING_DELAY)
-				{
-					sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - PLAYER_UPGRADING_DELAY);
-					sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100ms and trans to next frame
-				}
 
-				if (sprite->GetCurrentFrame() > PLAYER_ANI_UPGRADING_END) 
-				{
-					sprite->SelectFrame(PLAYER_ANI_IDLE);
-				}
-			}
-		}
-	else 
-		if (isHurting)
-		{
-			sprite->SelectFrame(PLAYER_ANI_HURTING);
-		}
-		else
-			if (isSitting) 
-			{
-				if (isAttacking) 
-				{
-					if (currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 1 && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 2) 
-					{
-						sprite->SelectFrame(PLAYER_ANI_SITTING_ATTACK_BEGIN);
-						if (supWeapon != NULL)
-						{
-							if (supWeapon->GetType() == EntityType::DAGGER)
-							{
-								Dagger* dagger = dynamic_cast<Dagger*>(supWeapon);
-								dagger->ResetDelay();
-							}
-							else if (supWeapon->GetType() == EntityType::BOOMERANG)
-							{
-								Boomerang* boomerang = dynamic_cast<Boomerang*>(supWeapon);
-								boomerang->ResetDelay();
-							}
-						}
-						sprite->SetCurrentTotalTime(dt);
-					}
-					else 
-					{
-						sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-						if (sprite->GetCurrentTotalTime() >= PLAYER_ATTACKING_DELAY)
-						{
-							sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - PLAYER_ATTACKING_DELAY);
-							sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100 and trans to next frame
-						}
-
-						if (sprite->GetCurrentFrame() > PLAYER_ANI_SITTING_ATTACK_END) 
-						{
-							sprite->SelectFrame(PLAYER_ANI_SITTING);
-							isAttacking = false;
-						}
-					}
-				}
-				else 
-				{
-					sprite->SelectFrame(PLAYER_ANI_SITTING);
-				}
-			}
-			else if (isAttacking && !isSitting) 
-			{
-				if (currentFrame < PLAYER_ANI_ATTACK_BEGIN) 
-				{
-					sprite->SelectFrame(PLAYER_ANI_ATTACK_BEGIN);
-					if (supWeapon != NULL)
-					{
-						if (supWeapon->GetType() == EntityType::DAGGER)
-						{
-							Dagger* dagger = dynamic_cast<Dagger*>(supWeapon);
-							dagger->ResetDelay();
-						}
-						else if (supWeapon->GetType() == EntityType::BOOMERANG)
-						{
-							Boomerang* boomerang = dynamic_cast<Boomerang*>(supWeapon);
-							boomerang->ResetDelay();
-						}
-					}
-					sprite->SetCurrentTotalTime(dt);
-				}
-				else 
-				{
-					sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-					if (sprite->GetCurrentTotalTime() >= PLAYER_ATTACKING_DELAY)
-					{
-						sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - PLAYER_ATTACKING_DELAY);
-						sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100ms and trans to next frame
-					}
-
-					if (sprite->GetCurrentFrame() > PLAYER_ANI_ATTACK_END) 
-					{
-						sprite->SelectFrame(PLAYER_ANI_IDLE);
-						isAttacking = false;
-					}
-				}
-			}
-			else
-				if (isWalking) 
-				{
-					if (!isJumping) 
-					{
-						if (currentFrame < PLAYER_ANI_WALKING_BEGIN || currentFrame >= PLAYER_ANI_WALKING_END)
-							sprite->SelectFrame(PLAYER_ANI_WALKING_BEGIN);
-
-						sprite->Update(dt);
-					}
-					else 
-					{
-						sprite->SelectFrame(PLAYER_ANI_JUMPING);
-					}
-				}
-				else
-					if (isJumping) 
-					{		//Nhay tai cho
-						sprite->SelectFrame(PLAYER_ANI_JUMPING);
-					}
-					else 
-					{
-						sprite->SelectFrame(PLAYER_ANI_IDLE);
-					}
-#pragma endregion
+	if ((state == PLAYER_STATE_ATTACK && animationSet->at(PLAYER_STATE_ATTACK)->IsRenderOver(PLAYER_ATTACKING_DELAY * 3)) ||
+		(state == PLAYER_STATE_SUPWEAPON_ATTACK && animationSet->at(PLAYER_STATE_SUPWEAPON_ATTACK)->IsRenderOver(PLAYER_ATTACKING_DELAY * 3)) ||
+		(state == PLAYER_STATE_SITTING_ATTACK && animationSet->at(PLAYER_STATE_SITTING_ATTACK)->IsRenderOver(PLAYER_ATTACKING_DELAY * 3)) ||
+		(state == PLAYER_STATE_SUPWEAPON_SIT_ATTACK && animationSet->at(PLAYER_STATE_SUPWEAPON_SIT_ATTACK)->IsRenderOver(PLAYER_ATTACKING_DELAY * 3)))
+	{
+		isAttacking = false;
+	}
+	
 
 	Entity::Update(dt);
 
@@ -291,6 +176,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			isHurting = false;
 			//isOnStairs = false;
 		}
+
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
@@ -453,12 +339,14 @@ void Player::Render()
 	int alpha = 255;
 	if (isImmortaling)
 		alpha = 150;
-	if (direction == 1) {
+	/*if (direction == 1) {
 		sprite->DrawFlipVertical(posX, posY, alpha);
 	}
 	else {
 		sprite->Draw(posX, posY, alpha);
-	}
+	}*/
+
+	animationSet->at(state)->Render(direction, posX, posY);
 
 	if (!mainWeapon->GetIsDone())
 	{
@@ -480,52 +368,12 @@ void Player::SetState(int state)
 	Entity::SetState(state);
 	switch (state)
 	{
-	case PLAYER_STATE_DIE:
+	case PLAYER_STATE_DIE:	//Undone
 		isDead = true;
 		vX = 0;
 		vY = 0;
 		break;
-	case PLAYER_STATE_WALKING_RIGHT:
-		direction = 1;
-		isWalking = true;
-		//isSitting = false;
-		isOnStairs = false;
-		vX = PLAYER_WALKING_SPEED * direction;
-		break;
-	case PLAYER_STATE_WALKING_LEFT:
-		direction = -1;
-		isWalking = true;
-		//isSitting = false;
-		isOnStairs = false;
-		vX = PLAYER_WALKING_SPEED * direction;
-		break; 
-	case PLAYER_STATE_GOING_UP_STAIRS:
-		isOnStairs = true;
-		directionY = 1;
-		//vX = PLAYER_ON_STAIRS_SPEED_X * direction;
-		//vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
-		isJumping = false;
-		isSitting = false;
-		break;
-	case PLAYER_STATE_GOING_DOWN_STAIRS:
-		isOnStairs = true;
-		directionY = -1;
-		//vX = PLAYER_ON_STAIRS_SPEED_X * direction;
-		//vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
-		isJumping = false;
-		isSitting = false;
-		break;
-	case PLAYER_STATE_JUMP:
-		if (!isAllowJump)
-			return;
-		isJumping = true;
-		isAllowJump = false;
-		//isSitting = false;
-		isOnStairs = false;
-		vY = -PLAYER_JUMP_SPEED_Y;
-		break;
 	case PLAYER_STATE_IDLE:
-		//vX = 0;
 		isWalking = false;
 		isSitting = false;
 		isAttacking = false;
@@ -533,22 +381,46 @@ void Player::SetState(int state)
 		isPassingStage = false;		//set simon not blocking
 		isOnStairs = false;
 		break;
-	case PLAYER_STATE_SUPWEAPON_ATTACK:
-		Attack(currentSupWeaponType);
-		isWalking = false;
+	case PLAYER_STATE_WALKING:
+		isWalking = true;
 		isOnStairs = false;
+		vX = PLAYER_WALKING_SPEED * direction;
+		break;
+	//case PLAYER_STATE_GOING_UP_STAIRS:
+	//	isOnStairs = true;
+	//	directionY = 1;
+	//	//vX = PLAYER_ON_STAIRS_SPEED_X * direction;
+	//	//vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
+	//	isJumping = false;
+	//	isSitting = false;
+	//	break;
+	//case PLAYER_STATE_GOING_DOWN_STAIRS:
+	//	isOnStairs = true;
+	//	directionY = -1;
+	//	//vX = PLAYER_ON_STAIRS_SPEED_X * direction;
+	//	//vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
+	//	isJumping = false;
+	//	isSitting = false;
+	//	break;
+	case PLAYER_STATE_JUMP:
+		if (!isAllowJump)
+			return;
+		isJumping = true;
+		isAllowJump = false;
+		isOnStairs = false;
+		vY = -PLAYER_JUMP_SPEED_Y;
 		break;
 	case PLAYER_STATE_ATTACK:
+		animationSet->at(state)->ResetCurrentFrame();
+		animationSet->at(state)->StartAnimation();
 		Attack(EntityType::MORNINGSTAR);
-		//vX = 0;		//While attacking cant walking until the attack is done
 		isWalking = false;
-		//isJumping = false;
 		isOnStairs = false;
-		//testing
 		break;
-	case PLAYER_STATE_SITTING:
-		vX = 0;		//Vi phim return khi dang ngoi nen set vX = 0 de khi moving -> sit se khong bi truot
-		isSitting = true;
+	case PLAYER_STATE_SUPWEAPON_ATTACK:
+		animationSet->at(state)->ResetCurrentFrame();
+		animationSet->at(state)->StartAnimation();
+		Attack(currentSupWeaponType);
 		isWalking = false;
 		isOnStairs = false;
 		break;
@@ -564,6 +436,30 @@ void Player::SetState(int state)
 		vX = PLAYER_DEFLECT_SPEED_X * direction;
 		vY = -PLAYER_DEFLECT_SPEED_Y;
 		break;
+	case PLAYER_STATE_SITTING:
+		vX = 0;		//Vi phim return khi dang ngoi nen set vX = 0 de khi moving -> sit se khong bi truot
+		isSitting = true;
+		isWalking = false;
+		isOnStairs = false;
+		break;
+	case PLAYER_STATE_SITTING_ATTACK:
+		animationSet->at(state)->ResetCurrentFrame();
+		animationSet->at(state)->StartAnimation();
+		Attack(EntityType::MORNINGSTAR);
+		vX = 0;		
+		isSitting = true;
+		isWalking = false;
+		isOnStairs = false;
+		break;
+	case PLAYER_STATE_SUPWEAPON_SIT_ATTACK:
+		animationSet->at(state)->ResetCurrentFrame();
+		animationSet->at(state)->StartAnimation();
+		Attack(currentSupWeaponType);
+		vX = 0;		
+		isSitting = true;
+		isWalking = false;
+		isOnStairs = false;
+		break;
 	case PLAYER_STATE_UPGRADING:
 		if (isAttacking) isAttacking = false;
 		isHurting = false;
@@ -575,10 +471,8 @@ void Player::SetState(int state)
 		vY = 0;
 		break;
 	case PLAYER_STATE_PASSING_STAGE:
-		//direction = 1;
 		isWalking = true;
-		//isSitting = false;
-		vX = PLAYER_PASSING_STAGE_SPEED * direction; 
+		vX = PLAYER_PASSING_STAGE_SPEED * direction;
 		posX += dx;	//Khi trong state nay tuc la da va cham voi gate, o ngoai update cua simon khi co va cham kh update posX
 		isPassingStage = true;	//block control simon
 		isOnStairs = false;
@@ -596,7 +490,7 @@ void Player::GetBoundingBox(float &left, float &top, float &right, float &bottom
 
 void Player::Attack(EntityType weaponType)
 {
-	if (isAttacking || isUpgrading)	//Co 1 bug khi dang danh ma rot item thi van danh tiep
+	if (isAttacking || isUpgrading)	
 		return;
 	
 	switch (weaponType)

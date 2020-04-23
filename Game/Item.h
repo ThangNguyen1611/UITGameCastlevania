@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Timer.h"
 
 class Item;
 typedef Item* LPGAMEITEM;
@@ -8,10 +9,7 @@ class Item : public Entity
 {
 protected:
 	bool isDone;
-	DWORD	timeDisplayed,
-			timeDisplayMax;		//duoc define rieng
-	DWORD	timeDelayDisplayed,
-			timeDelayDisplayMax;
+	Timer* displayTimer;
 public:
 	Item();
 	~Item();

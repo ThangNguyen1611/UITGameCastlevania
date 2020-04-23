@@ -1,6 +1,5 @@
 #pragma once
-#include "Texture2dManager.h"
-#include "Sprite.h"
+#include "Animations.h"
 
 class Effect;
 typedef Effect* LPGAMEEFFECT;
@@ -10,8 +9,7 @@ class Effect
 protected:
 	float posX, posY;
 	bool isDone;
-	Texture2d* texture;
-	Sprite* sprite;
+	LPANIMATION_SET animationSet;
 public:
 	Effect();
 	~Effect();
@@ -21,5 +19,7 @@ public:
 
 	bool GetIsDone() { return isDone; }
 	void SetIsDone(bool isdone) { isDone = isdone; }
+	void SetAnimationSet(LPANIMATION_SET aniSet) { animationSet = aniSet; }
+	LPANIMATION_SET GetAniSet() { return animationSet; }
 };
 

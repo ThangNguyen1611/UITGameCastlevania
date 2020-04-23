@@ -2,8 +2,7 @@
 
 Stairs::Stairs(float posX, float posY, int stairDirection, int stairDirectionY)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::STAIRS);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_STAIRS));
 	tag = EntityType::STAIRS;
 
 	this->posX = posX;
@@ -18,13 +17,12 @@ void Stairs::Render()
 {
 	if (direction == 1) 
 	{
-		sprite->SelectFrame(STAIRS_RIGHTWAY);
+		animationSet->at(STAIRS_RIGHTWAY)->Render(-direction, posX, posY);
 	}
 	else
 	{
-		sprite->SelectFrame(STAIRS_LEFTWAY);
+		animationSet->at(STAIRS_LEFTWAY)->Render(-direction, posX, posY);
 	}
-	sprite->Draw(posX, posY);
 	RenderBoundingBox();
 }
 

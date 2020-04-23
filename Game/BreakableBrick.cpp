@@ -3,15 +3,14 @@
 
 BreakableBrick::BreakableBrick(float posX, float posY, int type)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::BREAKABLEBRICK);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_BREAKABLEBRICK));
 	tag = EntityType::BREAKABLEBRICK;
 
 	this->posX = posX;
 	this->posY = posY;
 	health = 1;
 	isDead = false;
-	brickType = type;
+	brickType = type - 1;
 }
 
 BreakableBrick::~BreakableBrick() {}
@@ -23,15 +22,6 @@ void BreakableBrick::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		isDead = true;
 		return;
 	}
-
-	if (brickType == 1)
-		sprite->SelectFrame(BBRICK_TYPE1);
-	else if (brickType == 2)
-		sprite->SelectFrame(BBRICK_TYPE2);
-	else if (brickType == 3)
-		sprite->SelectFrame(BBRICK_TYPE3);
-	else if (brickType == 4)
-		sprite->SelectFrame(BBRICK_TYPE4);
 }
 
 void BreakableBrick::Render()
@@ -39,7 +29,7 @@ void BreakableBrick::Render()
 	if (isDead)
 		return;
 
-	sprite->Draw(posX, posY);
+	animationSet->at(brickType)->Render(-direction, posX, posY);
 
 	RenderBoundingBox();
 }

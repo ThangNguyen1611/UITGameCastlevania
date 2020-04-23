@@ -2,8 +2,7 @@
 
 Boomerang::Boomerang(LPGAMEENTITY owner)
 {
-	texture = Texture2dManager::GetInstance()->GetTexture(EntityType::BOOMERANG);
-	sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_BOOMERANG));
 	tag = EntityType::BOOMERANG;
 	ownerPosX = 0;
 	timeDelayed = 0;
@@ -24,27 +23,6 @@ void Boomerang::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	
 	Weapon::Update(dt);
 	posX += dx;
-
-	int currentFrame = sprite->GetCurrentFrame();
-	if (!isDone) {
-		if (currentFrame < BOOMERANG_ANI_BEGIN)
-		{
-			sprite->SelectFrame(BOOMERANG_ANI_BEGIN);
-			sprite->SetCurrentTotalTime(dt);
-		}
-		else {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-			if (sprite->GetCurrentTotalTime() >= BOOMERANG_SWITCH_SPEED)
-			{
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - BOOMERANG_SWITCH_SPEED);
-				sprite->SelectFrame(currentFrame + 1);
-			}
-
-			if (sprite->GetCurrentFrame() > BOOMERANG_ANI_END) {
-				sprite->SelectFrame(BOOMERANG_ANI_BEGIN);
-			}
-		}
-	}
 
 	if (ownerDirection == direction)	//state nem' di
 	{
@@ -80,15 +58,17 @@ void Boomerang::Render()
 	}
 	if (isDone)
 		return;
-	if (direction == -1) //Right direction
-	{
-		sprite->DrawFlipVertical(posX, posY);
-	}
-	else
-	{
-		sprite->Draw(posX, posY);
-	}
+
+	animationSet->at(0)->Render(direction, posX, posY);
 
 	RenderBoundingBox();
 
+}
+
+void Boomerang::GetBoundingBox(float &left, float &top, float &right, float &bottom)
+{
+	left = posX;
+	top = posY;
+	right = posX + BOOMERANG_BBOX_WIDTH;
+	bottom = posY + BOOMERANG_BBOX_HEIGHT;
 }

@@ -3,27 +3,16 @@
 Item::Item() 
 {
 	isDone = false;
-	timeDisplayed = 0;
-	timeDisplayMax = 0;
-	timeDelayDisplayed = 0;
-	timeDelayDisplayMax = 0;
 }
 
 Item::~Item(){}
 
 void Item::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	//thoat khoi tinh trang doi
-	timeDelayDisplayed += dt;
-	if (timeDelayDisplayed < timeDelayDisplayMax)
-	{
-		return;
-	}
-	timeDisplayed += dt;
-	if (timeDisplayed >= timeDisplayMax)	//xong trach nhiem
+	if (isDone) return;
+	if (!isDone && displayTimer->IsTimeUp())
 	{
 		isDone = true;
-		return;
 	}
 
 	Entity::Update(dt);
@@ -41,7 +30,6 @@ void Item::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	CalcPotentialCollisions(&bricks, coEvents);
 
-	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
 		posY += dy;
@@ -52,7 +40,6 @@ void Item::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-		// block 
 		posX += min_tx * dx + nx * 0.1f;
 		posY += min_ty * dy + ny * 0.1f;
 
@@ -67,13 +54,11 @@ void Item::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 void Item::Render()
 {
-	//Dung ra thi khi het delay moi tao item chu khong phai tao roi nhung het delay moi ve
-	if (timeDelayDisplayed < timeDelayDisplayMax)
-		return;
 	if (isDone)
 		return;
 
-	sprite->Draw(posX, posY);
+	animationSet->at(0)->Render(-direction, posX, posY);
+	//sprite->Draw(posX, posY);
 
 	RenderBoundingBox();
 }
@@ -84,7 +69,7 @@ void Item::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	{
 		left = posX;
 		top = posY;
-		right = posX + texture->getFrameWidth();
-		bottom = posY + texture->getFrameHeight();
+		right = posX + animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth();
+		bottom = posY + animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight();
 	}
 }

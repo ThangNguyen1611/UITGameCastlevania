@@ -6,9 +6,6 @@
 
 #include "debug.h"
 #include "define.h"
-#include "Sprite.h"
-#include "Texture2dManager.h"
-
 #include "Textures.h"
 #include "Animations.h"
 
@@ -47,8 +44,6 @@ protected:
 	int live;
 	int score;
 	bool isDead;
-	Texture2d* texture;
-	Sprite* sprite;
 	LPANIMATION_SET animationSet;
 
 	int state;
@@ -101,9 +96,6 @@ public:
 	void SetVy(float VY) { vY = VY; }
 	void AddVx(float VX) { this->SetVx(this->GetVx() + VX); }
 	void AddVy(float VY) { this->SetVy(this->GetVy() + VY); }
-
-	int GetWidth() { return this->texture->getFrameWidth(); }
-	int GetHeight() { return this->texture->getFrameHeight(); }
 
 	EntityType GetType() { return tag; }
 

@@ -1,19 +1,16 @@
 #pragma once
-#include "Texture2dManager.h"
-#include "Sprite.h"
+#include "Sprites.h"
 #include <string>
 using namespace std;
 
 class Text
 {
-	Texture2d* textTexture;
-	Sprite* textSprite;
+	LPSPRITE textSpr;
 public:
 	Text();
 	~Text();
 	void Render(float posX, float posY, const string &str);
 
 	string FillZeroString(string str, UINT MaxStringLenght);
-
 };
 

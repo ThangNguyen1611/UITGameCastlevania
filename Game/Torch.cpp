@@ -2,8 +2,7 @@
 
 Torch::Torch(float posX, float posY, int id)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::TORCH);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_TORCH));
 	tag = EntityType::TORCH;
 
 	this->posX = posX;
@@ -22,25 +21,6 @@ void Torch::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		isDead = true;
 		return;
 	}
-
-	int currentFrame = sprite->GetCurrentFrame();
-	if (!isDead) {
-		if (currentFrame < TORCH_ANI_BEGIN) {
-			sprite->SelectFrame(TORCH_ANI_BEGIN);
-			sprite->SetCurrentTotalTime(dt);
-		}
-		else {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-			if (sprite->GetCurrentTotalTime() >= TORCH_BURN_SPEED) {
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - TORCH_BURN_SPEED);
-				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
-			}
-
-			if (sprite->GetCurrentFrame() > TORCH_ANI_END) {
-				sprite->SelectFrame(TORCH_ANI_BEGIN);
-			}
-		}
-	}
 }
 
 void Torch::Render()
@@ -48,7 +28,7 @@ void Torch::Render()
 	if (isDead)
 		return;
 
-	sprite->Draw(posX, posY);
+	animationSet->at(0)->Render(-direction, posX, posY);
 	
 	RenderBoundingBox();
 }

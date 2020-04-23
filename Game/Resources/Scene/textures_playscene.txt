@@ -5,15 +5,15 @@
 2	Resources/Weapons/MorningStar.png	255	0	255
 3	Resources/Weapons/Dagger.png	255	0	255
 4	Resources/Weapons/Boomerang.png	255	0	255
-10	Resources/UI/BlackBoard.png	255	255	255
+10	Resources/UI/BlackBoard.png	255	0	255
 11	Resources/UI/HP.png	255	255	255
 12	Resources/UI/Texts.png	255	0	255
-20	Resources/Objects/Ground.png	255	255	255
-21	Resources/Objects/Ground.png	255	255	255
+20	Resources/Objects/Ground.png	255	0	255
+21	Resources/Objects/Ground.png	255	0	255
 22	Resources/Objects/Torch.png	255	0	255
 23	Resources/Objects/Candle.png	255	0	255
 24	Resources/Objects/MovingPlatform.png	116	116	116
-25	Resources/Objects/Stair.png	255	255	255
+25	Resources/Objects/Stair.png	255	0	255
 26	Resources/Objects/Gate.png	255	0	255
 
 40	Resources/Items/SmallHeart.png	255	0	255
@@ -44,22 +44,11 @@
 86	Resources/Enemies/Hunchman.png	255	0	255
 87	Resources/Enemies/Eagle.png	255	0	255
 
-100	Resources/Scene/TitleScene.png	255	0	255
-101	Resources/Scene/TitleBat.png	255	0	255
-102	Resources/Scene/StartText.png	255	0	255
-103	Resources/Scene/IntroScene.png	255	0	255
-104	Resources/Simon.png	255	0	255
-106	Resources/TileMap/TilesetStage1.png	255	0	255
-107	Resources/TileMap/TilesetStage2.png	255	0	255
-108	Resources/TileMap/TilesetStage2.png	255	0	255
-109	Resources/TileMap/TilesetStage3.png	255	0	255
-110	Resources/TileMap/TilesetStage3.png	255	0	255
-
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # Simon
 # Die
-0	240	192	300	256	1
+0	240	198	300	262	1
 # Idle
 1	0	0	60	64	1
 # Walking
@@ -75,30 +64,33 @@
 # Hurt
 9	0	64	60	128	1
 # Sitting
-10	300	192	360	256	1
+10	302	198	360	262	1
 # Sit Attack
-11	420	64	480	128	1
-12	0	128	60	192	1
-13	60	128	120	192	1
+11	420	66	480	130	1
+12	0	132	60	196	1
+13	60	132	120	196	1
 # Upgrading
-14	0	192	60	256	1
-15	60	192	120	256	1
-16	120	192	180	256	1
-17	180	192	240	256	1
+14	0	198	60	262	1
+15	60	198	120	262	1
+16	120	198	180	262	1
+17	180	198	240	262	1
 
 # MS
 # MS 1
 50	0	0	160	68	2
 51	160	0	320	68	2
 52	320	0	480	68	2
+53	480	0	640	68	2
 # MS 2
-53	0	68	160	136	2
-54	160	68	320	136	2
-55	320	68	480	136	2
+54	0	68	160	136	2
+55	160	68	320	136	2
+56	320	68	480	136	2
+57	480	68	640	136	2
 # MS 3
-56	0	136	160	204	2
-57	160	136	320	204	2
-58	320	136	480	204	2
+58	0	136	160	204	2
+59	160	136	320	204	2
+60	320	136	480	204	2
+61	480	136	640	204	2
 
 # Dagger
 62	0	0	32	18	3
@@ -154,8 +146,8 @@
 112	0	0	64	16	24
 
 # Stairs
-113	0	0	32	64	25
-114	32	0	64	64	25
+113	0	0	32	32	25
+114	32	0	64	32	25
 
 # Gate
 119	0	0	48	96	26
@@ -248,43 +240,6 @@
 191	40	0	80	80	83
 192	80	0	120	82	83
 
-# TitleScene
-250	0	0	514	450	100
-
-# TitleBat
-251	0	0	144	112	101
-252	144	0	288	112	101
-253	288	0	432	112	101
-254	432	0	576	112	101
-255	576	0	720	112	101
-256	0	112	144	224	101
-257	144	112	288	224	101
-258	288	112	432	224	101
-259	432	112	576	224	101
-260	576	112	720	224	101
-261	0	224	144	336	101
-262	144	224	288	336	101
-263	288	224	432	336	101
-264	432	224	576	336	101
-265	576	224	720	336	101
-
-# StartText
-266	0	0	214	30	102
-267	214	0	428	30	102
-
-# IntroScene
-268	0	0	512	448	103
-
-# IntroSimon 
-# Idle
-269	0	0	60	64	104
-# Walking
-270	60	0	120	64	104
-271	120	0	180	64	104
-272	180	0	240	64	104
-
-
-
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 # Simon
@@ -297,23 +252,29 @@
 # Jumping
 3	5	100
 # Attacking
-4	6	110	7	110	8	110
+4	6	130	7	130	8	130
 # Hurt
 5	9	100
 # Sitting
 6	10	100
 # Sit Attack
-7	11	110	12	110	13	110
+7	11	130	12	130	13	130
 # Upgrade
 8	14	100	15	100	16	100	17	100
+# SupWeaponAttacking
+9	6	130	7	130	8	130
+# SupWeapon Sit Attacking
+10	11	130	12	130	13	130
+# PassingStage
+11	1	100	2	100	3	100	4	100
 
 # MS
 # 1
-20	50	110	51	110	52	110
+20	50	130	51	130	52	130	53	130
 # 2
-21	53	110	54	110	55	110
+21	54	130	55	130	56	130	57	130
 # 3
-22	56	110	57	110	58	110
+22	58	130	59	130	60	130	61	130
 
 # Dagger
 23	62	100
@@ -401,19 +362,19 @@
 105	147	100
 
 # FireEff
-106	160	120	161	120	162	120	163	120
+106	160	150	161	150	162	150	163	150
 
 # HitEff
-107	164	120	165	120
+107	164	600	165	600
 
 # BrickExplode
 108	166	120	167	120
 
 # ScoreEff
-109	168	120	169	120
-110	170	120	171	120
-111	172	120	173	120
-112	174	120	175	120
+109	168	600	169	600
+110	170	600	171	600
+111	172	600	173	600
+112	174	600	175	600
 
 # VampireBat
 120	180	100
@@ -429,30 +390,12 @@
 # Knight
 125	190	150	191	150	192	150
 
-# TitleScene
-150	250	100
-
-# TitleBat
-151	251	150	252	150	253	150	254	150	255	150
-
-# StartText
-152	266	120	167	120
-
-# IntroScene
-153	268	100
-
-# IntroSimon
-# Idle
-154	269	100
-# Walking
-155	270	100	271	100	272	100
-
 #
 # id	ani1	ani2	ani3
 # id tuan theo define
 [ANIMATION_SETS]
 # Simon
-1	0	1	2	3	4	5	6	7	8
+1	0	1	2	3	4	5	6	7	8	9	10	11
 
 # MS
 2	20	21	22
@@ -554,18 +497,3 @@
 
 # Knight
 83	125
-
-# TitleScene
-100	150
-
-# TitleBat
-101	151
-
-# StartText
-102	152
-
-# IntroScene
-103	153
-
-# IntroSimon
-104	154	155

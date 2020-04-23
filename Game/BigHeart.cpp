@@ -2,18 +2,15 @@
 
 BigHeart::BigHeart(float posX, float posY)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::BIGHEART);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_BIGHEART));
 	tag = EntityType::BIGHEART;
 
 	this->posX = posX;
 	this->posY = posY;
 	
 	vY = BIGHEART_GRAVITY;
-	timeDisplayed = 0;
-	timeDisplayMax = BIGHEART_TIMEDISPLAYMAX; 
-	timeDelayDisplayed = 0;
-	timeDelayDisplayMax = BIGHEART_TIMEDELAYMAX;
+	displayTimer = new Timer(BIGHEART_TIMEDISPLAYMAX);
+	displayTimer->Start();
 }
 
 BigHeart::~BigHeart(){}

@@ -4,8 +4,7 @@
 
 Bat::Bat(float posX, float posY, int direction) 
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::BAT);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_BAT));
 	tag = EntityType::BAT;
 
 	this->posX = posX;
@@ -28,26 +27,6 @@ void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		SetState(BAT_STATE_DIE);
 		return;
-	}
-
-	int currentFrame = sprite->GetCurrentFrame();
-	if (!isDead) 
-	{
-		if (currentFrame < BAT_ANI_FLYING_BEGIN) {
-			sprite->SelectFrame(BAT_ANI_FLYING_BEGIN);
-			sprite->SetCurrentTotalTime(dt);
-		}
-		else {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-			if (sprite->GetCurrentTotalTime() >= BAT_FLAPPING_SPEED) {
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - BAT_FLAPPING_SPEED);
-				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			
-			}
-
-			if (sprite->GetCurrentFrame() > BAT_ANI_FLYING_END) {
-				sprite->SelectFrame(BAT_ANI_FLYING_BEGIN);
-			}
-		}
 	}
 	
 	//2 optional to FLY
@@ -135,12 +114,8 @@ void Bat::Render()
 	if (isDead)
 		return;
 
-	if (direction == 1) {
-		sprite->DrawFlipVertical(posX, posY, 255);
-	}
-	else {
-		sprite->Draw(posX, posY, 255);
-	}
+	animationSet->at(state)->Render(direction, posX, posY);
+
 	RenderBoundingBox();
 }
 

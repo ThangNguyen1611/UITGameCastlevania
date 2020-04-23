@@ -2,45 +2,38 @@
 
 MoneyBags::MoneyBags(float posX, float posY, EntityType typeBag)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::MONEYBAGS);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_MONEYBAGS));
 	tag = typeBag;
 
 	this->posX = posX;
 	this->posY = posY;
 
 	vY = BAGS_GRAVITY;
-	timeDisplayed = 0;
-	timeDisplayMax = BAGS_TIMEDISPLAYMAX;
-	timeDelayDisplayed = 0;
-	timeDelayDisplayMax = BAGS_TIMEDELAYMAX;
+	displayTimer = new Timer(BAGS_TIMEDISPLAYMAX);
+	displayTimer->Start();
 }
 
 MoneyBags::~MoneyBags(){}
 
 void MoneyBags::Render()
 {
-	if (timeDelayDisplayed < timeDelayDisplayMax)
-		return;
 	if (isDone)
 		return;
 	//khong dung lai Item::Render do muon return som tai day 
 	switch (tag)
 	{
 	case MONEYBAGRED:
-		sprite->SelectFrame(BAG_RED);
+		animationSet->at(0)->Render(-direction, posX, posY);
 		break;
 	case MONEYBAGWHITE:
-		sprite->SelectFrame(BAG_WHITE);
+		animationSet->at(1)->Render(-direction, posX, posY);
 		break;
 	case MONEYBAGBLUE:
-		sprite->SelectFrame(BAG_BLUE);
+		animationSet->at(2)->Render(-direction, posX, posY);
 		break;
 	default:
 		break;
 	}
-
-	sprite->Draw(posX, posY);
 
 	RenderBoundingBox();
 }

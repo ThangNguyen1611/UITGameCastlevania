@@ -1,29 +1,20 @@
 #pragma once
 #include "Scene.h"
-#include "Texture2dManager.h"
-#include "Sprite.h"
-
-#define BAT_ANI_BEGIN			0
-#define BAT_ANI_START_LOOP		12
-#define BAT_ANI_END				14
-
-#define BAT_FLAPPING_SPEED		150
-
-#define STARTTEXT_BEGIN			0
-#define STARTTEXT_END			1
-
-#define STARTTEXT_TRANS_SPEED	200
+#include "Textures.h"
+#include "Animations.h"
 
 class TitleScene : public Scene
 {
-	Texture2d* screenTexture;
-	Sprite* screenSprite;
-	Texture2d* batTexture;
-	Sprite* batSprite;
-	Texture2d* startTexture;
-	Sprite* startSprite;
+	LPSPRITE titleSceneSpr;
+	LPANIMATION_SET batAniSet;
+	LPANIMATION_SET startAniSet;
 
 	bool isAllowToStart;
+
+	void _ParseSection_TEXTURES(string line);
+	void _ParseSection_SPRITES(string line);
+	void _ParseSection_ANIMATIONS(string line);
+	void _ParseSection_ANIMATION_SETS(string line);
 public:
 	TitleScene();
 
@@ -32,6 +23,7 @@ public:
 	void Render();
 	void Unload();
 
+	void LoadTextures();
 	friend class TitleScenceKeyHandler;
 };
 

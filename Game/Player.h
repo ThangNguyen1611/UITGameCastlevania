@@ -20,19 +20,20 @@
 #define PLAYER_BBOX_WIDTH						45		//60
 #define PLAYER_BBOX_HEIGHT						63		//66
 
-#define PLAYER_STATE_DIE						-1
-#define PLAYER_STATE_IDLE						0
-#define PLAYER_STATE_WALKING_RIGHT				100
-#define PLAYER_STATE_WALKING_LEFT				200
-#define PLAYER_STATE_JUMP						300
-#define PLAYER_STATE_ATTACK						400
-#define PLAYER_STATE_SITTING					500
-#define PLAYER_STATE_HURTING					600
-#define PLAYER_STATE_UPGRADING					700
-#define PLAYER_STATE_SUPWEAPON_ATTACK			800
-#define PLAYER_STATE_PASSING_STAGE				900
-#define PLAYER_STATE_GOING_UP_STAIRS			1000
-#define PLAYER_STATE_GOING_DOWN_STAIRS			1100
+#define PLAYER_STATE_DIE						0
+#define PLAYER_STATE_IDLE						1
+#define PLAYER_STATE_WALKING					2
+#define PLAYER_STATE_JUMP						3
+#define PLAYER_STATE_ATTACK						4
+#define PLAYER_STATE_HURTING					5
+#define PLAYER_STATE_SITTING					6
+#define PLAYER_STATE_SITTING_ATTACK				7
+#define PLAYER_STATE_UPGRADING					8
+#define PLAYER_STATE_SUPWEAPON_ATTACK			9
+#define PLAYER_STATE_SUPWEAPON_SIT_ATTACK		10
+#define PLAYER_STATE_PASSING_STAGE				11
+//#define PLAYER_STATE_GOING_UP_STAIRS			1000
+//#define PLAYER_STATE_GOING_DOWN_STAIRS			1100
 
 #define PLAYER_ANI_DIE							28
 #define PLAYER_ANI_IDLE							0
@@ -56,7 +57,7 @@
 #define PLAYER_ANI_ATTACK_DOWN_STAIRS_BEGIN		18
 #define PLAYER_ANI_ATTACK_DOWN_STAIRS_END		20
 
-#define PLAYER_ATTACKING_DELAY					110
+#define PLAYER_ATTACKING_DELAY					130
 #define PLAYER_HURTING_DELAY					600
 #define PLAYER_IMMORTAL_TIMECOUNTER				1200
 #define PLAYER_UPGRADING_DELAY					100
@@ -121,6 +122,7 @@ public:
 	bool IsProcessingAuto() { return triggerAuto; }
 
 	int GetDirectionY() { return directionY; }
+	void SetDirectionY(int i) { directionY = i; }
 	void SetOnStair(bool onStair) { isOnStairs = onStair; }
 	
 	Weapon* GetPlayerMainWeapon() { return mainWeapon; }

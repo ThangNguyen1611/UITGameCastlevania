@@ -1,10 +1,7 @@
 #pragma once
 #include "Effect.h"
 
-#define FIRE_TIME_OF_PER_EFFECT			150		
-
-#define FIRE_ANI_BEGIN					0
-#define FIRE_ANI_END					3
+#define FIRE_BURN_DISPLAY	600
 
 class Fire : public Effect
 {

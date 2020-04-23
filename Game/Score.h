@@ -1,16 +1,12 @@
 #pragma once
 #include "Effect.h"
 
-#define SCORE_TIME_OF_PER_EFFECT			600		
+#define SCORE_100_ANI					0
+#define SCORE_400_ANI					2
+#define SCORE_700_ANI					4
+#define SCORE_1000_ANI					6
 
-#define SCORE_100_ANI_BEGIN					0
-#define SCORE_100_ANI_END					1
-#define SCORE_400_ANI_BEGIN					2
-#define SCORE_400_ANI_END					3
-#define SCORE_700_ANI_BEGIN					4
-#define SCORE_700_ANI_END					5
-#define SCORE_1000_ANI_BEGIN				6
-#define SCORE_1000_ANI_END					7
+#define SCORE_DISPLAY					600
 
 class Score : public Effect
 {
@@ -20,5 +16,6 @@ public:
 	~Score();
 
 	void Update(DWORD dt);
+	void Render();
 };
 

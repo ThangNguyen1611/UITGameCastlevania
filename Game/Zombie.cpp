@@ -2,8 +2,7 @@
 
 Zombie::Zombie(float posX, float posY, int direction)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::ZOMBIE);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_ZOMBIE));
 	tag = EntityType::ZOMBIE;
 
 	this->posX = posX;
@@ -26,26 +25,6 @@ void Zombie::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		return;
 	}
 	
-	int currentFrame = sprite->GetCurrentFrame();
-	if (!isDead) {
-		if (currentFrame < ZOMBIE_ANI_WALKING_BEGIN) 
-		{
-			sprite->SelectFrame(ZOMBIE_ANI_WALKING_BEGIN);
-			sprite->SetCurrentTotalTime(dt);
-		}
-		else {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-			if (sprite->GetCurrentTotalTime() >= ZOMBIE_DRESSDANCE_SPEED)
-			{
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - ZOMBIE_DRESSDANCE_SPEED);
-				sprite->SelectFrame(currentFrame + 1);
-			}
-
-			if (sprite->GetCurrentFrame() > ZOMBIE_ANI_WALKING_END) {
-				sprite->SelectFrame(ZOMBIE_ANI_WALKING_BEGIN);
-			}
-		}
-	}
 	Entity::Update(dt);
 	vY += ZOMBIE_GRAVITY * dt;
 
@@ -100,12 +79,8 @@ void Zombie::Render()
 	if (isDead)
 		return;
 
-	if (direction == 1) {
-		sprite->DrawFlipVertical(posX, posY, 255);
-	}
-	else {
-		sprite->Draw(posX, posY, 255);
-	}
+	animationSet->at(state)->Render(direction, posX, posY);
+
 	RenderBoundingBox();
 }
 

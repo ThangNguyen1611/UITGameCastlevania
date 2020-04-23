@@ -2,12 +2,26 @@
 
 Score::Score(float posX, float posY, EntityType scoreType)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::ADDSCOREEFFECT);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_ADDSCORE));
 	this->posX = posX;
 	this->posY = posY;
 	isDone = false;
 	this->scoreType = scoreType;
+
+	/*if (scoreType == EntityType::MONEYBAGRED)
+	{
+		animationSet->at(SCORE_100_ANI)->StartAnimation();
+	}
+	else if (scoreType == EntityType::MONEYBAGWHITE)
+	{
+		animationSet->at(SCORE_400_ANI)->StartAnimation();
+	}
+	else if (scoreType == EntityType::MONEYBAGBLUE)
+	{
+		animationSet->at(SCORE_700_ANI)->StartAnimation();
+	}*/
+	/*else
+		animationSet->at(SCORE_1000_ANI)->StartAnimation();*/
 }
 
 Score::~Score() {}
@@ -18,79 +32,43 @@ void Score::Update(DWORD dt)
 	{
 		return;
 	}
-
-	int currentFrame = sprite->GetCurrentFrame();
-	if (scoreType == EntityType::MONEYBAGRED)
+	/*if(scoreType == EntityType::MONEYBAGRED && animationSet->at(SCORE_100_ANI)->IsRenderOver(SCORE_DISPLAY))
 	{
-		if (currentFrame < SCORE_100_ANI_BEGIN) {
-			sprite->SelectFrame(SCORE_100_ANI_BEGIN);
-			sprite->SetCurrentTotalTime(dt);
-		}
-		else {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-			if (sprite->GetCurrentTotalTime() >= SCORE_TIME_OF_PER_EFFECT) {
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - SCORE_TIME_OF_PER_EFFECT);
-				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
-			}
-
-			if (sprite->GetCurrentFrame() > SCORE_100_ANI_END) {
-				isDone = true;
-			}
-		}
+		isDone = true;
 	}
-	else if (scoreType == EntityType::MONEYBAGWHITE)
+	else if (scoreType == EntityType::MONEYBAGWHITE && animationSet->at(SCORE_400_ANI)->IsRenderOver(SCORE_DISPLAY))
 	{
-		if (currentFrame < SCORE_400_ANI_BEGIN) {
-			sprite->SelectFrame(SCORE_400_ANI_BEGIN);
-			sprite->SetCurrentTotalTime(dt);
-		}
-		else {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-			if (sprite->GetCurrentTotalTime() >= SCORE_TIME_OF_PER_EFFECT) {
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - SCORE_TIME_OF_PER_EFFECT);
-				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
-			}
-
-			if (sprite->GetCurrentFrame() > SCORE_400_ANI_END) {
-				isDone = true;
-			}
-		}
+		isDone = true;
 	}
-	else if (scoreType == EntityType::MONEYBAGBLUE)
+	else if (scoreType == EntityType::MONEYBAGBLUE && animationSet->at(SCORE_700_ANI)->IsRenderOver(SCORE_DISPLAY))
 	{
-		if (currentFrame < SCORE_700_ANI_BEGIN) {
-			sprite->SelectFrame(SCORE_700_ANI_BEGIN);
-			sprite->SetCurrentTotalTime(dt);
-		}
-		else {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-			if (sprite->GetCurrentTotalTime() >= SCORE_TIME_OF_PER_EFFECT) {
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - SCORE_TIME_OF_PER_EFFECT);
-				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
-			}
-
-			if (sprite->GetCurrentFrame() > SCORE_700_ANI_END) {
-				isDone = true;
-			}
-		}
-	}
-	else
+		isDone = true;
+	}*/
+	/*else if (animationSet->at(SCORE_1000_ANI)->IsRenderOver(SCORE_DISPLAY))
 	{
-		if (currentFrame < SCORE_1000_ANI_BEGIN) {
-			sprite->SelectFrame(SCORE_1000_ANI_BEGIN);
-			sprite->SetCurrentTotalTime(dt);
-		}
-		else {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-			if (sprite->GetCurrentTotalTime() >= SCORE_TIME_OF_PER_EFFECT) {
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - SCORE_TIME_OF_PER_EFFECT);
-				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
-			}
+		isDone = true;
+	}*/
+}
 
-			if (sprite->GetCurrentFrame() > SCORE_1000_ANI_END) {
-				isDone = true;
-			}
-		}
+void Score::Render()
+{
+	if (!isDone)
+	{
+		/*switch (scoreType)
+		{
+		case MONEYBAGRED:
+			animationSet->at(SCORE_100_ANI)->Render(-1, posX, posY);
+			break;
+		case MONEYBAGWHITE:
+			animationSet->at(SCORE_400_ANI)->Render(-1, posX, posY);
+			break;
+		case MONEYBAGBLUE:
+			animationSet->at(SCORE_700_ANI)->Render(-1, posX, posY);
+			break;
+		default:
+			animationSet->at(SCORE_1000_ANI)->Render(-1, posX, posY);
+			break;
+		}*/
 	}
 }
 

@@ -9,11 +9,11 @@ Effect::~Effect(){}
 
 void Effect::Update(DWORD dt)
 {
-
+	
 }
 
 void Effect::Render()
 {
 	if(!isDone)
-		sprite->Draw(posX, posY);
+		animationSet->at(0)->Render(-1, posX, posY);
 }

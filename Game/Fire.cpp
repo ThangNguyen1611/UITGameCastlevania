@@ -2,11 +2,11 @@
 
 Fire::Fire(float posX, float posY)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::FIREEFFECT);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_FIREEFFECT));
 	this->posX = posX;
 	this->posY = posY;
 	isDone = false;
+	animationSet->at(0)->StartAnimation();
 }
 
 Fire::~Fire() {}
@@ -17,21 +17,8 @@ void Fire::Update(DWORD dt)
 	{
 		return;
 	}
-
-	int currentFrame = sprite->GetCurrentFrame();
-	if (currentFrame < FIRE_ANI_BEGIN) {
-		sprite->SelectFrame(FIRE_ANI_BEGIN);
-		sprite->SetCurrentTotalTime(dt);
-	}
-	else {
-		sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-		if (sprite->GetCurrentTotalTime() >= FIRE_TIME_OF_PER_EFFECT) {
-			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - FIRE_TIME_OF_PER_EFFECT);
-			sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
-		}
-
-		if (sprite->GetCurrentFrame() > FIRE_ANI_END) {
-			isDone = true;
-		}
+	if (animationSet->at(0)->IsRenderOver(FIRE_BURN_DISPLAY))
+	{
+		isDone = true;
 	}
 }

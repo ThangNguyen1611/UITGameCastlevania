@@ -1,10 +1,6 @@
 #include "Text.h"
 
-Text::Text()
-{
-	this->textTexture = Texture2dManager::GetInstance()->GetTexture(EntityType::TEXTS);
-	this->textSprite = new Sprite(textTexture, MaxFrameRate);
-}
+Text::Text(){}
 
 Text::~Text(){}
 
@@ -15,13 +11,13 @@ void Text::Render(float posX, float posY, const string &str)
 		//Hien tai chi dung so'
 		if (str[i] >= '0' && str[i] <= '9')
 		{
-			textSprite->SelectFrame(str[i] - '0' + 26);
+			textSpr = CSprites::GetInstance()->Get(str[i] - '0' + 84);
 		}
 		else	//va dau tru	
 		{
-			textSprite->SelectFrame(36);
+			textSpr = CSprites::GetInstance()->Get(94);
 		}
-		textSprite->Draw(posX + i * textTexture->getFrameWidth(), posY);
+		textSpr->Draw(-1, posX + i * 15, posY);
 	}
 }
 

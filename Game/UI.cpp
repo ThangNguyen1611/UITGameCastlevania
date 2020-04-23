@@ -2,8 +2,7 @@
 
 UI::UI(int initPlayerHB, int initBossHealth)
 {
-	UITexture = Texture2dManager::GetInstance()->GetTexture(EntityType::BLACKBOARD);
-	UISprite = new Sprite(UITexture, MaxFrameRate);
+	UIanimationSet = CAnimationSets::GetInstance()->Get(ANIMATION_SET_BLACKBOARD);
 
 	playerHB = new HealthBar(initPlayerHB, true);
 	bossHB = new HealthBar(initBossHealth, false);
@@ -22,15 +21,20 @@ void UI::Update(float posX, float posY, int currentPlayerHealth, int currentBoss
 
 void UI::Render(int currentStage, int remainingTime, Player* playerInfo)
 {
-	UISprite->Draw(posX, posY);
+	UIanimationSet->at(0)->Render(-1, posX , posY);
 
 	playerHB->Render();
 	bossHB->Render();
 
 	if (playerInfo->GetPlayerSupWeaponType() == EntityType::DAGGER)
 	{
-		playerSubWeaponSprite = new Sprite(Texture2dManager::GetInstance()->GetTexture(EntityType::ITEMDAGGER), MaxFrameRate);
-		playerSubWeaponSprite->Draw(posX + 68, posY + 8);
+		playerSubWeaponAnimationSet = CAnimationSets::GetInstance()->Get(ANIMATION_SET_ITEMDAGGER);
+		playerSubWeaponAnimationSet->at(0)->Render(1, posX + 68, posY + 8);
+	}
+	if (playerInfo->GetPlayerSupWeaponType() == EntityType::BOOMERANG)
+	{
+		playerSubWeaponAnimationSet = CAnimationSets::GetInstance()->Get(ANIMATION_SET_ITEMBMR);
+		playerSubWeaponAnimationSet->at(0)->Render(1, posX + 68, posY + 8);
 	}
 
 	text.Render(this->posX - 140, this->posY - 20, text.FillZeroString(to_string(playerInfo->GetScore()), MAX_TEXTLENGHT_SCORE));

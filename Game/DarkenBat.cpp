@@ -4,8 +4,7 @@
 
 DarkenBat::DarkenBat(float posX, float posY, int directionX, LPGAMEENTITY target)
 {
-	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::DARKENBAT);
-	this->sprite = new Sprite(texture, MaxFrameRate);
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_DARKENBAT));
 	tag = EntityType::DARKENBAT;
 
 	this->posX = posX;
@@ -29,33 +28,6 @@ void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		SetState(DARKBAT_STATE_DIE);
 		return;
-	}
-
-	int currentFrame = sprite->GetCurrentFrame();
-	if (!isDead)
-	{
-		if (!targetDetected)
-		{
-			sprite->SelectFrame(DARKBAT_ANI_INACTIVE);
-		}
-		else
-		{
-			if (currentFrame < DARKBAT_ANI_FLYING_BEGIN) {
-				sprite->SelectFrame(DARKBAT_ANI_FLYING_BEGIN);
-				sprite->SetCurrentTotalTime(dt);
-			}
-			else {
-				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
-				if (sprite->GetCurrentTotalTime() >= DARKBAT_FLAPPING_SPEED) {
-					sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - DARKBAT_FLAPPING_SPEED);
-					sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
-				}
-
-				if (sprite->GetCurrentFrame() > DARKBAT_ANI_FLYING_END) {
-					sprite->SelectFrame(DARKBAT_ANI_FLYING_BEGIN);
-				}
-			}
-		}
 	}
 
 	if (target != NULL)
@@ -85,12 +57,8 @@ void DarkenBat::Render()
 	if (isDead)
 		return;
 
-	if (direction == 1) {
-		sprite->DrawFlipVertical(posX, posY, 255);
-	}
-	else {
-		sprite->Draw(posX, posY, 255);
-	}
+	animationSet->at(state)->Render(direction, posX, posY);
+
 	RenderBoundingBox();
 }
 
