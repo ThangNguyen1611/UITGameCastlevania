@@ -28,7 +28,7 @@ IntroScene::IntroScene() : Scene()
 	isAllowToPlayPhase3 = false;
 }
 
-void IntroScene::Load()
+void IntroScene::LoadSceneObjects()
 {
 
 }

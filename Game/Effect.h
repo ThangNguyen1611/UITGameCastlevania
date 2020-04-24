@@ -14,7 +14,7 @@ public:
 	Effect();
 	~Effect();
 
-	virtual void Update(DWORD dt);
+	virtual void Update(DWORD dt) = 0;
 	virtual void Render();
 
 	bool GetIsDone() { return isDone; }

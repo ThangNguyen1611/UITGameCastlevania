@@ -111,3 +111,8 @@
 1	1520	345	4
 1	1488	217	4
 1	1520	217	4
+
+
+#idStage -- mapFilePath -- RowMap -- ColumnMap -- tilesetFilePath -- RowTileset -- ColumnTileset
+[TILEMAP]
+2500	Resources/TileMap/TilesetStage3_2Text.txt	12	48	Resources/TileMap/TilesetStage3.png	5	12

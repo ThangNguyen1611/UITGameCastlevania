@@ -66,6 +66,7 @@ protected:
 	std::vector<LPGAMEENTITY> listObjects;
 	std::vector<LPGAMEEFFECT> listEffects;
 	std::vector<LPGAMEITEM> listItems;
+	std::vector<LPCWSTR> listSceneFilePath;
 	UI* gameUI;
 	GameTime* gameTime;		
 	Camera* camera;
@@ -94,13 +95,17 @@ protected:
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
 
+	//Get stage objects' link and tilemap resources
+	void _ParseSection_SCENEFILEPATH(string line);
+	void _ParseSection_TILEMAP(string line);
+
 public:
 	PlayScene();
 
 	void LoadBaseObjects();
 	void LoadTextures();
 	void ChooseMap(int whatStage);	//Co the thay bien int thanh EntityType
-	virtual void Load();
+	virtual void LoadSceneObjects();
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();

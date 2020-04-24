@@ -18,7 +18,7 @@ class TitleScene : public Scene
 public:
 	TitleScene();
 
-	void Load();
+	void LoadSceneObjects();
 	void Update(DWORD dt);
 	void Render();
 	void Unload();

@@ -27,7 +27,6 @@ public:
 	void Render(int direction, float x, float y, int alpha = 255);
 
 	LPANIMATION_FRAME GetAnimationCurrentFrame(int id) { return frames[id]; }
-	void RenderAt(int currentFrameID, int direction, float x, float y, int alpha = 255);
 	void ResetCurrentFrame() { currentFrame = -1; }
 	int GetCurrentFrame() { return currentFrame; }
 	void StartAnimation() { startFrameTime = GetTickCount(); }

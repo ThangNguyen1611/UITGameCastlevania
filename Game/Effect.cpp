@@ -7,11 +7,6 @@ Effect::Effect()
 
 Effect::~Effect(){}
 
-void Effect::Update(DWORD dt)
-{
-	
-}
-
 void Effect::Render()
 {
 	if(!isDone)

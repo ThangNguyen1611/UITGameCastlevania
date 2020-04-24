@@ -63,3 +63,8 @@
 
 #Gate
 3	1400	310	2
+
+
+#idStage -- mapFilePath -- RowMap -- ColumnMap -- tilesetFilePath -- RowTileset -- ColumnTileset
+[TILEMAP]
+500	Resources/TileMap/TilesetStage1Text.txt	12	48	Resources/TileMap/TilesetStage1.png	4	17

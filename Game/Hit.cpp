@@ -17,7 +17,7 @@ void Hit::Update(DWORD dt)
 	{
 		return;
 	}
-	if (animationSet->at(0)->IsRenderOver(SPARKLE_DISPLAY))
+	if (animationSet->at(0)->IsRenderOver(SPARKLE_DISPLAY*2))
 	{
 		isDone = true;
 	}

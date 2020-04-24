@@ -35,17 +35,10 @@ void CAnimation::Render(int direction, float x, float y, int alpha)
 	frames[currentFrame]->GetSprite()->Draw(direction, x, y, alpha);
 }
 
-void CAnimation::RenderAt(int currentFrameID, int direction, float x, float y, int alpha)
-{
-	//currentFrame = currentID;
-	frames[currentFrameID]->GetSprite()->Draw(direction, x, y, alpha);
-}
-
 bool CAnimation::IsRenderOver(DWORD a)
 {
 	if (GetTickCount() - startFrameTime >= a)
 	{
-		//startFrameTime = 0;
 		return true;
 	}
 	else

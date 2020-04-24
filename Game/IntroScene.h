@@ -45,7 +45,7 @@ class IntroScene : public Scene
 public:
 	IntroScene();
 
-	void Load();
+	void LoadSceneObjects();
 	void Update(DWORD dt);
 	void Render();
 	void Unload();

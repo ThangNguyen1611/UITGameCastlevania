@@ -16,7 +16,7 @@ TitleScene::TitleScene() : Scene()
 	isAllowToStart = false;
 }
 
-void TitleScene::Load()
+void TitleScene::LoadSceneObjects()
 {
 
 }

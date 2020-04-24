@@ -18,14 +18,14 @@
 PlayScene::PlayScene() : Scene()
 {
 	keyHandler = new PlayScenceKeyHandler(this);
-	texturesFilePath = ToLPCWSTR("Resources/Scene/textures_playscene.txt");
-	LoadTextures();
 	LoadBaseObjects();
 	ChooseMap(STAGE_1);
 }
 
 void PlayScene::LoadBaseObjects()
 {
+	texturesFilePath = ToLPCWSTR("Resources/Scene/textures_playscene.txt");
+	LoadTextures();
 	if (player == NULL)
 	{
 		player = new Player(100, 280);
@@ -39,92 +39,101 @@ void PlayScene::LoadBaseObjects()
 }
 
 void PlayScene::ChooseMap(int whatMap)	
-//Muc dich chinh ham nay la chon ra sceneFilePath can thiet, co the kh dung ham nay ma tao if else o ham Load cung duoc
+//Muc dich chinh ham nay la chon ra sceneFilePath can thiet, co the kh dung ham nay ma tao if else o ham LoadSceneObjects cung duoc
 {
-	switch (whatMap)
-	{
-	case STAGE_1:
-	{
-		idStage = STAGE_1;
-		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(STAGE_1, ToLPCWSTR("Resources/TileMap/TilesetStage1Text.txt"), STAGE1_ROWMAP, STAGE1_COLUMNMAP, 
-			ToLPCWSTR("Resources/TileMap/TilesetStage1.png"), 4, 17);
-		player->ReceiveCurrentStage(idStage);
+	//switch (whatMap)
+	//{
+	//case STAGE_1:
+	//{
+	//	idStage = STAGE_1;
+	//	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+	//	map->LoadMap(STAGE_1, ToLPCWSTR("Resources/TileMap/TilesetStage1Text.txt"), STAGE1_ROWMAP, STAGE1_COLUMNMAP, 
+	//		ToLPCWSTR("Resources/TileMap/TilesetStage1.png"), 4, 17);
+	//	player->ReceiveCurrentStage(idStage);
 
-		sceneFilePath = ToLPCWSTR("Resources/Scene/scene1.txt");
-		Load();
-		break;
-	}
-	case STAGE_2_1:
-	{
-		idStage = STAGE_2_1;
-		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(STAGE_2_1, ToLPCWSTR("Resources/TileMap/TilesetStage2-1Text.txt"), STAGE2_1_ROWMAP, STAGE2_1_COLUMNMAP,
-			ToLPCWSTR("Resources/TileMap/TilesetStage2.png"), 4, 7);
-		player->ReceiveCurrentStage(idStage);
+	//	sceneFilePath = ToLPCWSTR("Resources/Scene/scene1.txt");
+	//	LoadSceneObjects();
+	//	break;
+	//}
+	//case STAGE_2_1:
+	//{
+	//	idStage = STAGE_2_1;
+	//	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+	//	map->LoadMap(STAGE_2_1, ToLPCWSTR("Resources/TileMap/TilesetStage2-1Text.txt"), STAGE2_1_ROWMAP, STAGE2_1_COLUMNMAP,
+	//		ToLPCWSTR("Resources/TileMap/TilesetStage2.png"), 4, 7);
+	//	player->ReceiveCurrentStage(idStage);
 
-		gameTime->ResetGameTime();	//Reset lai gameTime
+	//	gameTime->ResetGameTime();	//Reset lai gameTime
 
-		easterEgg_Stage2_1 = 0;
-		////Zombie Logic
-		//counterZombie = 0;
-		//isTimeToSpawnZombie = true;		//vua vao spawn luon
-		//triggerSpawnZombie = false;
-		////Bat Logic
-		//isTimeToSpawnBat = true;
-		//triggerSpawnBat = true;
+	//	easterEgg_Stage2_1 = 0;
+	//	////Zombie Logic
+	//	//counterZombie = 0;
+	//	//isTimeToSpawnZombie = true;		//vua vao spawn luon
+	//	//triggerSpawnZombie = false;
+	//	////Bat Logic
+	//	//isTimeToSpawnBat = true;
+	//	//triggerSpawnBat = true;
 
-		sceneFilePath = ToLPCWSTR("Resources/Scene/scene2_1.txt");
-		Load();
-		break;
-	}
-	case STAGE_2_2:
-	{
-		idStage = STAGE_2_2;
-		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(STAGE_2_2, ToLPCWSTR("Resources/TileMap/TilesetStage2-2Text.txt"), STAGE2_2_ROWMAP, STAGE2_2_COLUMNMAP,
-			ToLPCWSTR("Resources/TileMap/TilesetStage2.png"), 4, 7);
-		player->ReceiveCurrentStage(idStage);
+	//	sceneFilePath = ToLPCWSTR("Resources/Scene/scene2_1.txt");
+	//	LoadSceneObjects();
+	//	break;
+	//}
+	//case STAGE_2_2:
+	//{
+	//	idStage = STAGE_2_2;
+	//	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+	//	map->LoadMap(STAGE_2_2, ToLPCWSTR("Resources/TileMap/TilesetStage2-2Text.txt"), STAGE2_2_ROWMAP, STAGE2_2_COLUMNMAP,
+	//		ToLPCWSTR("Resources/TileMap/TilesetStage2.png"), 4, 7);
+	//	player->ReceiveCurrentStage(idStage);
 
-		gameTime->ResetGameTime();	//Reset lai gameTime
+	//	gameTime->ResetGameTime();	//Reset lai gameTime
 
-		easterEgg_Stage2_2 = 0;
+	//	easterEgg_Stage2_2 = 0;
 
-		sceneFilePath = ToLPCWSTR("Resources/Scene/scene2_2.txt");
-		Load();
-		break;
-	}
-	case STAGE_3_1:
-	{
-		idStage = STAGE_3_1;
-		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(STAGE_3_1, ToLPCWSTR("Resources/TileMap/TilesetStage3-1Text.txt"), STAGE3_1_ROWMAP, STAGE3_1_COLUMNMAP,
-			ToLPCWSTR("Resources/TileMap/TilesetStage3.png"), 5, 12);
-		player->ReceiveCurrentStage(idStage);
+	//	sceneFilePath = ToLPCWSTR("Resources/Scene/scene2_2.txt");
+	//	LoadSceneObjects();
+	//	break;
+	//}
+	//case STAGE_3_1:
+	//{
+	//	idStage = STAGE_3_1;
+	//	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+	//	map->LoadMap(STAGE_3_1, ToLPCWSTR("Resources/TileMap/TilesetStage3-1Text.txt"), STAGE3_1_ROWMAP, STAGE3_1_COLUMNMAP,
+	//		ToLPCWSTR("Resources/TileMap/TilesetStage3.png"), 5, 12);
+	//	player->ReceiveCurrentStage(idStage);
 
-		gameTime->ResetGameTime();	//Reset lai gameTime
+	//	gameTime->ResetGameTime();	//Reset lai gameTime
 
-		sceneFilePath = ToLPCWSTR("Resources/Scene/scene3_1.txt");
-		Load();
-		break;
-	}
-	case STAGE_3_2:
-	{
-		idStage = STAGE_3_2;
-		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(STAGE_3_2, ToLPCWSTR("Resources/TileMap/TilesetStage3-2Text.txt"), STAGE3_2_ROWMAP, STAGE3_2_COLUMNMAP,
-			ToLPCWSTR("Resources/TileMap/TilesetStage3.png"), 5, 12);
-		player->ReceiveCurrentStage(idStage);
+	//	sceneFilePath = ToLPCWSTR("Resources/Scene/scene3_1.txt");
+	//	LoadSceneObjects();
+	//	break;
+	//}
+	//case STAGE_3_2:
+	//{
+	//	idStage = STAGE_3_2;
+	//	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+	//	map->LoadMap(STAGE_3_2, ToLPCWSTR("Resources/TileMap/TilesetStage3-2Text.txt"), STAGE3_2_ROWMAP, STAGE3_2_COLUMNMAP,
+	//		ToLPCWSTR("Resources/TileMap/TilesetStage3.png"), 5, 12);
+	//	player->ReceiveCurrentStage(idStage);
 
-		gameTime->ResetGameTime();	//Reset lai gameTime
+	//	gameTime->ResetGameTime();	//Reset lai gameTime
 
-		sceneFilePath = ToLPCWSTR("Resources/Scene/scene3_2.txt");
-		Load();
-		break;
-	}
-	default:
-		break;
-	}
+	//	sceneFilePath = ToLPCWSTR("Resources/Scene/scene3_2.txt");
+	//	LoadSceneObjects();
+	//	break;
+	//}
+	//default:
+	//	break;
+	//}
+
+	idStage = whatMap;
+	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+	player->ReceiveCurrentStage(idStage);
+	gameTime->ResetGameTime();
+
+	int convertSimple = idStage / STAGE_1;
+	sceneFilePath = listSceneFilePath[convertSimple - 1];
+	LoadSceneObjects();
 }
 
 Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY)
@@ -1161,6 +1170,26 @@ void PlayScene::_ParseSection_ANIMATION_SETS(string line)
 	CAnimationSets::GetInstance()->Add(ani_set_id, s);
 }
 
+void PlayScene::_ParseSection_SCENEFILEPATH(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 1) return;
+
+	listSceneFilePath.push_back(ToLPCWSTR(tokens[0]));
+}
+
+void PlayScene::_ParseSection_TILEMAP(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 7) return;
+
+	map->LoadMap(atoi(tokens[0].c_str()), 
+		ToLPCWSTR(tokens[1]), atoi(tokens[2].c_str()), atoi(tokens[3].c_str()),
+		ToLPCWSTR(tokens[4]), atoi(tokens[5].c_str()), atoi(tokens[6].c_str()));
+}
+
 /*
 	Parse a line in section [OBJECTS]
 */
@@ -1247,15 +1276,6 @@ void PlayScene::LoadTextures()
 	ifstream f;
 	f.open(texturesFilePath);
 
-
-	/*if (f.fail())
-	{
-		DebugOut(L"[ERROR] LOAD ANISPRITETEXT FAIL : %s \n", sceneFilePath);
-		f.close();
-		return;
-	}*/
-
-
 	// current resource section flag
 	int section = SCENE_SECTION_UNKNOWN;
 
@@ -1276,6 +1296,9 @@ void PlayScene::LoadTextures()
 		if (line == "[ANIMATION_SETS]") {
 			section = SCENE_SECTION_ANIMATION_SETS; continue;
 		}
+		if (line == "[SCENE]") {
+			section = SCENE_SECTION_SCENEFILEPATH; continue;
+		}
 		
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
@@ -1288,19 +1311,18 @@ void PlayScene::LoadTextures()
 		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		case SCENE_SECTION_SCENEFILEPATH: _ParseSection_SCENEFILEPATH(line); break;
 		}
 	}
 
 	f.close();
 
-	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
-
 	DebugOut(L"[INFO] Done loading TEXTURES resources %s\n", texturesFilePath);
 }
 
-void PlayScene::Load()
+void PlayScene::LoadSceneObjects()
 {
-	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
+	DebugOut(L"[INFO] Start loading scene111 resources from : %s \n", sceneFilePath);
 
 	ifstream f;
 	f.open(sceneFilePath);
@@ -1318,6 +1340,9 @@ void PlayScene::Load()
 		if (line == "[OBJECTS]") {
 			section = SCENE_SECTION_OBJECTS; continue;
 		}
+		if (line == "[TILEMAP]") {
+			section = SCENE_SECTION_TILEMAP; continue;
+		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -1325,9 +1350,8 @@ void PlayScene::Load()
 		//
 		switch (section)
 		{
-		case SCENE_SECTION_OBJECTS:
-			_ParseSection_OBJECTS(line);
-			break;
+		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		case SCENE_SECTION_TILEMAP:	_ParseSection_TILEMAP(line); break;
 		}
 	}
 

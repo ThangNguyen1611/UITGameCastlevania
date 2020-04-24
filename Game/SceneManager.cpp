@@ -15,7 +15,7 @@ SceneManager::~SceneManager(){}
 
 void SceneManager::Load()
 {
-	currentScene->Load();
+	currentScene->LoadSceneObjects();
 }
 void SceneManager::Unload()
 {

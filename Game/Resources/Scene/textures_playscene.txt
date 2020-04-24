@@ -362,10 +362,10 @@
 105	147	100
 
 # FireEff
-106	160	150	161	150	162	150	163	150
+106	160	75	161	75	162	75	163	75
 
 # HitEff
-107	164	600	165	600
+107	164	300	165	300
 
 # BrickExplode
 108	166	120	167	120
@@ -497,3 +497,16 @@
 
 # Knight
 83	125
+
+
+[SCENE]
+#Stage1
+Resources/Scene/scene1.txt
+#Stage2_1
+Resources/Scene/scene2_1.txt
+#Stage2_2
+Resources/Scene/scene2_2.txt
+#Stage3_1
+Resources/Scene/scene3_1.txt
+#Stage3_2
+Resources/Scene/scene3_2.txt

@@ -17,7 +17,7 @@ void Fire::Update(DWORD dt)
 	{
 		return;
 	}
-	if (animationSet->at(0)->IsRenderOver(FIRE_BURN_DISPLAY))
+	if (animationSet->at(0)->IsRenderOver(FIRE_BURN_DISPLAY*2))
 	{
 		isDone = true;
 	}

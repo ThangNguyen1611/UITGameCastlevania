@@ -13,7 +13,7 @@ public:
 	Scene();
 
 	KeyboardHandler * GetKeyEventHandler() { return keyHandler; }
-	virtual void Load() = 0;
+	virtual void LoadSceneObjects() = 0;
 	virtual void Unload() = 0;
 	virtual void Update(DWORD dt) = 0;
 	virtual void Render() = 0;
