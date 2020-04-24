@@ -864,6 +864,10 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 					{
 						simon->SetPosition(304, 200);
 					}
+					else
+					{
+						simon->SetPosition(304, 200);
+					}
 
 		simon->SetVx(0);
 		simon->SetVy(0);
@@ -1184,6 +1188,14 @@ void PlayScene::_ParseSection_TILEMAP(string line)
 	vector<string> tokens = split(line);
 
 	if (tokens.size() < 7) return;
+
+	//idStage
+	//mapFilePath
+	//Row of Map
+	//Column of Map
+	//tilesetFilePath
+	//Row of Tileset
+	//Column of Tileset
 
 	map->LoadMap(atoi(tokens[0].c_str()), 
 		ToLPCWSTR(tokens[1]), atoi(tokens[2].c_str()), atoi(tokens[3].c_str()),

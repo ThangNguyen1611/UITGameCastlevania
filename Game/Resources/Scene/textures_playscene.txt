@@ -510,3 +510,6 @@ Resources/Scene/scene2_2.txt
 Resources/Scene/scene3_1.txt
 #Stage3_2
 Resources/Scene/scene3_2.txt
+#Test
+Resources/Scene/scene1.txt
+Resources/Scene/scene3_1.txt
