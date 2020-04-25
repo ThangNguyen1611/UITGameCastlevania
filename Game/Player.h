@@ -66,6 +66,9 @@
 
 class Player : public Entity
 {
+	int mana;
+	int live;
+	int score;
 	bool isWalking,
 		isJumping,
 		isAllowJump,
@@ -105,6 +108,15 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *colliable_objects = NULL);
 	void Render();
 	void SetState(int state);
+
+	int GetMana() { return mana; }
+	void AddMana(int BonusMana) { mana += BonusMana; }
+
+	int GetScore() { return score; }
+	void AddScore(int BonusScore) { score += BonusScore; }
+
+	int GetLive() { return live; }
+	void AddLive(int BonusLive) { live += BonusLive; }
 
 	void Attack(EntityType weaponType);	
 	bool IsWalking() { return isWalking; }

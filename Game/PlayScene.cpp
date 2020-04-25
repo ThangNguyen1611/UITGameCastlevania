@@ -1,20 +1,5 @@
 #include "PlayScene.h"
 
-#define STAGE1_ROWMAP			12
-#define STAGE1_COLUMNMAP		48
-
-#define STAGE2_1_ROWMAP			12
-#define STAGE2_1_COLUMNMAP		17
-
-#define STAGE2_2_ROWMAP			12
-#define STAGE2_2_COLUMNMAP		33
-
-#define STAGE3_1_ROWMAP			12
-#define STAGE3_1_COLUMNMAP		48
-
-#define STAGE3_2_ROWMAP			12
-#define STAGE3_2_COLUMNMAP		48
-
 PlayScene::PlayScene() : Scene()
 {
 	keyHandler = new PlayScenceKeyHandler(this);
@@ -39,97 +24,30 @@ void PlayScene::LoadBaseObjects()
 }
 
 void PlayScene::ChooseMap(int whatMap)	
-//Muc dich chinh ham nay la chon ra sceneFilePath can thiet, co the kh dung ham nay ma tao if else o ham LoadSceneObjects cung duoc
 {
-	//switch (whatMap)
-	//{
-	//case STAGE_1:
-	//{
-	//	idStage = STAGE_1;
-	//	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-	//	map->LoadMap(STAGE_1, ToLPCWSTR("Resources/TileMap/TilesetStage1Text.txt"), STAGE1_ROWMAP, STAGE1_COLUMNMAP, 
-	//		ToLPCWSTR("Resources/TileMap/TilesetStage1.png"), 4, 17);
-	//	player->ReceiveCurrentStage(idStage);
-
-	//	sceneFilePath = ToLPCWSTR("Resources/Scene/scene1.txt");
-	//	LoadSceneObjects();
-	//	break;
-	//}
-	//case STAGE_2_1:
-	//{
-	//	idStage = STAGE_2_1;
-	//	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-	//	map->LoadMap(STAGE_2_1, ToLPCWSTR("Resources/TileMap/TilesetStage2-1Text.txt"), STAGE2_1_ROWMAP, STAGE2_1_COLUMNMAP,
-	//		ToLPCWSTR("Resources/TileMap/TilesetStage2.png"), 4, 7);
-	//	player->ReceiveCurrentStage(idStage);
-
-	//	gameTime->ResetGameTime();	//Reset lai gameTime
-
-	//	easterEgg_Stage2_1 = 0;
-	//	////Zombie Logic
-	//	//counterZombie = 0;
-	//	//isTimeToSpawnZombie = true;		//vua vao spawn luon
-	//	//triggerSpawnZombie = false;
-	//	////Bat Logic
-	//	//isTimeToSpawnBat = true;
-	//	//triggerSpawnBat = true;
-
-	//	sceneFilePath = ToLPCWSTR("Resources/Scene/scene2_1.txt");
-	//	LoadSceneObjects();
-	//	break;
-	//}
-	//case STAGE_2_2:
-	//{
-	//	idStage = STAGE_2_2;
-	//	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-	//	map->LoadMap(STAGE_2_2, ToLPCWSTR("Resources/TileMap/TilesetStage2-2Text.txt"), STAGE2_2_ROWMAP, STAGE2_2_COLUMNMAP,
-	//		ToLPCWSTR("Resources/TileMap/TilesetStage2.png"), 4, 7);
-	//	player->ReceiveCurrentStage(idStage);
-
-	//	gameTime->ResetGameTime();	//Reset lai gameTime
-
-	//	easterEgg_Stage2_2 = 0;
-
-	//	sceneFilePath = ToLPCWSTR("Resources/Scene/scene2_2.txt");
-	//	LoadSceneObjects();
-	//	break;
-	//}
-	//case STAGE_3_1:
-	//{
-	//	idStage = STAGE_3_1;
-	//	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-	//	map->LoadMap(STAGE_3_1, ToLPCWSTR("Resources/TileMap/TilesetStage3-1Text.txt"), STAGE3_1_ROWMAP, STAGE3_1_COLUMNMAP,
-	//		ToLPCWSTR("Resources/TileMap/TilesetStage3.png"), 5, 12);
-	//	player->ReceiveCurrentStage(idStage);
-
-	//	gameTime->ResetGameTime();	//Reset lai gameTime
-
-	//	sceneFilePath = ToLPCWSTR("Resources/Scene/scene3_1.txt");
-	//	LoadSceneObjects();
-	//	break;
-	//}
-	//case STAGE_3_2:
-	//{
-	//	idStage = STAGE_3_2;
-	//	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-	//	map->LoadMap(STAGE_3_2, ToLPCWSTR("Resources/TileMap/TilesetStage3-2Text.txt"), STAGE3_2_ROWMAP, STAGE3_2_COLUMNMAP,
-	//		ToLPCWSTR("Resources/TileMap/TilesetStage3.png"), 5, 12);
-	//	player->ReceiveCurrentStage(idStage);
-
-	//	gameTime->ResetGameTime();	//Reset lai gameTime
-
-	//	sceneFilePath = ToLPCWSTR("Resources/Scene/scene3_2.txt");
-	//	LoadSceneObjects();
-	//	break;
-	//}
-	//default:
-	//	break;
-	//}
-
 	idStage = whatMap;
 	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
 	player->ReceiveCurrentStage(idStage);
 	gameTime->ResetGameTime();
+
+	switch (idStage)
+	{
+	case STAGE_2_1:
+		easterEgg_Stage2_1 = 0;
+		////Zombie Logic
+		//counterZombie = 0;
+		//isTimeToSpawnZombie = true;		//vua vao spawn luon
+		//triggerSpawnZombie = false;
+		////Bat Logic
+		//isTimeToSpawnBat = true;
+		//triggerSpawnBat = true;
+		break;
+	case STAGE_2_2:
+		easterEgg_Stage2_2 = 0;
+		break;
+	default:
+		break;
+	}
 
 	int convertSimple = idStage / STAGE_1;
 	sceneFilePath = listSceneFilePath[convertSimple - 1];
@@ -270,6 +188,7 @@ void PlayScene::WeaponInteractObj(UINT i, bool isMainWeapon)
 			player->AddScore(500);
 			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		}
+		//Add Heart(-1) nen thay the bang damage cua weapon
 		listObjects[i]->AddHealth(-1);
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));

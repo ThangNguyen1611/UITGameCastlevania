@@ -6,7 +6,7 @@ Hit::Hit(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 	isDone = false;
-	animationSet->at(0)->StartAnimation();
+	animationSet->at(0)->StartAnimation(SPARKLE_DISPLAY * 2);
 }
 
 Hit::~Hit(){}
@@ -17,7 +17,7 @@ void Hit::Update(DWORD dt)
 	{
 		return;
 	}
-	if (animationSet->at(0)->IsRenderOver(SPARKLE_DISPLAY*2))
+	if (animationSet->at(0)->IsRenderOver())
 	{
 		isDone = true;
 	}

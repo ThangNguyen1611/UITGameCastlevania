@@ -6,7 +6,7 @@ Fire::Fire(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 	isDone = false;
-	animationSet->at(0)->StartAnimation();
+	animationSet->at(0)->StartAnimation(FIRE_BURN_DISPLAY * 2);
 }
 
 Fire::~Fire() {}
@@ -17,7 +17,7 @@ void Fire::Update(DWORD dt)
 	{
 		return;
 	}
-	if (animationSet->at(0)->IsRenderOver(FIRE_BURN_DISPLAY*2))
+	if (animationSet->at(0)->IsRenderOver())
 	{
 		isDone = true;
 	}

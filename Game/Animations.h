@@ -1,5 +1,6 @@
 #pragma once
 #include "Sprites.h"
+#include "Timer.h"
 
 class CAnimationFrame
 {
@@ -16,7 +17,7 @@ typedef CAnimationFrame *LPANIMATION_FRAME;
 
 class CAnimation
 {
-	DWORD startFrameTime;
+	Timer* animationTimer;
 	DWORD lastFrameTime;
 	int defaultTime;
 	int currentFrame;
@@ -29,8 +30,8 @@ public:
 	LPANIMATION_FRAME GetAnimationCurrentFrame(int id) { return frames[id]; }
 	void ResetCurrentFrame() { currentFrame = -1; }
 	int GetCurrentFrame() { return currentFrame; }
-	void StartAnimation() { startFrameTime = GetTickCount(); }
-	bool IsRenderOver(DWORD a);
+	void StartAnimation(int limitTime = -1);
+	bool IsRenderOver();
 };
 
 typedef CAnimation *LPANIMATION;

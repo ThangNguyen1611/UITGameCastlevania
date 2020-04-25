@@ -136,6 +136,10 @@ void IntroScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_ESCAPE:
 		DestroyWindow(Game::GetInstance()->GetWindowHandle());
 		break;
+	/*case DIK_I:
+		((IntroScene*)scence)->Unload();
+		SceneManager::GetInstance()->SetScene(new PlayScene());
+		break;*/
 	}
 }
 

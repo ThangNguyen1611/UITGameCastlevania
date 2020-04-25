@@ -40,9 +40,6 @@ protected:
 	int direction;	//-1 left && 1 right
 	EntityType tag;
 	int health;
-	int mana;
-	int live;
-	int score;
 	bool isDead;
 	LPANIMATION_SET animationSet;
 
@@ -65,15 +62,6 @@ public:
 
 	int GetHealth() { return health; }
 	void AddHealth(int BonusHealth) { health += BonusHealth; }
-
-	int GetMana() { return mana; }
-	void AddMana(int BonusMana) { mana += BonusMana; }
-
-	int GetScore() { return score; }
-	void AddScore(int BonusScore) { score += BonusScore; }
-
-	int GetLive() { return live; }
-	void AddLive(int BonusLive) { live += BonusLive; }
 
 	bool IsDeadYet() { return isDead; }
 	void SetDirection(int d) { direction = d; }

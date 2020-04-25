@@ -35,14 +35,33 @@ void CAnimation::Render(int direction, float x, float y, int alpha)
 	frames[currentFrame]->GetSprite()->Draw(direction, x, y, alpha);
 }
 
-bool CAnimation::IsRenderOver(DWORD a)
+void CAnimation::StartAnimation(int limitTime)
 {
-	if (GetTickCount() - startFrameTime >= a)
+	int timerLimitTime = 0;
+	if (limitTime == -1)
 	{
-		return true;
+		for (int i = 0; i < frames.size(); i++)
+		{
+			timerLimitTime += frames[i]->GetTime();
+		}
 	}
 	else
-		return false;
+	{
+		timerLimitTime = limitTime;
+	}
+
+	animationTimer = new Timer(timerLimitTime);
+	animationTimer->Start();
+}
+
+bool CAnimation::IsRenderOver()
+{
+	bool b = animationTimer->IsTimeUp();
+	if (b)
+	{
+		animationTimer->Reset();
+	}
+	return b;
 }
 
 CAnimations * CAnimations::__instance = NULL;

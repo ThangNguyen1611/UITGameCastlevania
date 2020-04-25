@@ -102,10 +102,10 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		}
 	}
 
-	if ((state == PLAYER_STATE_ATTACK && animationSet->at(PLAYER_STATE_ATTACK)->IsRenderOver(PLAYER_ATTACKING_DELAY * 3)) ||
-		(state == PLAYER_STATE_SUPWEAPON_ATTACK && animationSet->at(PLAYER_STATE_SUPWEAPON_ATTACK)->IsRenderOver(PLAYER_ATTACKING_DELAY * 3)) ||
-		(state == PLAYER_STATE_SITTING_ATTACK && animationSet->at(PLAYER_STATE_SITTING_ATTACK)->IsRenderOver(PLAYER_ATTACKING_DELAY * 3)) ||
-		(state == PLAYER_STATE_SUPWEAPON_SIT_ATTACK && animationSet->at(PLAYER_STATE_SUPWEAPON_SIT_ATTACK)->IsRenderOver(PLAYER_ATTACKING_DELAY * 3)))
+	if ((state == PLAYER_STATE_ATTACK && animationSet->at(PLAYER_STATE_ATTACK)->IsRenderOver()) ||
+		(state == PLAYER_STATE_SUPWEAPON_ATTACK && animationSet->at(PLAYER_STATE_SUPWEAPON_ATTACK)->IsRenderOver()) ||
+		(state == PLAYER_STATE_SITTING_ATTACK && animationSet->at(PLAYER_STATE_SITTING_ATTACK)->IsRenderOver()) ||
+		(state == PLAYER_STATE_SUPWEAPON_SIT_ATTACK && animationSet->at(PLAYER_STATE_SUPWEAPON_SIT_ATTACK)->IsRenderOver()))
 	{
 		isAttacking = false;
 	}

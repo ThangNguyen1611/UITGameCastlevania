@@ -4,6 +4,7 @@
 class MorningStar : public Weapon
 {
 	int level;
+	bool isDidDamage;
 public:
 	MorningStar();
 	~MorningStar();
