@@ -11,6 +11,7 @@ ItemBoomerang::ItemBoomerang(float posX, float posY)
 	vY = ITEMBOOMERANG_GRAVITY;
 	displayTimer = new Timer(ITEMBOOMERANG_TIMEDISPLAYMAX);
 	displayTimer->Start();
+	delayLimit = ITEMBOOMERANG_TIMEDELAYMAX;
 }
 
 ItemBoomerang::~ItemBoomerang() {}

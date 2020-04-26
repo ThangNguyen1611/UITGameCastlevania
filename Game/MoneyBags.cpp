@@ -11,13 +11,14 @@ MoneyBags::MoneyBags(float posX, float posY, EntityType typeBag)
 	vY = BAGS_GRAVITY;
 	displayTimer = new Timer(BAGS_TIMEDISPLAYMAX);
 	displayTimer->Start();
+	delayLimit = BAGS_TIMEDELAYMAX;
 }
 
 MoneyBags::~MoneyBags(){}
 
 void MoneyBags::Render()
 {
-	if (isDone)
+	if (isDone || delayStart <= delayLimit)
 		return;
 	//khong dung lai Item::Render do muon return som tai day 
 	switch (tag)

@@ -11,6 +11,7 @@ BigHeart::BigHeart(float posX, float posY)
 	vY = BIGHEART_GRAVITY;
 	displayTimer = new Timer(BIGHEART_TIMEDISPLAYMAX);
 	displayTimer->Start();
+	delayLimit = BIGHERAT_TIMEDELAYMAX;
 }
 
 BigHeart::~BigHeart(){}

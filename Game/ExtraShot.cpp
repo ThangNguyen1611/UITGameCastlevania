@@ -11,6 +11,7 @@ ExtraShot::ExtraShot(float posX, float posY, int type)
 	vY = EXTRASHOT_GRAVITY;
 	displayTimer = new Timer(EXTRASHOT_TIMEDISPLAYMAX);
 	displayTimer->Start();
+	delayLimit = EXTRASHOT_TIMEDELAYMAX;
 }
 
 ExtraShot::~ExtraShot() {}

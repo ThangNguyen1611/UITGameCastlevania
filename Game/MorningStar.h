@@ -13,7 +13,7 @@ public:
 	void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects = NULL);
 	void Render();
 
-	void Attack(float posX, float posY, int direction);
+	void Attack(float posX, int direction);
 	void ArticulatedPlayerPos(bool isSitting = false);
 
 	bool IsCollidingObject(Entity* Obj);

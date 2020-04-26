@@ -6,6 +6,7 @@
 #define SMALLHEART_AMPLITUDE_VERTICAL	30.0f	
 
 #define SMALLHEART_TIMEDISPLAYMAX		4500
+#define SMALLHEART_TIMEDELAYMAX			600
 
 class SmallHeart : public Item
 {

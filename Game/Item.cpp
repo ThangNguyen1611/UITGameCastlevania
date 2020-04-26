@@ -3,6 +3,8 @@
 Item::Item() 
 {
 	isDone = false;
+	//finishedDelay = false;
+	delayStart = 0;
 }
 
 Item::~Item(){}
@@ -10,6 +12,16 @@ Item::~Item(){}
 void Item::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
 	if (isDone) return;
+	/*if (!finishedDelay && delayTimer->IsTimeUp())
+	{
+		displayTimer->Start();
+		finishedDelay = true;
+	}*/
+	delayStart += dt;
+	if (delayStart <= delayLimit)
+	{
+		return;
+	}
 	if (!isDone && displayTimer->IsTimeUp())
 	{
 		isDone = true;
@@ -54,7 +66,7 @@ void Item::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 void Item::Render()
 {
-	if (isDone)
+	if (isDone || delayStart <= delayLimit)
 		return;
 
 	animationSet->at(0)->Render(-direction, posX, posY);

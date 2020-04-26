@@ -4,6 +4,7 @@
 #define UPGRADEMS_GRAVITY				0.03f
 
 #define UPGRADEMS_TIMEDISPLAYMAX		4500
+#define UPGRADEMS_TIMEDELAYMAX			600
 
 class UpgradeMorningStar : public Item
 {

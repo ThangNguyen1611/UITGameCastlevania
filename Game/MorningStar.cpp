@@ -14,7 +14,10 @@ void MorningStar::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	Weapon::Update(dt);
 
 	if (animationSet->at(level - 1)->GetCurrentFrame() == 3)
+	{
+		isDidDamage = false;
 		isDone = true;
+	}
 }
 
 void MorningStar::Render()
@@ -60,9 +63,9 @@ void MorningStar::GetBoundingBox(float &left, float &top, float &right, float &b
 	bottom = posY + 68 - 40;
 }
 
-void MorningStar::Attack(float posX, float posY, int direction)
+void MorningStar::Attack(float posX, int direction)
 {
-	Weapon::Attack(posX, posY, direction);
+	Weapon::Attack(posX, direction);
 	animationSet->at(level - 1)->ResetCurrentFrame();
 	animationSet->at(level - 1)->StartAnimation();
 }

@@ -3,17 +3,17 @@
 Weapon::Weapon() 
 {
 	isDone = true;
+	isReceivedPos = true;
+	isDidDamage = false;
 }
 
 Weapon::~Weapon(){}
 
-void Weapon::Attack(float posX, float posY, int direction)
+void Weapon::Attack(float posX, int direction)
 {
 	//su dung bien isDone nhu khi lam projectiles
 	//isDone khi chua danh la true, duoc danh la false
 	isDone = false;
-	this->posX = posX;
-	this->posY = posY;
 	this->direction = direction;
 }
 

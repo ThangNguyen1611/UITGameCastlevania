@@ -12,7 +12,7 @@ Player::Player(float posX, float posY)
 	this->SetState(PLAYER_STATE_IDLE);
 
 	health = PLAYER_MAXHEALTH;
-	mana = 5;
+	mana = 555;
 	score = 0;
 	live = 3;
 	isDead = false;
@@ -108,6 +108,12 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		(state == PLAYER_STATE_SUPWEAPON_SIT_ATTACK && animationSet->at(PLAYER_STATE_SUPWEAPON_SIT_ATTACK)->IsRenderOver()))
 	{
 		isAttacking = false;
+	}
+
+	if (!isAttacking)
+	{
+		if (isJumping)
+			SetState(PLAYER_STATE_JUMP);
 	}
 	
 
@@ -272,7 +278,6 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	if (!mainWeapon->GetIsDone())
 	{
 		mainWeapon->SetPosition(posX, posY);				//Update pos per player::update
-		//mainWeapon->SetSpeed(vX, vY);					//Collision
 		mainWeapon->ArticulatedPlayerPos(isSitting);		//Fixing weapon pos
 		mainWeapon->Update(dt, coObjects);
 	}
@@ -280,6 +285,11 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if (!supWeapon->GetIsDone())
 		{
+			if (!supWeapon->GetIsReceivedPos())
+			{
+				supWeapon->SetPosition(posX, posY);
+				supWeapon->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
+			}
 			supWeapon->Update(dt, coObjects);
 		}
 	}
@@ -500,7 +510,7 @@ void Player::Attack(EntityType weaponType)
 		if (mainWeapon->GetIsDone())
 		{
 			isAttacking = true;
-			mainWeapon->Attack(posX, posY, direction);
+			mainWeapon->Attack(posX, direction);
 		}
 		break; 
 	}
@@ -512,7 +522,7 @@ void Player::Attack(EntityType weaponType)
 			{
 				AddMana(-1);
 				isAttacking = true;
-				supWeapon->Attack(posX, posY, direction);
+				supWeapon->Attack(posX, direction);
 			}
 		}
 		break;
@@ -525,7 +535,7 @@ void Player::Attack(EntityType weaponType)
 			{
 				AddMana(-1);
 				isAttacking = true;
-				supWeapon->Attack(posX, posY, direction);
+				supWeapon->Attack(posX, direction);
 			}
 		}
 		break;

@@ -10,6 +10,10 @@ class Item : public Entity
 protected:
 	bool isDone;
 	Timer* displayTimer;
+	//bool finishedDelay;
+	//Timer* delayTimer;
+	DWORD delayStart;
+	DWORD delayLimit;
 public:
 	Item();
 	~Item();

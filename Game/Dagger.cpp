@@ -16,6 +16,7 @@ void Dagger::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	timeDelayed += dt;
 	if (timeDelayed <= timeDelayMax)
 	{
+		isReceivedPos = false;
 		return;
 	}
 	if (CheckIsOutCamera(ownerPosX))
@@ -27,9 +28,9 @@ void Dagger::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	posX += dx;
 }
 
-void Dagger::Attack(float posX, float posY, int direction)
+void Dagger::Attack(float posX, int direction)
 {
-	Weapon::Attack(posX, posY, direction);
+	Weapon::Attack(posX, direction);
 	ownerPosX = posX;
 	this->posY -= 8;	//Fit Simon Hand
 	vX = DAGGER_SPEED_X * this->direction;
@@ -62,12 +63,12 @@ bool Dagger::CheckIsOutCamera(float posX)
 {
 	if (vX > 0)	//Walking Right
 	{
-		if (this->posX - posX >= (SCREEN_WIDTH / 2))
+		if (this->posX - posX >= (SCREEN_WIDTH * 0.75))
 			return true;
 	}
 	else if (vX < 0)
 	{
-		if (posX - this->posX >= (SCREEN_WIDTH / 2))
+		if (posX - this->posX >= (SCREEN_WIDTH * 0.75))
 			return true;
 	}
 	return false;

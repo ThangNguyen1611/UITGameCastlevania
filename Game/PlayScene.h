@@ -112,7 +112,7 @@ public:
 
 	Effect* CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY);
 	Item* DropItem(EntityType createrType, float posX, float posY, int idCreater = 0);
-	void WeaponInteractObj(UINT i, bool isMainWeapon);
+	void WeaponInteractObj(UINT i, Weapon* weapon);
 	void WeaponCollision();
 	void PlayerCollideItem();
 	void CheckObjAlive();

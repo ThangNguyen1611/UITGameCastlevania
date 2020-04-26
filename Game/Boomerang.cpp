@@ -9,6 +9,8 @@ Boomerang::Boomerang(LPGAMEENTITY owner)
 	timeDelayMax = MAX_BOOMERANG_DELAY;
 
 	this->owner = owner;
+	isDidDamageTurn1 = false;
+	isDidDamageTurn2 = false;
 }
 
 Boomerang::~Boomerang() {}
@@ -18,6 +20,7 @@ void Boomerang::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	timeDelayed += dt;
 	if (timeDelayed <= timeDelayMax)
 	{
+		isReceivedPos = false;
 		return;
 	}
 	
@@ -41,9 +44,9 @@ void Boomerang::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 }
 
-void Boomerang::Attack(float posX, float posY, int direction)
+void Boomerang::Attack(float posX, int direction)
 {
-	Weapon::Attack(posX, posY, direction);
+	Weapon::Attack(posX, direction);
 	ownerPosX = posX;
 	ownerDirection = direction;
 	this->posY -= 8;	//Fit Simon Hand

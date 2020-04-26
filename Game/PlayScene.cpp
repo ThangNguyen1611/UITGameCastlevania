@@ -71,7 +71,7 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 	int bagrandom = rand() % 100;
 	if (createrType == EntityType::NONE)		//special case
 	{
-		if(idStage == STAGE_2_1)
+		if (idStage == STAGE_2_1)
 			return new Crown(posX, posY);
 		else
 			if (idStage == STAGE_2_2)
@@ -84,13 +84,13 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 		{
 			return new BigHeart(posX, posY);
 		}
-		else 
-			if (idCreater == 2) 
+		else
+			if (idCreater == 2)
 			{
 				return new UpgradeMorningStar(posX, posY);
 			}
-			else 
-				if (idCreater == 3) 
+			else
+				if (idCreater == 3)
 				{
 					return new ItemDagger(posX, posY);
 				}
@@ -145,38 +145,38 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 				}
 			}
 		}
-	else 
-		if (createrType == EntityType::ZOMBIE || createrType == EntityType::KNIGHT || createrType == EntityType::DARKENBAT)
-	{
-		int random = rand() % 1000;
-		if (random <= 200)
-			return new SmallHeart(posX, posY);
-		else if (200 < random && random <= 400)
-			return new BigHeart(posX, posY);
-		else if (400 < random && random <= 600)
-			return new YummiChickenLeg(posX, posY);
-		else if (600 < random && random <= 800)
-			return new UpgradeMorningStar(posX, posY);
 		else
-		{
-			if (bagrandom <= 33)
-				return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
-			else if (33 < bagrandom && bagrandom <= 66)
-				return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
+			if (createrType == EntityType::KNIGHT)
+			{
+				int random = rand() % 1000;
+				if (random <= 200)
+					return new SmallHeart(posX, posY);
+				else if (200 < random && random <= 400)
+					return new BigHeart(posX, posY);
+				else if (400 < random && random <= 600)
+					return new YummiChickenLeg(posX, posY);
+				else if (600 < random && random <= 800)
+					return new UpgradeMorningStar(posX, posY);
+				else
+				{
+					if (bagrandom <= 33)
+						return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
+					else if (33 < bagrandom && bagrandom <= 66)
+						return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
+					else
+						return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
+				}
+			}
 			else
-				return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
-		}
-	}
-	else
-		if (createrType == EntityType::BAT)
-		{
-			return new ItemDagger(posX, posY);
-		}
-		else
-			return new BigHeart(posX, posY);
+				if (createrType == EntityType::DARKENBAT)
+				{
+					return new ItemBoomerang(posX, posY);
+				}
+				else
+					return new BigHeart(posX, posY);
 }
 
-void PlayScene::WeaponInteractObj(UINT i, bool isMainWeapon)
+void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 {
 	//Co 1 phuong an de delay DropItem la trigger Start timer o day, o update thi lien tuc check timer de push
 	//Van de la timer co hoat dong dung khong khi giet nhieu target 1 luc ?	//Phuong an la dat timer trong class cua item
@@ -227,7 +227,28 @@ void PlayScene::WeaponInteractObj(UINT i, bool isMainWeapon)
 			player->AddScore(200);
 			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		}
-		listObjects[i]->AddHealth(-1);
+
+		if (weapon->GetType() ==  EntityType::BOOMERANG)
+		{
+			Boomerang* bmr = dynamic_cast<Boomerang*>(player->GetPlayerSupWeapon());
+			if (!bmr->GetIsDidDamageTurn1() && bmr->GetOwnerDirection() == bmr->GetDirection())
+			{
+				listObjects[i]->AddHealth(-1);
+				bmr->SetIsDidDamageTurn1(true);
+			}
+			if (!bmr->GetIsDidDamageTurn2() && bmr->GetOwnerDirection() != bmr->GetDirection())
+			{
+				listObjects[i]->AddHealth(-1);
+				bmr->SetIsDidDamageTurn2(true);
+			}
+		}
+		else
+			//if (!weapon->GetIsDidDamage())
+			//{
+				listObjects[i]->AddHealth(-1);
+			//	weapon->SetIsDidDamage(true);
+			//}
+
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		break;
@@ -251,7 +272,7 @@ void PlayScene::WeaponInteractObj(UINT i, bool isMainWeapon)
 	}
 	case EntityType::BREAKABLEBRICK:
 	{
-		if (isMainWeapon)
+		if (weapon->GetType() == EntityType::MORNINGSTAR)
 		{
 			if (idStage == STAGE_2_1)
 			{
@@ -300,13 +321,13 @@ void PlayScene::WeaponCollision()
 		{
 			if (player->GetPlayerMainWeapon()->IsCollidingObject(listObjects[i]))	//Main weapon va cham voi obj
 			{
-				WeaponInteractObj(i, true);
+				WeaponInteractObj(i, player->GetPlayerMainWeapon());
 			}
 			else
 				if (player->GetPlayerSupWeapon() != NULL //Dong nay de dam bao dong ben duoi khong bi break
 					&& player->GetPlayerSupWeapon()->IsCollidingObject(listObjects[i]))
 				{
-					WeaponInteractObj(i, false);
+					WeaponInteractObj(i, player->GetPlayerSupWeapon());
 					SetSubWeaponDone(i);
 				}
 		}

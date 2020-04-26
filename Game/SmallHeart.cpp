@@ -11,6 +11,7 @@ SmallHeart::SmallHeart(float posX, float posY)
 
 	displayTimer = new Timer(SMALLHEART_TIMEDISPLAYMAX);
 	displayTimer->Start();
+	delayLimit = SMALLHEART_TIMEDELAYMAX;
 	//Dat vX o day de vi kh co state va co the dung yen khi gap mat dat
 	vX = SMALLHEART_SPEED_X * direction;
 }
@@ -20,6 +21,16 @@ SmallHeart::~SmallHeart(){}
 void SmallHeart::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
 	if (isDone) return;
+	/*if (!finishedDelay && delayTimer->IsTimeUp())
+	{
+		displayTimer->Start();
+		finishedDelay = true;
+	}*/
+	delayStart += dt;
+	if (delayStart <= delayLimit)
+	{
+		return;
+	}
 	if (!isDone && displayTimer->IsTimeUp())
 	{
 		isDone = true;

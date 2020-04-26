@@ -10,6 +10,7 @@ Crown::Crown(float posX, float posY)
 
 	displayTimer = new Timer(CROWN_TIMEDISPLAYMAX);
 	displayTimer->Start();
+	delayLimit = CROWN_TIMEDELAYMAX;
 	isShowDone = false;
 }
 
@@ -20,6 +21,16 @@ void Crown::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	//Do kha nang moc. tu dat' len nen khong the dung lai item::update
 
 	if (isDone) return;
+	/*if (!finishedDelay && delayTimer->IsTimeUp())
+	{
+		displayTimer->Start();
+		finishedDelay = true;
+	}*/
+	delayStart += dt;
+	if (delayStart <= delayLimit)
+	{
+		return;
+	}
 	if (!isDone && displayTimer->IsTimeUp())
 	{
 		isDone = true;
