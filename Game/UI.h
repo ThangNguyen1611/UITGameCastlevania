@@ -21,6 +21,7 @@ class UI
 	Text text;
 	HealthBar* playerHB;
 	HealthBar* bossHB;
+	LPSPRITE UIExtraShot;
 	LPANIMATION_SET playerSubWeaponAnimationSet;
 public:
 	UI(int initPlayerHealth = 16, int initBossHealth = 16);

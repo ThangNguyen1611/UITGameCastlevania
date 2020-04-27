@@ -70,7 +70,6 @@ void Item::Render()
 		return;
 
 	animationSet->at(0)->Render(-direction, posX, posY);
-	//sprite->Draw(posX, posY);
 
 	RenderBoundingBox();
 }

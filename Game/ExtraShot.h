@@ -13,6 +13,8 @@ public:
 	ExtraShot(float posX, float posY, int type);
 	~ExtraShot();
 
+	void Render();
+
 	int GetTypeExtra() { return typeExtraShot; }
 };
 

@@ -53,16 +53,15 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	if (!isWalking && !isJumping)	//Attack tren mat dat thi dung yen, attack khi dang jump thi di chuyen duoc
 	{
 		vX = 0;
-		//old explain: state_walking: jump false already, transfer to state_attack: walking false too -> vX = 0
-		//		  state_jumping: jump true, transfer to state_attack: jump false but posY != 375 -> jump true -> vX != 0
-		//update explain: state_walking: jump false (collision with brick), transfer to state_attack: walking false too -> vX = 0
-		//				state_jumping: jump true (until collision with brick) -> vX != 0
+		//explain: state_walking: jump false (collision with brick), transfer to state_attack: walking false too -> vX = 0
+		//		   state_jumping: jump true (until collision with brick) -> vX != 0
 	}
 
 #pragma region Timer
 	if (isHurting && hurtingTimer->IsTimeUp()) 
 	{
-		SetState(PLAYER_STATE_IDLE);
+		if(!isRespawning)	//1 bug khi bi hurt -> respawn se duoc idle som hon du kien
+			SetState(PLAYER_STATE_IDLE);
 		isHurting = false;
 		hurtingTimer->Reset();
 	}
@@ -73,7 +72,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	if (isUpgrading && upgradeTimer->IsTimeUp()) 
 	{
-		SetState(PLAYER_STATE_IDLE);
+		if (!isRespawning)
+			SetState(PLAYER_STATE_IDLE);
 		isUpgrading = false;
 		upgradeTimer->Reset();
 	}
@@ -127,6 +127,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	if (posX <= 15)	//Not go out
 		posX = 15;
+	if (currentStageLiving == STAGE_3_1 && posX >= 1510)
+		posX = 1510;
 
 #pragma region Collide Logic
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -379,7 +381,7 @@ void Player::SetState(int state)
 	switch (state)
 	{
 	case PLAYER_STATE_DIE:	//Undone
-		isDead = true;
+		//isDead = true;
 		vX = 0;
 		vY = 0;
 		break;

@@ -26,6 +26,17 @@ void UI::Render(int currentStage, int remainingTime, Player* playerInfo)
 	playerHB->Render();
 	bossHB->Render();
 
+	if (playerInfo->IsGettingDouble())
+	{
+		UIExtraShot = CSprites::GetInstance()->Get(95);
+		UIExtraShot->Draw(-1, this->posX + 210, this->posY + 12);
+	}
+	else if (playerInfo->IsGettingTriple())
+	{
+		UIExtraShot = CSprites::GetInstance()->Get(96);
+		UIExtraShot->Draw(-1, this->posX + 210, this->posY + 12);
+	}
+
 	if (playerInfo->GetPlayerSupWeaponType() == EntityType::DAGGER)
 	{
 		playerSubWeaponAnimationSet = CAnimationSets::GetInstance()->Get(ANIMATION_SET_ITEMDAGGER);

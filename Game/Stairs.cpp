@@ -15,14 +15,14 @@ Stairs::~Stairs(){}
 
 void Stairs::Render()
 {
-	if (direction == 1) 
+	/*if (direction == 1) 
 	{
 		animationSet->at(STAIRS_RIGHTWAY)->Render(-direction, posX, posY);
 	}
 	else
 	{
 		animationSet->at(STAIRS_LEFTWAY)->Render(-direction, posX, posY);
-	}
+	}*/
 	RenderBoundingBox();
 }
 

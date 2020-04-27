@@ -378,9 +378,17 @@ void PlayScene::PlayerCollideItem()
 					listItems[i]->SetIsDone(true);
 					break;
 				case EntityType::ITEMEXTRASHOT:
+				{
 					//Xet type extra
+					ExtraShot* exs = dynamic_cast<ExtraShot*>(listItems[i]);
+					if (exs->GetTypeExtra() == 2)
+						player->SetGettingDouble(true);
+					else
+						if (exs->GetTypeExtra() == 3)
+							player->SetGettingTriple(true);
 					listItems[i]->SetIsDone(true);
-					break;
+					break; 
+				}
 				case EntityType::UPGRADEMORNINGSTAR:
 				{
 					//nang cap ms
@@ -456,6 +464,15 @@ void PlayScene::PlayerGotGate()
 						player->SetState(PLAYER_STATE_IDLE);
 					}
 				}
+				else if (idStage == STAGE_2_1)
+				{
+					Unload();
+					ChooseMap(STAGE_2_2);
+					player->SetPosition(800, 150);
+					player->SetVx(0);
+					player->SetVy(0);
+					player->SetState(PLAYER_STATE_IDLE);
+				}
 				else if (idStage == STAGE_2_2)
 				{
 					if (PlayerPassingStage(listObjects[i]->GetPosX() - 10.0f, -1))
@@ -467,6 +484,15 @@ void PlayScene::PlayerGotGate()
 						player->SetVy(0);
 						player->SetState(PLAYER_STATE_IDLE);
 					}
+				}
+				else if (idStage == STAGE_3_1)
+				{
+					Unload();
+					ChooseMap(STAGE_3_2);
+					player->SetPosition(304, 200);
+					player->SetVx(0);
+					player->SetVy(0);
+					player->SetState(PLAYER_STATE_IDLE);
 				}
 			}
 		}
@@ -514,24 +540,14 @@ bool PlayScene::PlayerGotStairs()
 
 void PlayScene::PlayerFailDown()
 {
-	if (idStage == STAGE_2_2)
+	if (idStage == STAGE_2_2 || idStage == STAGE_3_2)
 	{
-		if (player->GetPosX() <= 544)
+		if (player->GetPosY() >= 441)
 		{
-			if (player->GetPosY() >= 441)
-			{
-				player->AddHealth(-player->GetHealth());
-			}
+			player->AddHealth(-player->GetHealth());
 		}
 	}
-	else
-		if (idStage == STAGE_3_2)
-		{
-			if (player->GetPosY() >= 441)
-			{
-				player->AddHealth(-player->GetHealth());
-			}
-		}
+	
 }
 
 void PlayScene::EasterEggEvent()
@@ -834,12 +850,12 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			simon->GetPlayerMainWeapon()->SetBBARGB(0);
 		break;
 	case DIK_C:
-		if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsSitting() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage() || simon->IsProcessingAuto())
+		if (simon->IsDeadYet() || simon->IsRespawning() || simon->IsAttacking() || simon->IsSitting() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage() || simon->IsProcessingAuto())
 			return;
 		simon->SetState(PLAYER_STATE_JUMP);
 		break;
 	case DIK_X:
-		if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsHurting() || simon->IsUpgrading() || Game::GetInstance()->IsKeyDown(DIK_UP) || simon->IsPassingStage() || simon->IsProcessingAuto())	//Up + X khong Whip duoc nua
+		if (simon->IsDeadYet() || simon->IsRespawning() || simon->IsAttacking() || simon->IsHurting() || simon->IsUpgrading() || Game::GetInstance()->IsKeyDown(DIK_UP) || simon->IsPassingStage() || simon->IsProcessingAuto())	//Up + X khong Whip duoc nua
 			return;
 		if(!simon->IsSitting())
 			simon->SetState(PLAYER_STATE_ATTACK);
@@ -860,7 +876,7 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 	PlayScene* playScene = dynamic_cast<PlayScene*>(scence);
 	vector<LPGAMEENTITY> listObjects = ((PlayScene*)scence)->listObjects;
 
-	if (simon->IsDeadYet() ||  simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage()) 
+	if (simon->IsDeadYet() || simon->IsRespawning() ||  simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage())
 	{
 		return;
 	}

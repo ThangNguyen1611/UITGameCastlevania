@@ -8,6 +8,7 @@
 10	Resources/UI/BlackBoard.png	255	0	255
 11	Resources/UI/HP.png	255	255	255
 12	Resources/UI/Texts.png	255	0	255
+13	Resources/UI/ExtraShot.png	255	0	255
 20	Resources/Objects/Ground.png	255	0	255
 21	Resources/Objects/Ground.png	255	0	255
 22	Resources/Objects/Torch.png	255	0	255
@@ -121,6 +122,10 @@
 92	120	28	135	42	12
 93	135	28	150	42	12
 94	150	28	165	42	12
+
+#UIExtraShot
+95	0	0	42	42	13
+96	42	0	84	42	13
 
 # Brick
 100	0	0	32	32	20

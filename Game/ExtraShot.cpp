@@ -7,7 +7,7 @@ ExtraShot::ExtraShot(float posX, float posY, int type)
 
 	this->posX = posX;
 	this->posY = posY;
-	typeExtraShot = type - 2;
+	typeExtraShot = type;
 	vY = EXTRASHOT_GRAVITY;
 	displayTimer = new Timer(EXTRASHOT_TIMEDISPLAYMAX);
 	displayTimer->Start();
@@ -15,3 +15,13 @@ ExtraShot::ExtraShot(float posX, float posY, int type)
 }
 
 ExtraShot::~ExtraShot() {}
+
+void ExtraShot::Render()
+{
+	if (isDone || delayStart <= delayLimit)
+		return;
+
+	animationSet->at(typeExtraShot - 2)->Render(-direction, posX, posY);
+
+	RenderBoundingBox();
+}

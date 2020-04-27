@@ -57,10 +57,8 @@
 #define PLAYER_ANI_ATTACK_DOWN_STAIRS_BEGIN		18
 #define PLAYER_ANI_ATTACK_DOWN_STAIRS_END		20
 
-#define PLAYER_ATTACKING_DELAY					130
 #define PLAYER_HURTING_DELAY					600
 #define PLAYER_IMMORTAL_TIMECOUNTER				1200
-#define PLAYER_UPGRADING_DELAY					100
 #define PLAYER_UPGRADING_TIMECOUNTER			1200
 #define PLAYER_RESPAWNING_TIMECOUNTER			2400
 
@@ -90,6 +88,9 @@ class Player : public Entity
 	int directionY;	//1 = up, -1 = down
 
 	int currentStageLiving;
+
+	bool isGettingDouble;
+	bool isGettingTriple;
 
 	Timer* hurtingTimer = new Timer(PLAYER_HURTING_DELAY);
 	Timer* immortalTimer = new Timer(PLAYER_IMMORTAL_TIMECOUNTER);
@@ -130,6 +131,11 @@ public:
 	bool IsPassingStage() { return isPassingStage; }
 	bool IsRespawning() { return isRespawning; }
 	bool IsOnStairs() { return isOnStairs; }
+
+	bool IsGettingDouble() { return isGettingDouble; }
+	void SetGettingDouble(bool b) { isGettingDouble = b; }
+	bool IsGettingTriple() { return isGettingTriple; }
+	void SetGettingTriple(bool b) { isGettingTriple = b; }
 
 	bool IsProcessingAuto() { return triggerAuto; }
 
