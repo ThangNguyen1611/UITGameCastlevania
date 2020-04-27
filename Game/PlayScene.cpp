@@ -448,6 +448,7 @@ void PlayScene::PlayerGotGate()
 					if (PlayerPassingStage(listObjects[i]->GetPosX() + 20.0f, 1))
 					{
 						Unload();
+						camera->SetCamPos(0, 0);		//Khi o gate stage 1, toa do X cua camera > 1500 -> draw lai ngay lap tuc khi qua stage 2 se gap bug
 						ChooseMap(STAGE_2_1);
 						player->SetPosition(100, 365);
 						player->SetVx(0);

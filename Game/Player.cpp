@@ -12,7 +12,7 @@ Player::Player(float posX, float posY)
 	this->SetState(PLAYER_STATE_IDLE);
 
 	health = PLAYER_MAXHEALTH;
-	mana = 555;
+	mana = 55;
 	score = 0;
 	live = 3;
 	isDead = false;
