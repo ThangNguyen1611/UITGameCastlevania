@@ -11,7 +11,6 @@
 class Dagger : public Weapon
 {
 	float ownerPosX;
-	float timeDelayed, timeDelayMax;
 public:
 	Dagger();
 	~Dagger();
@@ -22,8 +21,6 @@ public:
 
 	void Attack(float posX, int direction);
 
-	bool CheckIsOutCamera(float posX);
 
-	void ResetDelay() { timeDelayed = 0; }
 };
 

@@ -170,7 +170,7 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 			else
 				if (createrType == EntityType::DARKENBAT)
 				{
-					return new ItemBoomerang(posX, posY);
+					return new ItemAxe(posX, posY);
 				}
 				else
 					return new BigHeart(posX, posY);
@@ -408,6 +408,12 @@ void PlayScene::PlayerCollideItem()
 				case EntityType::ITEMBOOMERANG:
 				{
 					player->SetPlayerSupWeaponType(EntityType::BOOMERANG);
+					listItems[i]->SetIsDone(true);
+					break;
+				}
+				case EntityType::ITEMAXE:
+				{
+					player->SetPlayerSupWeaponType(EntityType::AXE);
 					listItems[i]->SetIsDone(true);
 					break;
 				}

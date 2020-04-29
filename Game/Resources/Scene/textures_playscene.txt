@@ -5,6 +5,7 @@
 2	Resources/Weapons/MorningStar.png	255	0	255
 3	Resources/Weapons/Dagger.png	255	0	255
 4	Resources/Weapons/Boomerang.png	255	0	255
+5	Resources/Weapons/Axe.png	255	0	255
 10	Resources/UI/BlackBoard.png	255	0	255
 11	Resources/UI/HP.png	255	255	255
 12	Resources/UI/Texts.png	255	0	255
@@ -30,6 +31,7 @@
 53	Resources/Items/Crown.png	255	0	255
 54	Resources/Items/ExtraShot.png	255	0	255
 55	Resources/Items/Boomerang.png	255	0	255
+56	Resources/Items/Axe.png	255	0	255
 
 70	Resources/Effects/Fire.png	255	0	255
 71	Resources/Effects/Hit.png	255	0	255
@@ -100,6 +102,12 @@
 63	0	0	28	28	4
 64	28	0	56	28	4
 65	56	0	84	28	4
+
+# Axe
+66	0	0	30	28	5
+67	30	0	60	28	5
+68	60	0	90	28	5
+69	90	0	120	28	5
 
 # Black Board
 80	0	0	520	80	10
@@ -200,6 +208,9 @@
 # ItemBoomerang
 147	0	0	30	28	55
 
+# ItemAxe
+148	0	0	30	28	56
+
 # FireEff
 160	0	0	42	44	70
 161	42	0	84	44	70
@@ -287,6 +298,9 @@
 # Boomerang
 54	63	120	64	120	65	120
 
+# Axe
+55	66	120	67	120	68	120	69	120
+
 # BlackBoard
 60	80	100
 
@@ -326,74 +340,77 @@
 89	119	100
 
 # Small Heart
-90	130	100
+100	130	100
 # Big Heart
-91	131	100
+101	131	100
 
 # Chicken
-92	132	100
+102	132	100
 
 # MoneyBags
-93	133	100
-94	134	100
-95	135	100
+103	133	100
+104	134	100
+105	135	100
 
 # UpgradeMS
-96	136	100
+106	136	100
 
 # CrystalBall
-97	137	120	138	120
+107	137	120	138	120
 
 # InviPot
-98	139	100
+108	139	100
 
 # ItemDagger
-99	140	100
+109	140	100
 
 # StopWatch
-100	141	100
+110	141	100
 
 # Cross
-101	142	100
+111	142	100
 
 # Crown
-102	143	120	144	120
+112	143	120	144	120
 
 # ItemExtraShot
-103	145	120
-104	146	120
+113	145	120
+114	146	120
 
 # ItemBoomerang
-105	147	100
+115	147	100
+
+# ItemAxe
+116	148	100
 
 # FireEff
-106	160	75	161	75	162	75	163	75
+130	160	75	161	75	162	75	163	75
 
 # HitEff
-107	164	300	165	300
+131	164	300	165	300
 
 # BrickExplode
-108	166	120	167	120
+132	166	120	167	120
 
 # ScoreEff
-109	168	600	169	600
-110	170	600	171	600
-111	172	600	173	600
-112	174	600	175	600
+133	168	600	169	600
+134	170	600	171	600
+135	172	600	173	600
+136	174	600	175	600
 
 # VampireBat
-120	180	100
-121	181	120	182	120	183	120
+150	180	100
+151	181	120	182	120	183	120
 
 # Zombie
-122	184	120	185	120
+152	184	120	185	120
 
 # DarkenBat
-123	186	100
-124	187	120	188	120	189	120
+153	186	100
+154	187	120	188	120	189	120
 
 # Knight
-125	190	150	191	150	192	150
+155	190	150	191	150	192	150
 
 #
 # id	ani1	ani2	ani3
@@ -410,6 +427,9 @@
 
 # Boomerang
 4	54
+
+# Axe
+5	55
 
 # BlackBoard
 10	60
@@ -441,67 +461,70 @@
 26	89
 
 # SmallHeart
-40	90
+40	100
 
 # BigHeart
-41	91
+41	101
 
 # Chicken
-42	92
+42	102
 
 # MoneyBags
-43	93	94	95
+43	103	104	105
 
 # UpgradeMS
-47	96
+47	106
 
 # CrystalBall
-48	97
+48	107
 
 # InviPot
-49	98
+49	108
 
 # ItemDagger
-50	99
+50	109
 
 # StopWatch
-51	100
+51	110
 
 # Cross
-52	101
+52	111
 
 # Crown
-53	102
+53	112
 
 # ItemExtraShot
-54	103	104
+54	113	114
 
 # ItemBoomerang
-55	105
+55	115
+
+# ItemAxe
+56	116
 
 # FireEff
-70	106
+70	130
 
 # HitEff
-71	107
+71	131
 
 # BrickExplode
-72	108
+72	132
 
 # AddScore
-73	109	110	111	112
+73	133	134	135	136
 
 # VampireBat
-80	120	121
+80	150	151
 
 # Zombie
-81	122
+81	152
 
 # DarkenBat
-82	123	124
+82	153	154
 
 # Knight
-83	125
+83	155
 
 
 [SCENE]

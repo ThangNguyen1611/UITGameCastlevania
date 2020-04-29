@@ -7,6 +7,7 @@ protected:
 	bool isDone;
 	bool isReceivedPos;
 	bool isDidDamage;
+	float timeDelayed, timeDelayMax;
 public:
 	Weapon();
 	~Weapon();
@@ -17,6 +18,7 @@ public:
 	virtual void Attack(float posX, int direction);
 	virtual void ArticulatedPlayerPos(bool isSitting) {}
 
+	void ResetDelay() { timeDelayed = 0; }
 	bool GetIsDone() { return isDone; }
 	void SetIsDone(bool isdone) { isDone = isdone; }
 
@@ -26,6 +28,7 @@ public:
 	bool GetIsDidDamage() { return isDidDamage; }
 	void SetIsDidDamage(bool isDid) { isDidDamage = isDid; }
 
+	bool CheckIsOutCamera(float posX);
 	virtual bool IsCollidingObject(Entity* Obj);	//Not inherit from Entity cause this func return the result from Entity
 };
 

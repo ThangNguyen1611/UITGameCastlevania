@@ -89,15 +89,11 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if (supWeapon != NULL)
 		{
-			if (supWeapon->GetType() == EntityType::DAGGER)
+			if (supWeapon->GetType() == EntityType::DAGGER || 
+				supWeapon->GetType() == EntityType::BOOMERANG || 
+				supWeapon->GetType() == EntityType::AXE)
 			{
-				Dagger* dagger = dynamic_cast<Dagger*>(supWeapon);
-				dagger->ResetDelay();
-			}
-			else if (supWeapon->GetType() == EntityType::BOOMERANG)
-			{
-				Boomerang* boomerang = dynamic_cast<Boomerang*>(supWeapon);
-				boomerang->ResetDelay();
+				supWeapon->ResetDelay();
 			}
 		}
 	}
@@ -290,6 +286,12 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			if (!supWeapon->GetIsReceivedPos())
 			{
 				supWeapon->SetPosition(posX, posY);
+				//tam thoi
+				if (supWeapon->GetType() == EntityType::AXE)
+				{
+					Axe* axe = dynamic_cast<Axe*>(supWeapon);
+					axe->SetTempY(posY);
+				}
 				supWeapon->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
 			}
 			supWeapon->Update(dt, coObjects);
@@ -542,6 +544,19 @@ void Player::Attack(EntityType weaponType)
 		}
 		break;
 	}
+	case EntityType::AXE:
+	{
+		if (mana > 0)
+		{
+			if (supWeapon->GetIsDone())
+			{
+				AddMana(-1);
+				isAttacking = true;
+				supWeapon->Attack(posX, direction);
+			}
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -570,6 +585,10 @@ void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
 	case EntityType::BOOMERANG:
 		currentSupWeaponType = EntityType::BOOMERANG;
 		supWeapon = new Boomerang(this);
+		break;
+	case EntityType::AXE:
+		currentSupWeaponType = EntityType::AXE;
+		supWeapon = new Axe();
 		break;
 	default:
 		break;

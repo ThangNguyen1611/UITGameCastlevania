@@ -47,6 +47,11 @@ void UI::Render(int currentStage, int remainingTime, Player* playerInfo)
 		playerSubWeaponAnimationSet = CAnimationSets::GetInstance()->Get(ANIMATION_SET_ITEMBMR);
 		playerSubWeaponAnimationSet->at(0)->Render(1, posX + 68, posY + 8);
 	}
+	if (playerInfo->GetPlayerSupWeaponType() == EntityType::AXE)
+	{
+		playerSubWeaponAnimationSet = CAnimationSets::GetInstance()->Get(ANIMATION_SET_ITEMAXE);
+		playerSubWeaponAnimationSet->at(0)->Render(1, posX + 68, posY + 8);
+	}
 
 	text.Render(this->posX - 140, this->posY - 20, text.FillZeroString(to_string(playerInfo->GetScore()), MAX_TEXTLENGHT_SCORE));
 	text.Render(this->posX + 50, this->posY - 20, text.FillZeroString(to_string(remainingTime), MAX_TEXTLENGHT_REMAININGTIME));

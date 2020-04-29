@@ -59,17 +59,4 @@ void Dagger::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	bottom = posY + DAGGER_BBOX_HEIGHT;
 }
 
-bool Dagger::CheckIsOutCamera(float posX)
-{
-	if (vX > 0)	//Walking Right
-	{
-		if (this->posX - posX >= (SCREEN_WIDTH * 0.75))
-			return true;
-	}
-	else if (vX < 0)
-	{
-		if (posX - this->posX >= (SCREEN_WIDTH * 0.75))
-			return true;
-	}
-	return false;
-}
+

@@ -18,6 +18,7 @@
 #include "UpgradeMorningStar.h"
 #include "ItemDagger.h"
 #include "ItemBoomerang.h"
+#include "ItemAxe.h"
 #include "Hit.h"
 #include "Fire.h"
 #include "Score.h"

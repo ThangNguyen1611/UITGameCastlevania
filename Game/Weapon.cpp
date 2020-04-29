@@ -37,3 +37,18 @@ bool Weapon::IsCollidingObject(Entity* Obj)
 
 	return Entity::IsCollidingObject(Obj);
 }
+
+bool Weapon::CheckIsOutCamera(float posX)
+{
+	if (vX > 0)	//Walking Right
+	{
+		if (this->posX - posX >= (SCREEN_WIDTH * 0.75))
+			return true;
+	}
+	else if (vX < 0)
+	{
+		if (posX - this->posX >= (SCREEN_WIDTH * 0.75))
+			return true;
+	}
+	return false;
+}

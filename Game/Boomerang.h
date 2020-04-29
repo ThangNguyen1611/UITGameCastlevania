@@ -15,7 +15,6 @@ class Boomerang : public Weapon
 {
 	float ownerPosX;
 	int ownerDirection;
-	float timeDelayed, timeDelayMax;
 	LPGAMEENTITY owner;
 	bool isDidDamageTurn1, isDidDamageTurn2;
 public:
@@ -27,8 +26,6 @@ public:
 	void Render();
 
 	void Attack(float posX, int direction);
-
-	void ResetDelay() { timeDelayed = 0; }
 
 	bool GetIsDidDamageTurn1() { return isDidDamageTurn1; }
 	void SetIsDidDamageTurn1(bool isDid) { isDidDamageTurn1 = isDid; }
