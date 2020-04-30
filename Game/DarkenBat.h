@@ -2,8 +2,8 @@
 #include "Entity.h"
 
 #define DARKBAT_FLYING_SPEED_X			0.15f
-#define DARKBAT_FLYING_SPEED_Y			0.1f
-#define DARKBAT_AMPLITUDE_HORIZONTAL	30.0f	
+#define DARKBAT_FLYING_SPEED_Y			0.02f
+#define DARKBAT_AMPLITUDE_HORIZONTAL	40	
 
 #define DARKBAT_BBOX_WIDTH				32
 #define DARKBAT_BBOX_HEIGHT				32
@@ -15,6 +15,7 @@
 class DarkenBat : public Entity
 {
 	float tempY;
+	int directionY;
 	bool targetDetected;
 	LPGAMEENTITY target;
 public:

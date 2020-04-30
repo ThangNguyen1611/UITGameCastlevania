@@ -170,7 +170,7 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 			else
 				if (createrType == EntityType::DARKENBAT)
 				{
-					return new ItemAxe(posX, posY);
+					return new ItemWaterPotion(posX, posY);
 				}
 				else
 					return new BigHeart(posX, posY);
@@ -414,6 +414,12 @@ void PlayScene::PlayerCollideItem()
 				case EntityType::ITEMAXE:
 				{
 					player->SetPlayerSupWeaponType(EntityType::AXE);
+					listItems[i]->SetIsDone(true);
+					break;
+				}
+				case EntityType::ITEMWATERPOTION:
+				{
+					player->SetPlayerSupWeaponType(EntityType::WATERPOTION);
 					listItems[i]->SetIsDone(true);
 					break;
 				}

@@ -15,17 +15,20 @@ void Axe::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	timeDelayed += dt;
 	if (timeDelayed <= timeDelayMax)
 	{
+		tempY = posY;
 		isReceivedPos = false;
 		return;
 	}
 
-	//tam thoi
 	if (tempY - posY >= AXE_MAX_DISTANCE_HEIGHT)
 		directionY = 1;
-	else if (posY - tempY >= 1)
+	/*else if (posY - tempY >= 1)
+		isDone = true;*/
+
+	if (posY > 441) //SCREENHEIGHT - BOARDHEIGHT
 		isDone = true;
 
-	vY = AXE_SPEED_Y * directionY;
+	vY += AXE_SPEED_Y * directionY;		// += bring the parabol-shape fly
 
 	Weapon::Update(dt);
 	posX += dx;
@@ -39,14 +42,13 @@ void Axe::Attack(float posX, int direction)
 	this->posY -= 8;	//Fit Simon Hand
 	vX = AXE_SPEED_X * this->direction;
 	directionY = -1;
+	vY = 0;
 }
 
 void Axe::Render()
 {
 	if (timeDelayed <= timeDelayMax)
-	{
 		return;
-	}
 	if (isDone)
 		return;
 

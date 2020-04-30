@@ -5,6 +5,7 @@
 #include "Dagger.h"
 #include "Boomerang.h"
 #include "Axe.h"
+#include "WaterPotion.h"
 #include "Timer.h"
 #include <map>
 

@@ -2,9 +2,9 @@
 #include "Weapon.h"
 #include <math.h>
 
-#define AXE_SPEED_X					0.15f
-#define AXE_SPEED_Y					0.2f
-#define AXE_MAX_DISTANCE_HEIGHT		150
+#define AXE_SPEED_X					0.2f	//15
+#define AXE_SPEED_Y					0.02f	//2
+#define AXE_MAX_DISTANCE_HEIGHT		50		//150
 
 #define AXE_BBOX_WIDTH		30
 #define AXE_BBOX_HEIGHT		28
@@ -24,7 +24,4 @@ public:
 	void Render();
 
 	void Attack(float posX, int direction);
-
-	//tam thoi
-	void SetTempY(float temp) { tempY = temp; }
 };

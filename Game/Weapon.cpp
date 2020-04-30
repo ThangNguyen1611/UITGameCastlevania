@@ -15,6 +15,7 @@ void Weapon::Attack(float posX, int direction)
 	//isDone khi chua danh la true, duoc danh la false
 	isDone = false;
 	this->direction = direction;
+	timeDelayed = 0;
 }
 
 void Weapon::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)

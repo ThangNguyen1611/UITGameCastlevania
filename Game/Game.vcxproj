@@ -159,6 +159,7 @@
     <ClCompile Include="ItemAxe.cpp" />
     <ClCompile Include="ItemBoomerang.cpp" />
     <ClCompile Include="ItemDagger.cpp" />
+    <ClCompile Include="ItemWaterPotion.cpp" />
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Torch.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="UpgradeMorningStar.cpp" />
+    <ClCompile Include="WaterPotion.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="YummiChickenLeg.cpp" />
     <ClCompile Include="Zombie.cpp" />
@@ -212,6 +214,7 @@
     <ClInclude Include="ItemAxe.h" />
     <ClInclude Include="ItemBoomerang.h" />
     <ClInclude Include="ItemDagger.h" />
+    <ClInclude Include="ItemWaterPotion.h" />
     <ClInclude Include="KeyboardHandler.h" />
     <ClInclude Include="Knight.h" />
     <ClInclude Include="Map.h" />
@@ -234,6 +237,7 @@
     <ClInclude Include="Torch.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="UpgradeMorningStar.h" />
+    <ClInclude Include="WaterPotion.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="YummiChickenLeg.h" />
     <ClInclude Include="Zombie.h" />

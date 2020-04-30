@@ -6,6 +6,7 @@
 3	Resources/Weapons/Dagger.png	255	0	255
 4	Resources/Weapons/Boomerang.png	255	0	255
 5	Resources/Weapons/Axe.png	255	0	255
+6	Resources/Weapons/WaterPotion.png	255	0	255
 10	Resources/UI/BlackBoard.png	255	0	255
 11	Resources/UI/HP.png	255	255	255
 12	Resources/UI/Texts.png	255	0	255
@@ -32,6 +33,7 @@
 54	Resources/Items/ExtraShot.png	255	0	255
 55	Resources/Items/Boomerang.png	255	0	255
 56	Resources/Items/Axe.png	255	0	255
+57	Resources/Items/WaterPotion.png	255	0	255
 
 70	Resources/Effects/Fire.png	255	0	255
 71	Resources/Effects/Hit.png	255	0	255
@@ -108,6 +110,12 @@
 67	30	0	60	28	5
 68	60	0	90	28	5
 69	90	0	120	28	5
+
+# WaterPotion
+70	0	0	32	26	6
+71	32	0	64	26	6
+72	64	0	96	26	6
+73	96	0	128	26	6
 
 # Black Board
 80	0	0	520	80	10
@@ -211,6 +219,9 @@
 # ItemAxe
 148	0	0	30	28	56
 
+# ItemWaterPotion
+149	0	0	32	32	57
+
 # FireEff
 160	0	0	42	44	70
 161	42	0	84	44	70
@@ -301,6 +312,10 @@
 # Axe
 55	66	120	67	120	68	120	69	120
 
+# WaterPotion
+56	70	100
+57	71	120	72	120	73	120
+
 # BlackBoard
 60	80	100
 
@@ -383,6 +398,9 @@
 # ItemAxe
 116	148	100
 
+# ItemWaterPotion
+117	149	100
+
 # FireEff
 130	160	75	161	75	162	75	163	75
 
@@ -430,6 +448,9 @@
 
 # Axe
 5	55
+
+# WaterPotion
+6	56	57
 
 # BlackBoard
 10	60
@@ -501,6 +522,9 @@
 
 # ItemAxe
 56	116
+
+# ItemWaterPotion
+57	117
 
 # FireEff
 70	130

@@ -19,6 +19,7 @@
 #include "ItemDagger.h"
 #include "ItemBoomerang.h"
 #include "ItemAxe.h"
+#include "ItemWaterPotion.h"
 #include "Hit.h"
 #include "Fire.h"
 #include "Score.h"

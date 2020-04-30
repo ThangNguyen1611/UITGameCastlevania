@@ -11,6 +11,7 @@ DarkenBat::DarkenBat(float posX, float posY, int directionX, LPGAMEENTITY target
 	this->posY = posY;
 	this->tempY = posY;
 	this->direction = directionX;
+	directionY = 1;
 
 	this->SetState(DARKBAT_STATE_INACTIVE);
 
@@ -43,7 +44,13 @@ void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		//posY = 60 * sin(0.3 * posX * PI / 180) + tempY;
 		//posY = ((-1 * pow(posX, 2)) / 125) + (1057 * posX / 288) - 214;
-		posY = ((-23 * pow(posX, 2)) / 2702) + (123 * posX / 32) - 227;
+		//posY = ((-23 * pow(posX, 2)) / 2702) + (123 * posX / 32) - 227;
+		if (posY - tempY >= DARKBAT_AMPLITUDE_HORIZONTAL)
+			directionY = -1;
+		else if(tempY - posY >= DARKBAT_AMPLITUDE_HORIZONTAL)
+			directionY = 1;
+
+		vY += DARKBAT_FLYING_SPEED_Y * directionY;
 	}
 
 	Entity::Update(dt);
@@ -75,6 +82,7 @@ void DarkenBat::SetState(int state)
 		break;
 	case DARKBAT_STATE_FLYING:
 		vX = DARKBAT_FLYING_SPEED_X * direction;
+		directionY = 1;
 		break;
 	case DARKBAT_STATE_INACTIVE:
 		vX = 0;

@@ -91,7 +91,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		{
 			if (supWeapon->GetType() == EntityType::DAGGER || 
 				supWeapon->GetType() == EntityType::BOOMERANG || 
-				supWeapon->GetType() == EntityType::AXE)
+				supWeapon->GetType() == EntityType::AXE ||
+				supWeapon->GetType() == EntityType::WATERPOTION)
 			{
 				supWeapon->ResetDelay();
 			}
@@ -286,12 +287,6 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			if (!supWeapon->GetIsReceivedPos())
 			{
 				supWeapon->SetPosition(posX, posY);
-				//tam thoi
-				if (supWeapon->GetType() == EntityType::AXE)
-				{
-					Axe* axe = dynamic_cast<Axe*>(supWeapon);
-					axe->SetTempY(posY);
-				}
 				supWeapon->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
 			}
 			supWeapon->Update(dt, coObjects);
@@ -557,6 +552,19 @@ void Player::Attack(EntityType weaponType)
 		}
 		break;
 	}
+	case EntityType::WATERPOTION:
+	{
+		if (mana > 0)
+		{
+			if (supWeapon->GetIsDone())
+			{
+				AddMana(-1);
+				isAttacking = true;
+				supWeapon->Attack(posX, direction);
+			}
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -589,6 +597,10 @@ void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
 	case EntityType::AXE:
 		currentSupWeaponType = EntityType::AXE;
 		supWeapon = new Axe();
+		break;
+	case EntityType::WATERPOTION:
+		currentSupWeaponType = EntityType::WATERPOTION;
+		supWeapon = new WaterPotion();
 		break;
 	default:
 		break;
