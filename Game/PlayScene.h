@@ -71,8 +71,8 @@ protected:
 	std::vector<LPCWSTR> listSceneFilePath;
 	UI* gameUI;
 	GameTime* gameTime;		
-	Camera* camera;
-	Map* map;
+	Camera* gameCamera;
+	Map* gameMap;
 
 	int idStage; 
 
@@ -105,8 +105,8 @@ public:
 	PlayScene();
 
 	void LoadBaseObjects();
-	void LoadTextures();
-	void ChooseMap(int whatStage);	//Co the thay bien int thanh EntityType
+	void LoadBaseTextures();
+	void ChooseMap(int whatStage);
 	virtual void LoadSceneObjects();
 	virtual void Update(DWORD dt);
 	virtual void Render();

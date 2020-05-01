@@ -1,3 +1,102 @@
+# Id	FilePath			R	G	B
+[TEXTURES]
+3	Resources/Weapons/Dagger.png	255	0	255
+
+22	Resources/Objects/Torch.png	255	0	255
+26	Resources/Objects/Gate.png	255	0	255
+
+41	Resources/Items/BigHeart.png	255	0	255
+47	Resources/Items/UpgradeMS.png	255	0	255
+50	Resources/Items/Dagger.png	255	0	255
+
+70	Resources/Effects/Fire.png	255	0	255
+71	Resources/Effects/Hit.png	255	0	255
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+# Dagger
+62	0	0	32	18	3
+
+# Torch
+108	0	0	32	64	22
+109	32	0	64	64	22
+
+# Gate
+119	0	0	48	96	26
+
+# Big Heart
+131	0	0	24	20	41
+
+# UpgradeMS
+136	0	0	32	32	47
+
+# ItemDagger
+140	0	0	32	18	50
+
+# FireEff
+160	0	0	42	44	70
+161	42	0	84	44	70
+162	84	0	126	44	70
+163	126	0	168	44	70
+
+# HitEff
+164	0	0	16	20	71
+165	16	0	32	20	71
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+# Dagger
+23	62	100
+
+# Torch
+78	108	120	109	120
+
+# Gate
+89	119	100
+
+# Big Heart
+101	131	100
+
+# UpgradeMS
+106	136	100
+
+# ItemDagger
+109	140	100
+
+# FireEff
+130	160	75	161	75	162	75	163	75
+
+# HitEff
+131	164	300	165	300
+
+#
+# id	ani1	ani2	ani3
+# id tuan theo define
+[ANIMATION_SETS]
+# Dagger
+3	23
+
+# Torch
+22	78
+
+# Gate
+26	89
+
+# BigHeart
+41	101
+
+# UpgradeMS
+47	106
+
+# ItemDagger
+50	109
+
+# FireEff
+70	130
+
+# HitEff
+71	131
+
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 1 = Brick, 2 = Torch, 3 = Gate, 4 = Stairs

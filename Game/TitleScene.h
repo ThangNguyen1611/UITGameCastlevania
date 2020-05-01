@@ -23,7 +23,7 @@ public:
 	void Render();
 	void Unload();
 
-	void LoadTextures();
+	void LoadBaseTextures();
 	friend class TitleScenceKeyHandler;
 };
 

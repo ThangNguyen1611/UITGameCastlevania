@@ -10,17 +10,17 @@ PlayScene::PlayScene() : Scene()
 void PlayScene::LoadBaseObjects()
 {
 	texturesFilePath = ToLPCWSTR("Resources/Scene/textures_playscene.txt");
-	LoadTextures();
+	LoadBaseTextures();
 	if (player == NULL)
 	{
 		player = new Player(100, 280);
 		//listObjects.push_back(player);
-		DebugOut(L"[INFO] Simon object created! \n");
+		DebugOut(L"[INFO] Simon CREATED! \n");
 	}
 	gameUI = new UI(player->GetHealth(), 16);
 	gameTime = GameTime::GetInstance();		//That ra khong can 2 buoc nay vi ca 2 deu thiet ke Singleton
-	camera = Camera::GetInstance();
-	map = new Map();
+	gameCamera = Camera::GetInstance();
+	gameMap = new Map();
 }
 
 void PlayScene::ChooseMap(int whatMap)	
@@ -468,7 +468,7 @@ void PlayScene::PlayerGotGate()
 					if (PlayerPassingStage(listObjects[i]->GetPosX() + 20.0f, 1))
 					{
 						Unload();
-						camera->SetCamPos(0, 0);		//Khi o gate stage 1, toa do X cua camera > 1500 -> draw lai ngay lap tuc khi qua stage 2 se gap bug
+						gameCamera->SetCamPos(0, 0);		//Khi o gate stage 1, toa do X cua camera > 1500 -> draw lai ngay lap tuc khi qua stage 2 se gap bug
 						ChooseMap(STAGE_2_1);
 						player->SetPosition(100, 365);
 						player->SetVx(0);
@@ -766,7 +766,7 @@ void PlayScene::Update(DWORD dt)
 	}
 	cy -= SCREEN_HEIGHT / 2;
 
-	camera->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
+	gameCamera->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
 #pragma endregion
 
 	WeaponCollision();
@@ -783,7 +783,7 @@ void PlayScene::Update(DWORD dt)
 
 void PlayScene::Render()
 {
-	map->Draw();
+	gameMap->Draw();
 	for (int i = 0; i < listObjects.size(); i++)
 		listObjects[i]->Render();
 	for (int i = 0; i < listEffects.size(); i++)
@@ -1166,7 +1166,7 @@ void PlayScene::_ParseSection_TILEMAP(string line)
 	//Row of Tileset
 	//Column of Tileset
 
-	map->LoadMap(atoi(tokens[0].c_str()), 
+	gameMap->LoadMap(atoi(tokens[0].c_str()), 
 		ToLPCWSTR(tokens[1]), atoi(tokens[2].c_str()), atoi(tokens[3].c_str()),
 		ToLPCWSTR(tokens[4]), atoi(tokens[5].c_str()), atoi(tokens[6].c_str()));
 }
@@ -1250,7 +1250,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	}
 }
 
-void PlayScene::LoadTextures()
+void PlayScene::LoadBaseTextures()
 {
 	DebugOut(L"[INFO] Start loading TEXTURES resources from : %s \n", texturesFilePath);
 
@@ -1267,7 +1267,9 @@ void PlayScene::LoadTextures()
 
 		if (line[0] == '#') continue;	// skip comment lines	
 
-		if (line == "[TEXTURES]") { section = SCENE_SECTION_TEXTURES; continue; }
+		if (line == "[TEXTURES]") { 
+			section = SCENE_SECTION_TEXTURES; continue; 
+		}
 		if (line == "[SPRITES]") {
 			section = SCENE_SECTION_SPRITES; continue;
 		}
@@ -1318,6 +1320,18 @@ void PlayScene::LoadSceneObjects()
 
 		if (line[0] == '#') continue;	// skip comment lines	
 
+		if (line == "[TEXTURES]") {
+			section = SCENE_SECTION_TEXTURES; continue;
+		}
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
 		if (line == "[OBJECTS]") {
 			section = SCENE_SECTION_OBJECTS; continue;
 		}
@@ -1331,6 +1345,10 @@ void PlayScene::LoadSceneObjects()
 		//
 		switch (section)
 		{
+		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		case SCENE_SECTION_TILEMAP:	_ParseSection_TILEMAP(line); break;
 		}

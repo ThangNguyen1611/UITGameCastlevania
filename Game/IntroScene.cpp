@@ -8,7 +8,7 @@ IntroScene::IntroScene() : Scene()
 	keyHandler = new TitleScenceKeyHandler(this);
 	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
 	texturesFilePath = ToLPCWSTR("Resources/Scene/textures_introscene.txt");
-	LoadTextures();
+	LoadBaseTextures();
 
 	introSceneSpr = CSprites::GetInstance()->Get(268);
 	simonAniSet = CAnimationSets::GetInstance()->Get(ANIMATION_SET_INTROSIMON);
@@ -233,7 +233,7 @@ void IntroScene::_ParseSection_ANIMATION_SETS(string line)
 }
 
 
-void IntroScene::LoadTextures()
+void IntroScene::LoadBaseTextures()
 {
 	DebugOut(L"[INFO] Start loading TEXTURES resources from : %s \n", texturesFilePath);
 

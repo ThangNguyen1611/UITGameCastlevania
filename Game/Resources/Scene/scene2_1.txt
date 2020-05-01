@@ -1,3 +1,291 @@
+# Id	FilePath			R	G	B
+[TEXTURES]
+4	Resources/Weapons/Boomerang.png	255	0	255
+5	Resources/Weapons/Axe.png	255	0	255
+6	Resources/Weapons/WaterPotion.png	255	0	255
+
+21	Resources/Objects/Ground.png	255	0	255
+23	Resources/Objects/Candle.png	255	0	255
+24	Resources/Objects/MovingPlatform.png	116	116	116
+25	Resources/Objects/Stair.png	255	0	255
+
+40	Resources/Items/SmallHeart.png	255	0	255
+42	Resources/Items/YummiChickenLeg.png	255	0	255
+43	Resources/Items/MoneyBags.png	255	0	255
+48	Resources/Items/CrystalBall.png	255	0	255
+49	Resources/Items/InviPotion.png	255	0	255
+51	Resources/Items/StopWatch.png	255	0	255
+52	Resources/Items/Cross.png	255	0	255
+53	Resources/Items/Crown.png	255	0	255
+54	Resources/Items/ExtraShot.png	255	0	255
+55	Resources/Items/Boomerang.png	255	0	255
+56	Resources/Items/Axe.png	255	0	255
+57	Resources/Items/WaterPotion.png	255	0	255
+
+72	Resources/Effects/BrickExplode.png	255	0	255
+73	Resources/Effects/Score.png	255	0	255
+
+82	Resources/Enemies/DarkenBat.png	255	0	255
+83	Resources/Enemies/Knight.png	116	116	116
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+# Boomerang
+63	0	0	28	28	4
+64	28	0	56	28	4
+65	56	0	84	28	4
+
+# Axe
+66	0	0	30	28	5
+67	30	0	60	28	5
+68	60	0	90	28	5
+69	90	0	120	28	5
+
+# WaterPotion
+70	0	0	32	26	6
+71	32	0	64	26	6
+72	64	0	96	26	6
+73	96	0	128	26	6
+
+# BreakableBrick
+104	0	0	32	32	21
+105	32	0	64	32	21
+106	64	0	96	32	21
+107	96	0	128	32	21
+
+# Candle 
+110	0	0	16	32	23
+111	16	0	32	32	23
+
+# MovingFlatform
+112	0	0	64	16	24
+
+# Stairs
+113	0	0	32	32	25
+114	32	0	64	32	25
+
+# Small Heart
+130	0	0	16	16	40
+
+# Chicken
+132	0	0	32	26	42
+
+# MoneyBags
+133	0	0	30	30	43
+134	30	0	60	30	43
+135	60	0	90	30	43
+
+# CrystalBall
+137	0	0	28	32	48
+138	28	0	56	32	48
+
+# InviPot
+139	0	0	30	37	49
+
+# StopWatch
+141	0	0	30	32	51
+
+# Cross
+142	0	0	32	32	52
+
+# Crown
+143	0	0	32	32	53
+144	32	0	64	32	53
+
+# ItemExtraShot
+145	0	0	32	32	54
+146	32	0	64	32	54
+
+# ItemBoomerang
+147	0	0	30	28	55
+
+# ItemAxe
+148	0	0	30	28	56
+
+# ItemWaterPotion
+149	0	0	32	32	57
+
+# BrickExplodeEff
+166	0	0	18	23	72
+167	18	0	36	23	72
+
+# ScoreEff
+168	0	0	38	18	73
+169	38	0	76	18	73
+170	76	0	114	18	73
+171	114	0	152	18	73
+172	152	0	190	18	73
+173	190	0	228	18	73
+174	228	0	266	18	73
+175	266	0	304	18	73
+
+# DarkenBat
+186	0	0	32	32	82
+187	32	0	64	32	82
+188	64	0	96	32	82
+189	96	0	128	32	82
+
+# Knight
+190	0	0	40	80	83
+191	40	0	80	80	83
+192	80	0	120	82	83
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+# Boomerang
+54	63	120	64	120	65	120
+
+# Axe
+55	66	120	67	120	68	120	69	120
+
+# WaterPotion
+56	70	100
+57	71	120	72	120	73	120
+
+# BreakableBrick
+74	104	100
+75	105	100
+76	106	100
+77	107	100
+
+# Candle
+79	110	120	111	120
+
+# MF
+80	112	100
+
+# Stairs
+81	113	100
+82	114	100
+
+# Small Heart
+100	130	100
+
+# Chicken
+102	132	100
+
+# MoneyBags
+103	133	100
+104	134	100
+105	135	100
+
+# CrystalBall
+107	137	120	138	120
+
+# InviPot
+108	139	100
+
+# StopWatch
+110	141	100
+
+# Cross
+111	142	100
+
+# Crown
+112	143	120	144	120
+
+# ItemExtraShot
+113	145	120
+114	146	120
+
+# ItemBoomerang
+115	147	100
+
+# ItemAxe
+116	148	100
+
+# ItemWaterPotion
+117	149	100
+
+# BrickExplode
+132	166	120	167	120
+
+# ScoreEff
+133	168	600	169	600
+134	170	600	171	600
+135	172	600	173	600
+136	174	600	175	600
+
+# DarkenBat
+153	186	100
+154	187	120	188	120	189	120
+
+# Knight
+155	190	150	191	150	192	150
+
+#
+# id	ani1	ani2	ani3
+# id tuan theo define
+[ANIMATION_SETS]
+# Boomerang
+4	54
+
+# Axe
+5	55
+
+# WaterPotion
+6	56	57
+
+# BreakableBrick
+21	74	75	76	77
+
+# Candle
+23	79
+
+# MF
+24	80
+
+# Stairs
+25	81	82
+
+# SmallHeart
+40	100
+
+# Chicken
+42	102
+
+# MoneyBags
+43	103	104	105
+
+# CrystalBall
+48	107
+
+# InviPot
+49	108
+
+# StopWatch
+51	110
+
+# Cross
+52	111
+
+# Crown
+53	112
+
+# ItemExtraShot
+54	113	114
+
+# ItemBoomerang
+55	115
+
+# ItemAxe
+56	116
+
+# ItemWaterPotion
+57	117
+
+# BrickExplode
+72	132
+
+# AddScore
+73	133	134	135	136
+
+# DarkenBat
+82	153	154
+
+# Knight
+83	155
+
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 1 = Brick, 2 = Torch, 3 = Gate, 4 = Stairs, 5 = DarkenBat, 6 = Knight, 

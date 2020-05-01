@@ -7,7 +7,7 @@ TitleScene::TitleScene() : Scene()
 	keyHandler = new TitleScenceKeyHandler(this);
 	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
 	texturesFilePath = ToLPCWSTR("Resources/Scene/textures_titlescene.txt");
-	LoadTextures();
+	LoadBaseTextures();
 
 	titleSceneSpr = CSprites::GetInstance()->Get(250);
 	batAniSet = CAnimationSets::GetInstance()->Get(ANIMATION_SET_TITLEBAT);
@@ -150,7 +150,7 @@ void TitleScene::_ParseSection_ANIMATION_SETS(string line)
 }
 
 
-void TitleScene::LoadTextures()
+void TitleScene::LoadBaseTextures()
 {
 	DebugOut(L"[INFO] Start loading TEXTURES resources from : %s \n", texturesFilePath);
 
