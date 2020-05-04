@@ -60,52 +60,6 @@ void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	//}
 	//Entity::Update(dt);
 
-	//vector<LPCOLLISIONEVENT> coEvents;
-	//vector<LPCOLLISIONEVENT> coEventsResult;
-
-	//coEvents.clear();
-
-	//// turn off collision when die 
-	//if (state != BAT_STATE_DIE)
-	//	CalcPotentialCollisions(coObjects, coEvents);
-
-	//// No collision occured, proceed normally
-	//if (coEvents.size() == 0)
-	//{
-	//	posX += dx;
-	//	posY += dy;
-	//}
-	//else
-	//{
-	//	float min_tx, min_ty, nx = 0, ny;
-
-	//	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-	//	// block 
-	//	posX += min_tx * dx + nx * 0.6f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-	//	posY += min_ty * dy + ny * 0.6f;
-
-	//	if (nx != 0) vX = 0;
-	//	if (ny != 0) vY = 0;
-
-	//	for (UINT i = 0; i < coEventsResult.size(); i++)
-	//	{
-	//		LPCOLLISIONEVENT e = coEventsResult[i];
-
-	//		if (e->obj->GetType() == EntityType::PLAYER)
-	//		{
-	//			Player *player = dynamic_cast<Player *>(e->obj);
-
-	//			if (e->ny != 1 && (GetDistance(D3DXVECTOR2(posX, posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= BAT_BBOX_WIDTH/2))
-	//			{
-	//				if (player->GetState() != PLAYER_STATE_DIE)
-	//				{
-	//					player->SetState(PLAYER_STATE_DIE);
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
 #pragma endregion
 }
 

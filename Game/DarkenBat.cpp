@@ -25,7 +25,7 @@ DarkenBat::~DarkenBat(){}
 
 void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posX < 0)
+	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 2)
 	{
 		SetState(DARKBAT_STATE_DIE);
 		return;

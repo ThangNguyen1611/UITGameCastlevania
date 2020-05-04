@@ -35,6 +35,7 @@
 #include "Stairs.h"
 #include "DarkenBat.h"
 #include "Knight.h"
+#include "Ghost.h"
 #include "BreakableBrick.h"
 #include "Candle.h"
 #include "MovingPlatform.h"
@@ -84,6 +85,7 @@ protected:
 	bool isTimeToSpawnBat;
 	bool triggerSpawnBat;
 	Timer* spawningBatTimer = new Timer(SPAWNING_BAT_DELAY);
+	bool triggerSpawnGhost;
 	//testing Scan
 	//bool isScanned;
 	//Timer* scanningGameTimer = new Timer(SCANING_GAME_DELAY);
@@ -124,6 +126,7 @@ public:
 	bool PlayerGotStairs();
 	void EasterEggEvent();	//EEE
 	void PlayerFailDown();
+	void PlayerInSightGhost();
 
 	friend class PlayScenceKeyHandler;
 };

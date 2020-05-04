@@ -1,3 +1,26 @@
+# Id	FilePath			R	G	B
+[TEXTURES]
+84	Resources/Enemies/Ghost.png	116	116	116
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+
+#Ghost
+193	0	0	32	32	84
+194	32	0	64	32	84
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+156	193	120	194	120
+
+#
+# id	ani1	ani2	ani3
+# id tuan theo define
+[ANIMATION_SETS]
+
+# Ghost
+84	156
+
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 1 = Brick, 2 = Torch, 3 = Gate, 4 = Stairs

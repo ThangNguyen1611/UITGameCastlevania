@@ -11,7 +11,7 @@
 
 80	Resources/Enemies/VampireBat.png	255	0	255
 81	Resources/Enemies/Zombie.png	255	0	255
-84	Resources/Enemies/Ghost.png	255	0	255
+84	Resources/Enemies/Ghost.png	116	116	116
 85	Resources/Enemies/Raven.png	255	0	255
 86	Resources/Enemies/Hunchman.png	255	0	255
 87	Resources/Enemies/Eagle.png	255	0	255

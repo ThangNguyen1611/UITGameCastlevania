@@ -45,6 +45,9 @@ void PlayScene::ChooseMap(int whatMap)
 	case STAGE_2_2:
 		easterEgg_Stage2_2 = 0;
 		break;
+	case STAGE_3_1:
+		triggerSpawnGhost = true;
+		break;
 	default:
 		break;
 	}
@@ -199,6 +202,17 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 			player->AddScore(500);
 			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		}
+		listObjects[i]->AddHealth(-1);
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		break;
+	case EntityType::GHOST:
+		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
+		{
+			player->AddScore(100);
+			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		}
+		//Add Heart(-1) nen thay the bang damage cua weapon
 		listObjects[i]->AddHealth(-1);
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
@@ -583,6 +597,18 @@ void PlayScene::EasterEggEvent()
 		}
 }
 
+void PlayScene::PlayerInSightGhost()
+{
+	if (player->GetPosX() > 1100 && player->GetPosX() < 1110)
+	{
+		if (triggerSpawnGhost)
+		{
+			listObjects.push_back(new Ghost(1350, 345, player));
+			triggerSpawnGhost = false;
+		}
+	}
+}
+
 void PlayScene::CheckObjAlive()
 {
 	for (UINT i = 0; i < listObjects.size(); i++)
@@ -775,6 +801,8 @@ void PlayScene::Update(DWORD dt)
 	//PlayerGotStairs();
 	PlayerFailDown();
 	EasterEggEvent();
+	if(idStage == STAGE_3_1)
+		PlayerInSightGhost();
 
 	gameTime->Update(dt);
 	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera

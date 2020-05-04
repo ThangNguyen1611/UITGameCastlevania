@@ -153,6 +153,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Gate.cpp" />
+    <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Hit.cpp" />
     <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="Gate.h" />
+    <ClInclude Include="Ghost.h" />
     <ClInclude Include="Hit.h" />
     <ClInclude Include="IntroScene.h" />
     <ClInclude Include="Item.h" />
