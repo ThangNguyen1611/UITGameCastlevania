@@ -36,6 +36,7 @@
 #include "DarkenBat.h"
 #include "Knight.h"
 #include "Ghost.h"
+#include "Hunchman.h"
 #include "BreakableBrick.h"
 #include "Candle.h"
 #include "MovingPlatform.h"
@@ -53,6 +54,7 @@
 #define OBJECT_TYPE_BREAKABLEBRICK		7
 #define OBJECT_TYPE_CANDLE				8
 #define OBJECT_TYPE_MOVING_PLATFORM		9
+#define OBJECT_TYPE_HUNCHMAN			10
 
 using namespace std;
 

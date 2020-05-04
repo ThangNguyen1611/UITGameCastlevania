@@ -395,22 +395,32 @@ void Player::SetState(int state)
 		isOnStairs = false;
 		vX = PLAYER_WALKING_SPEED * direction;
 		break;
-	//case PLAYER_STATE_GOING_UP_STAIRS:
-	//	isOnStairs = true;
-	//	directionY = 1;
-	//	//vX = PLAYER_ON_STAIRS_SPEED_X * direction;
-	//	//vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
-	//	isJumping = false;
-	//	isSitting = false;
-	//	break;
-	//case PLAYER_STATE_GOING_DOWN_STAIRS:
-	//	isOnStairs = true;
-	//	directionY = -1;
-	//	//vX = PLAYER_ON_STAIRS_SPEED_X * direction;
-	//	//vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
-	//	isJumping = false;
-	//	isSitting = false;
-	//	break;
+	case PLAYER_STATE_GOING_UP_STAIRS:
+		//isOnStairs = true;
+		//directionY = 1;
+		////vX = PLAYER_ON_STAIRS_SPEED_X * direction;
+		////vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
+		//isJumping = false;
+		//isSitting = false;
+		vX = PLAYER_ON_STAIRS_SPEED_X * direction;
+		vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
+		isOnStairs = true;
+		animationSet->at(state)->ResetCurrentFrame();
+		animationSet->at(state)->StartAnimation();
+		break;
+	case PLAYER_STATE_GOING_DOWN_STAIRS:
+		//isOnStairs = true;
+		//directionY = -1;
+		////vX = PLAYER_ON_STAIRS_SPEED_X * direction;
+		////vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
+		//isJumping = false;
+		//isSitting = false;
+		vX = PLAYER_ON_STAIRS_SPEED_X * direction;
+		vY = PLAYER_ON_STAIRS_SPEED_Y * directionY;
+		isOnStairs = true;
+		animationSet->at(state)->ResetCurrentFrame();
+		animationSet->at(state)->StartAnimation();
+		break;
 	case PLAYER_STATE_JUMP:
 		if (!isAllowJump)
 			return;

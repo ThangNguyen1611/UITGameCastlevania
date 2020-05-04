@@ -155,6 +155,7 @@
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Hit.cpp" />
+    <ClCompile Include="Hunchman.cpp" />
     <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemAxe.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Gate.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Hit.h" />
+    <ClInclude Include="Hunchman.h" />
     <ClInclude Include="IntroScene.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemAxe.h" />

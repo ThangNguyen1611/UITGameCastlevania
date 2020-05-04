@@ -17,7 +17,6 @@ DarkenBat::DarkenBat(float posX, float posY, int directionX, LPGAMEENTITY target
 
 	health = 1;
 	isDead = false;
-	targetDetected = false;
 	this->target = target;
 }
 
@@ -35,7 +34,6 @@ void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 200)
 		{
-			targetDetected = true;
 			SetState(DARKBAT_STATE_FLYING);
 		}
 	}

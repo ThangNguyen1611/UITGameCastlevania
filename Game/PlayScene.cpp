@@ -266,6 +266,17 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		break;
+	case EntityType::HUNCHMAN:
+		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
+		{
+			player->AddScore(1000);
+			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		}
+		//Add Heart(-1) nen thay the bang damage cua weapon
+		listObjects[i]->AddHealth(-1);
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		break;
 	case EntityType::TORCH:
 	{
 		Torch* torch = dynamic_cast<Torch*>(listObjects[i]);	//Extension cua DropItem
@@ -1270,6 +1281,12 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MOVING_PLATFORM:
 	{
 		listObjects.push_back(new MovingPlatform(x, y));
+		break;
+	}
+	case OBJECT_TYPE_HUNCHMAN:
+	{
+		//player tao truoc nen kh sao
+		listObjects.push_back(new Hunchman(x, y, player));
 		break;
 	}
 	default:

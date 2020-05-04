@@ -16,7 +16,6 @@ class DarkenBat : public Entity
 {
 	float tempY;
 	int directionY;
-	bool targetDetected;
 	LPGAMEENTITY target;
 public:
 	DarkenBat(float posX, float posY, int directionX, LPGAMEENTITY target);

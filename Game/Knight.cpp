@@ -122,7 +122,6 @@ void Knight::SetState(int state)
 	case KNIGHT_STATE_DIE:
 		vX = 0;
 		vY = 0;
-		health = 0;
 		isDead = true;
 		break;
 	case KNIGHT_STATE_WALKING:
