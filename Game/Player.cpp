@@ -50,7 +50,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		isImmortaling = true;
 	}
 
-	if (!isWalking && !isJumping)	//Attack tren mat dat thi dung yen, attack khi dang jump thi di chuyen duoc
+	if (!isWalking && !isJumping && !isOnMF)	//Attack tren mat dat thi dung yen, attack khi dang jump thi di chuyen duoc
 	{
 		vX = 0;
 		//explain: state_walking: jump false (collision with brick), transfer to state_attack: walking false too -> vX = 0
@@ -250,8 +250,17 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					if (e->ny < 0)
 					{
 						//is it wrong ?
-						posX = e->obj->GetPosX();
+						//posX = e->obj->GetPosX();
+						if(!isOnMF)
+							backupVx = vX;
+						isOnMF = true;
+						vX = e->obj->GetVx();
 					}
+				}
+				else
+				{
+					isOnMF = false;
+					vX = backupVx;
 				}
 			}
 		}

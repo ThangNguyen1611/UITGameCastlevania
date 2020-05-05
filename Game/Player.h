@@ -79,7 +79,9 @@ class Player : public Entity
 		isUpgrading,
 		isPassingStage,
 		isRespawning,
-		isOnStairs;
+		isOnStairs,
+		isOnMF;
+	float backupVx;
 
 	bool triggerAuto;	//trigger make player cant use input
 	float targetPosX;
