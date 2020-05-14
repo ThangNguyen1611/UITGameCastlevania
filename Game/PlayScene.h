@@ -72,6 +72,8 @@ protected:
 	std::vector<LPGAMEEFFECT> listEffects;
 	std::vector<LPGAMEITEM> listItems;
 	std::vector<LPCWSTR> listSceneFilePath;
+	std::vector<LPGAMEENTITY> listStairs;
+	std::vector<LPGAMEENTITY> listStairsEx;
 	UI* gameUI;
 	GameTime* gameTime;		
 	Camera* gameCamera;
@@ -125,10 +127,14 @@ public:
 	void SetSubWeaponDone(UINT i);
 	bool PlayerPassingStage(float DistanceXWant, int directionGo);
 	void PlayerGotGate();
-	bool PlayerGotStairs();
 	void EasterEggEvent();	//EEE
 	void PlayerFailDown();
 	void PlayerInSightGhost();
+
+	std::vector<LPGAMEENTITY> GetListStairs() { return listStairs; }
+	std::vector<LPGAMEENTITY> GetListStairsEx() { return listStairsEx; }
+	bool PlayerCollideStairs();
+	bool PlayerCollideStairsEx();
 
 	friend class PlayScenceKeyHandler;
 };

@@ -15,10 +15,10 @@ void Gate::Render()
 {
 	RenderBoundingBox();
 
-	if (gateSwitchSceneId == 2 || gateSwitchSceneId == 4)	//Gate tai stage 1 3 khong ve~
-		return;
+	//if (gateSwitchSceneId == 2 || gateSwitchSceneId == 4)	//Gate tai stage 1 3 khong ve~
+	//	return;
 
-	animationSet->at(0)->Render(-direction, posX, posY);
+	//animationSet->at(0)->Render(-direction, posX, posY);
 }
 
 void Gate::GetBoundingBox(float &l, float &t, float &r, float &b)

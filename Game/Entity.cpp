@@ -12,9 +12,7 @@ Entity::Entity()
 	bbARGB = 0;
 }
 
-Entity::~Entity() {
-	//SAFE_DELETE(textSprite);
-}
+Entity::~Entity(){}
 
 void Entity::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
@@ -33,15 +31,10 @@ void Entity::RenderBoundingBox()
 	rect.top = 0;
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
-
-	/*Texture2d* bbox = Texture2dManager::GetInstance()->GetTexture(EntityType::BBOX);
-	D3DXVECTOR3 origin((float)texture->getFrameWidth() / 2, (float)texture->getFrameHeight() / 2, 0);
-	Game::GetInstance()->OldDraw(posX, posY, bbox->GetTexture(), rect.left, rect.top, rect.right, rect.bottom, origin, bbARGB);*/
-
+	
 	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(0);
 	Game::GetInstance()->Draw(direction, l, t, bbox, rect.left, rect.top, rect.right, rect.bottom, bbARGB);
 }
-
 
 /*
 	Extension of original SweptAABB to deal with two moving listObjects
@@ -70,16 +63,18 @@ LPCOLLISIONEVENT Entity::SweptAABBEx(LPGAMEENTITY coO)
 	//Do BBox theo logic SweptAABB la xet cac rect voi origin la goc trai tren
 	//Nhu vay logic se ap dung cho Draw voi origin la goc trai tren
 	//Su dung origin la tam textTexture -> xet cac rect lech theo huong tam textTexture
+	LPSPRITE sprt = animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite();
+	LPSPRITE coSprt = coO->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite();
 	Game::SweptAABB(
-		ml - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
-		mt - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
-		mr - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
-		mb - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
+		ml - (float)sprt->GetFrameWidth() / 2,
+		mt - (float)sprt->GetFrameHeight() / 2,
+		mr - (float)sprt->GetFrameWidth() / 2,
+		mb - (float)sprt->GetFrameHeight() / 2,
 		dx, dy,
-		sl - (float)coO->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
-		st - (float)coO->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
-		sr - (float)coO->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth(),
-		sb - (float)coO->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
+		sl - (float)coSprt->GetFrameWidth() / 2,
+		st - (float)coSprt->GetFrameHeight() / 2,
+		sr - (float)coSprt->GetFrameWidth(),
+		sb - (float)coSprt->GetFrameHeight() / 2,
 		t, nx, ny
 	);
 
@@ -152,15 +147,17 @@ bool Entity::IsCollidingObject(Entity* Obj)
 	Obj->GetBoundingBox(sl, st, sr, sb);
 
 	//Check AABB first
+	LPSPRITE sprt = animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite();
+	LPSPRITE coSprt = Obj->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite();
 	if (Game::GetInstance()->IsCollidingAABB(
-		ml - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
-		mt - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
-		mr - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
-		mb - (float)animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
-		sl - (float)Obj->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth() / 2,
-		st - (float)Obj->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2,
-		sr - (float)Obj->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameWidth(),
-		sb - (float)Obj->animationSet->at(0)->GetAnimationCurrentFrame(0)->GetSprite()->GetFrameHeight() / 2))
+		ml - (float)sprt->GetFrameWidth() / 2,
+		mt - (float)sprt->GetFrameHeight() / 2,
+		mr - (float)sprt->GetFrameWidth() / 2,
+		mb - (float)sprt->GetFrameHeight() / 2,
+		sl - (float)coSprt->GetFrameWidth() / 2,
+		st - (float)coSprt->GetFrameHeight() / 2,
+		sr - (float)coSprt->GetFrameWidth(),
+		sb - (float)coSprt->GetFrameHeight() / 2))
 		return true;
 
 	//Swept AABB later

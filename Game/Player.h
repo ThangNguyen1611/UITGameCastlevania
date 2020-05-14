@@ -36,6 +36,8 @@
 #define PLAYER_STATE_PASSING_STAGE				11
 #define PLAYER_STATE_GOING_UP_STAIRS			12
 #define PLAYER_STATE_GOING_DOWN_STAIRS			13
+#define PLAYER_STATE_UPSTARIS_ATTACK			14
+#define PLAYER_STATE_DOWNSTAIRS_ATTACK			15
 
 #define PLAYER_ANI_DIE							28
 #define PLAYER_ANI_IDLE							0
@@ -83,13 +85,16 @@ class Player : public Entity
 		isOnMF;
 	float backupVx;
 
-	bool triggerAuto;	//trigger make player cant use input
-	float targetPosX;
-	float targetPosY;
-	float processAutoSpeedX;
-	float processAutoSpeedY;
+	bool canMoveDown;
+	bool canMoveUp;
+	bool cannotMoveDown;
+	LPGAMEENTITY stairCollided = nullptr;
+	int stairDirection;
 
-	int directionY;	//1 = up, -1 = down
+	bool isWalkingOnStairs;
+	float posWalkingOnStairs;
+	int stateWalkingOnStairs;
+	int directionWalkingOnStairs;
 
 	int currentStageLiving;
 
@@ -141,10 +146,6 @@ public:
 	bool IsGettingTriple() { return isGettingTriple; }
 	void SetGettingTriple(bool b) { isGettingTriple = b; }
 
-	bool IsProcessingAuto() { return triggerAuto; }
-
-	int GetDirectionY() { return directionY; }
-	void SetDirectionY(int i) { directionY = i; }
 	void SetOnStair(bool onStair) { isOnStairs = onStair; }
 	
 	Weapon* GetPlayerMainWeapon() { return mainWeapon; }
@@ -159,8 +160,18 @@ public:
 
 	void Respawn();
 
-	void KnownTargetMovement(float targetX, float targetY, float speedX, float speedY, int directionX = 1, int directionY = 1);
-	//1 co che khong duoc dieu khien
-	//target Pos nen la 1 cap vector de khi su dung khong xay ra nhung loi lien quan nhap lieu
+	bool SimonCollideWithStair(vector<LPGAMEENTITY> *listStairs);
+	void TriggerAutoWalk(float nextPos, int nextState, int nextDirection);
+	void AutoWalk();
+	bool GetCannotMoveDown() { return cannotMoveDown; }
+	void SetCannotMoveDown(bool b) { cannotMoveDown = b; }
+	int GetStairsDirectionPlayerColliding() { return stairDirection; }
+
+	bool GetIsWalkingOnStairs() { return isWalkingOnStairs; }
+
+	void PlayerUpStairs();
+	void PlayerDownStairs();
+	bool PlayerStandOnStairs();
+
 };
 

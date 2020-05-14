@@ -55,12 +55,14 @@ public:
 
 	void RenderBoundingBox();
 
+	LPANIMATION_SET GetAnimationSet() { return animationSet; }
 	void SetAnimationSet(LPANIMATION_SET aniSet) { animationSet = aniSet; }
 
 	void SetState(int STATE) { this->state = STATE; }
 	int GetState() { return state; }
 
 	int GetHealth() { return health; }
+	void SetHealth(int value) { health = value; }
 	void AddHealth(int BonusHealth) { health += BonusHealth; }
 
 	bool IsDeadYet() { return isDead; }

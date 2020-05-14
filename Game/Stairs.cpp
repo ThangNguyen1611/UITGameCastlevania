@@ -1,6 +1,6 @@
 #include "Stairs.h"
 
-Stairs::Stairs(float posX, float posY, int stairDirection, int stairDirectionY)
+Stairs::Stairs(float posX, float posY, int stairDirection)
 {
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_STAIRS));
 	tag = EntityType::STAIRS;
@@ -8,7 +8,6 @@ Stairs::Stairs(float posX, float posY, int stairDirection, int stairDirectionY)
 	this->posX = posX;
 	this->posY = posY;
 	this->direction = stairDirection;
-	this->directionY = stairDirectionY;
 }
 
 Stairs::~Stairs(){}

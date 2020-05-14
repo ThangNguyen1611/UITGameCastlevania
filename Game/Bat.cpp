@@ -46,21 +46,6 @@ void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	posX += dx;
 	posY += dy;
 
-#pragma region Past
-	//Entity* target;
-	////Player is the first unit of vector
-	//target = coObjects->at(0);
-	//if (!target->IsDeadYet() && !isDead) {
-	//	//AI (testing - not neccesary)
-	//	D3DXVECTOR2 pos = D3DXVECTOR2(posX, posY);
-	//	//speed nay dc define cho vX (pos += vX * dt) nen khi muon dung cho pos phai nhan voi 1 so tuong duong dt
-	//	pos += RadialMovement(D3DXVECTOR2(target->GetPosX(), target->GetPosY()), pos, BAT_FLYING_SPEED * 10);
-	//	posX = pos.x;
-	//	posY = pos.y;
-	//}
-	//Entity::Update(dt);
-
-#pragma endregion
 }
 
 void Bat::Render() 
