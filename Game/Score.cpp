@@ -6,22 +6,7 @@ Score::Score(float posX, float posY, EntityType scoreType)
 	this->posX = posX;
 	this->posY = posY;
 	isDone = false;
-	this->scoreType = scoreType;
-
-	/*if (scoreType == EntityType::MONEYBAGRED)
-	{
-		animationSet->at(SCORE_100_ANI)->StartAnimation();
-	}
-	else if (scoreType == EntityType::MONEYBAGWHITE)
-	{
-		animationSet->at(SCORE_400_ANI)->StartAnimation();
-	}
-	else if (scoreType == EntityType::MONEYBAGBLUE)
-	{
-		animationSet->at(SCORE_700_ANI)->StartAnimation();
-	}*/
-	/*else
-		animationSet->at(SCORE_1000_ANI)->StartAnimation();*/
+	SetType(scoreType);
 }
 
 Score::~Score() {}
@@ -32,43 +17,35 @@ void Score::Update(DWORD dt)
 	{
 		return;
 	}
-	/*if(scoreType == EntityType::MONEYBAGRED && animationSet->at(SCORE_100_ANI)->IsRenderOver(SCORE_DISPLAY))
+	if(animationSet->at(type)->GetCurrentFrame() == 1)
 	{
 		isDone = true;
+		animationSet->at(type)->ResetCurrentFrame();
 	}
-	else if (scoreType == EntityType::MONEYBAGWHITE && animationSet->at(SCORE_400_ANI)->IsRenderOver(SCORE_DISPLAY))
-	{
-		isDone = true;
-	}
-	else if (scoreType == EntityType::MONEYBAGBLUE && animationSet->at(SCORE_700_ANI)->IsRenderOver(SCORE_DISPLAY))
-	{
-		isDone = true;
-	}*/
-	/*else if (animationSet->at(SCORE_1000_ANI)->IsRenderOver(SCORE_DISPLAY))
-	{
-		isDone = true;
-	}*/
 }
 
 void Score::Render()
 {
 	if (!isDone)
+		animationSet->at(type)->Render(-1, posX, posY);
+}
+
+void Score::SetType(EntityType scoreType)
+{
+	switch (scoreType)
 	{
-		/*switch (scoreType)
-		{
-		case MONEYBAGRED:
-			animationSet->at(SCORE_100_ANI)->Render(-1, posX, posY);
-			break;
-		case MONEYBAGWHITE:
-			animationSet->at(SCORE_400_ANI)->Render(-1, posX, posY);
-			break;
-		case MONEYBAGBLUE:
-			animationSet->at(SCORE_700_ANI)->Render(-1, posX, posY);
-			break;
-		default:
-			animationSet->at(SCORE_1000_ANI)->Render(-1, posX, posY);
-			break;
-		}*/
+	case MONEYBAGRED:
+		type = SCORE_100_ANI;
+		break;
+	case MONEYBAGWHITE:
+		type = SCORE_400_ANI;
+		break;
+	case MONEYBAGBLUE:
+		type = SCORE_700_ANI;
+		break;
+	default:
+		type = SCORE_1000_ANI;
+		break;
 	}
 }
 

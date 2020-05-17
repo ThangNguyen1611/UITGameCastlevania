@@ -4,7 +4,6 @@ Weapon::Weapon()
 {
 	isDone = true;
 	isReceivedPos = true;
-	isDidDamage = false;
 }
 
 Weapon::~Weapon(){}

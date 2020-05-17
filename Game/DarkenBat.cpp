@@ -8,6 +8,7 @@ DarkenBat::DarkenBat(float posX, float posY, int directionX, LPGAMEENTITY target
 	tag = EntityType::DARKENBAT;
 
 	this->posX = posX;
+	this->firstPosX = posX;
 	this->posY = posY;
 	this->tempY = posY;
 	this->direction = directionX;
@@ -18,13 +19,14 @@ DarkenBat::DarkenBat(float posX, float posY, int directionX, LPGAMEENTITY target
 	health = 1;
 	isDead = false;
 	this->target = target;
+	isDonePhase1 = false;
 }
 
 DarkenBat::~DarkenBat(){}
 
 void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 2)
+	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 3)	//Player die
 	{
 		SetState(DARKBAT_STATE_DIE);
 		return;
@@ -38,22 +40,40 @@ void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		}
 	}
 
-	if (vX != 0)
+	if (!isDonePhase1)
 	{
-		//posY = 60 * sin(0.3 * posX * PI / 180) + tempY;
-		//posY = ((-1 * pow(posX, 2)) / 125) + (1057 * posX / 288) - 214;
-		//posY = ((-23 * pow(posX, 2)) / 2702) + (123 * posX / 32) - 227;
-		if (posY - tempY >= DARKBAT_AMPLITUDE_HORIZONTAL)
-			directionY = -1;
-		else if(tempY - posY >= DARKBAT_AMPLITUDE_HORIZONTAL)
-			directionY = 1;
+		if (vX != 0)
+		{
+			if (posY - tempY >= DARKBAT_AMPLITUDE_HORIZONTAL)
+				directionY = -1;
+			else if (tempY - posY >= DARKBAT_AMPLITUDE_HORIZONTAL)
+				directionY = 1;
 
-		vY += DARKBAT_FLYING_SPEED_Y * directionY;
+			vY += DARKBAT_FLYING_SPEED_Y * directionY;
+		}
+		if (posX > DARKBAT_MAX_DISTANCE_PHASE1 + firstPosX)
+		{
+			isDonePhase1 = true;
+		}
+	}
+	if (isDonePhase1)
+	{
+		D3DXVECTOR2 pos = D3DXVECTOR2(posX, posY);
+		pos += RadialMovement(D3DXVECTOR2(target->GetPosX(), target->GetPosY()), pos, DARKBAT_FLYING_SPEED_PHASE2);
+		posX = pos.x;
+		posY = pos.y;
+		if (target->GetPosX() < posX)
+			direction = -1;
+		else
+			direction = 1;
 	}
 
 	Entity::Update(dt);
-	posX += dx;
-	posY += dy;
+	if (!isDonePhase1) 
+	{
+		posX += dx;
+		posY += dy;
+	}
 
 }
 

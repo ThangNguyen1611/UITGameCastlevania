@@ -21,6 +21,7 @@ void PlayScene::LoadBaseObjects()
 	gameTime = GameTime::GetInstance();		//That ra khong can 2 buoc nay vi ca 2 deu thiet ke Singleton
 	gameCamera = Camera::GetInstance();
 	gameMap = new Map();
+	triggerResetGame = false;
 }
 
 void PlayScene::ChooseMap(int whatMap)	
@@ -55,6 +56,20 @@ void PlayScene::ChooseMap(int whatMap)
 	int convertSimple = idStage / STAGE_1;
 	sceneFilePath = listSceneFilePath[convertSimple - 1];
 	LoadSceneObjects();
+	gameGrid = new Grid(mapWidth, mapHeight);
+	gameGrid->PushObjectIntoGrid(listObjectsToGrid);
+}
+
+void PlayScene::GetObjectFromGrid()
+{
+	listObjects.clear();
+	listObjectsFromGrid.clear();
+	gameGrid->GetObjectFromGrid(listObjectsFromGrid);
+	for (UINT i = 0; i < listObjectsFromGrid.size(); i++)
+	{
+		LPGAMEENTITY obj = listObjectsFromGrid[i];
+		listObjects.push_back(obj);
+	}
 }
 
 Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY)
@@ -69,9 +84,31 @@ Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, f
 		return new Hit(posX - HIT_EFFECT_CUSTOMIZED_POS, posY - HIT_EFFECT_CUSTOMIZED_POS);
 }
 
+Item* PlayScene::RandomItem(float posX, float posY)
+{
+	int bagrandom = rand() % 100; 
+	int random = rand() % 1000;
+	if (random <= 200)
+		return new SmallHeart(posX, posY);
+	else if (200 < random && random <= 400)
+		return new BigHeart(posX, posY);
+	else if (400 < random && random <= 600)
+		return new YummiChickenLeg(posX, posY);
+	else if (600 < random && random <= 800)
+		return new UpgradeMorningStar(posX, posY);
+	else
+	{
+		if (bagrandom <= 33)
+			return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
+		else if (33 < bagrandom && bagrandom <= 66)
+			return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
+		else
+			return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
+	}
+}
+
 Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int idCreater)
 {
-	int bagrandom = rand() % 100;
 	if (createrType == EntityType::NONE)		//special case
 	{
 		if (idStage == STAGE_2_1)
@@ -99,24 +136,7 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 				}
 				else
 				{
-					int random = rand() % 1000;
-					if (random <= 200)
-						return new SmallHeart(posX, posY);
-					else if (200 < random && random <= 400)
-						return new BigHeart(posX, posY);
-					else if (400 < random && random <= 600)
-						return new YummiChickenLeg(posX, posY);
-					else if (600 < random && random <= 800)
-						return new UpgradeMorningStar(posX, posY);
-					else
-					{
-						if (bagrandom <= 33)
-							return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
-						else if (33 < bagrandom && bagrandom <= 66)
-							return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
-						else
-							return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
-					}
+					RandomItem(posX, posY);
 				}
 	}
 	else
@@ -128,55 +148,22 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 			}
 			else
 			{
-				int random = rand() % 1000;
-				if (random <= 200)
-					return new SmallHeart(posX, posY);
-				else if (200 < random && random <= 400)
-					return new BigHeart(posX, posY);
-				else if (400 < random && random <= 600)
-					return new YummiChickenLeg(posX, posY);
-				else if (600 < random && random <= 800)
-					return new UpgradeMorningStar(posX, posY);
-				else
-				{
-					if (bagrandom <= 33)
-						return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
-					else if (33 < bagrandom && bagrandom <= 66)
-						return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
-					else
-						return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
-				}
+				RandomItem(posX, posY);
 			}
 		}
 		else
-			if (createrType == EntityType::KNIGHT)
+			if (createrType == EntityType::KNIGHT || 
+				createrType == EntityType::DARKENBAT ||
+				createrType == EntityType::GHOST ||
+				createrType == EntityType::HUNCHMAN ||
+				createrType == EntityType::RAVEN || 
+				createrType == EntityType::SKELETON)
 			{
-				int random = rand() % 1000;
-				if (random <= 200)
-					return new SmallHeart(posX, posY);
-				else if (200 < random && random <= 400)
-					return new BigHeart(posX, posY);
-				else if (400 < random && random <= 600)
-					return new YummiChickenLeg(posX, posY);
-				else if (600 < random && random <= 800)
-					return new UpgradeMorningStar(posX, posY);
-				else
-				{
-					if (bagrandom <= 33)
-						return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
-					else if (33 < bagrandom && bagrandom <= 66)
-						return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
-					else
-						return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
-				}
+				RandomItem(posX, posY);
 			}
 			else
-				if (createrType == EntityType::DARKENBAT)
-				{
-					return new ItemWaterPotion(posX, posY);
-				}
-				else
-					return new BigHeart(posX, posY);
+				return new BigHeart(posX, posY);
+			
 }
 
 void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
@@ -257,11 +244,7 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 			}
 		}
 		else
-			//if (!weapon->GetIsDidDamage())
-			//{
-				listObjects[i]->AddHealth(-1);
-			//	weapon->SetIsDidDamage(true);
-			//}
+			listObjects[i]->AddHealth(-1);
 
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
@@ -270,6 +253,28 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
 		{
 			player->AddScore(1000);
+			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		}
+		//Add Heart(-1) nen thay the bang damage cua weapon
+		listObjects[i]->AddHealth(-1);
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		break;
+	case EntityType::SKELETON:
+		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
+		{
+			player->AddScore(3000);
+			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		}
+		//Add Heart(-1) nen thay the bang damage cua weapon
+		listObjects[i]->AddHealth(-1);
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		break;
+	case EntityType::RAVEN:
+		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
+		{
+			player->AddScore(1500);
 			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		}
 		//Add Heart(-1) nen thay the bang damage cua weapon
@@ -355,6 +360,25 @@ void PlayScene::WeaponCollision()
 					WeaponInteractObj(i, player->GetPlayerSupWeapon());
 					SetSubWeaponDone(i);
 				}
+		}
+	}
+}
+
+void PlayScene::PlayerCollideBone()
+{
+	for (UINT i = 0; i < listObjects.size(); i++)
+	{
+		if (listObjects[i]->GetType() == EntityType::SKELETON)
+		{
+			Skeleton* skeleton = dynamic_cast<Skeleton*>(listObjects[i]);
+			if (skeleton->GetBone()->IsCollidingObject(player))
+			{
+				player->AddHealth(-1);
+				player->StartHurtingTimer();
+				player->StartImmortalingTimer();
+				player->SetImmortal(true);
+				player->SetState(PLAYER_STATE_HURTING);
+			}
 		}
 	}
 }
@@ -575,14 +599,26 @@ void PlayScene::PlayerGotGate()
 						player->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
 					}
 				}
+				else // CASE: STAGE UNDEFINED BUT HAD GATES
+					//neu can sua theo huong file thi co the luu thong tin quan trong nhu positon, camera pos, state vao gate de luu lai
+					//nhung cach nay khong hoan toan toi uu (vd stage 2-2 co 2 gate dan den no, van dung if se chinh xac hon)
+				{
+					Unload();
+					gameCamera->SetCamPos(0, 0);
+					ChooseMap(STAGE_1);
+					player->SetPosition(100, 200);
+					player->SetVx(0);
+					player->SetVy(0);
+					player->SetState(PLAYER_STATE_IDLE);
+				}
 			}
 		}
 	}
 }
 
-void PlayScene::PlayerFailDown()
+void PlayScene::PlayerFailDown()	//Un-used
 {
-	if (idStage == STAGE_2_2 || idStage == STAGE_3_2)
+	if (idStage == STAGE_2_2 || idStage == STAGE_3_1 || idStage == STAGE_3_2)
 	{
 		if (player->GetPosY() >= 441)
 		{
@@ -619,7 +655,7 @@ void PlayScene::PlayerInSightGhost()
 	{
 		if (triggerSpawnGhost)
 		{
-			listObjects.push_back(new Ghost(1350, 345, player));
+			listObjectsToGrid.push_back(new Ghost(1350, 345, player));
 			triggerSpawnGhost = false;
 		}
 	}
@@ -660,6 +696,7 @@ void PlayScene::CheckObjAlive()
 
 void PlayScene::Update(DWORD dt)
 {
+	GetObjectFromGrid();
 #pragma region Scan Game Periodically
 	//Nen co 1 lan quet toan bo object cua game moi 100 hoac 1000 lan update
 	/*if (!isScanned && scanningGameTimer->IsTimeUp())
@@ -750,54 +787,14 @@ void PlayScene::Update(DWORD dt)
 		}
 	}
 #pragma endregion
-#pragma region Objects Updates
-	vector<LPGAMEENTITY> coObjects;
-	for (int i = 0; i < listObjects.size(); i++)
-	{
-		coObjects.push_back(listObjects[i]);
-	}
-	player->Update(dt, &coObjects);
-	for (int i = 0; i < listObjects.size(); i++)
-	{
-		listObjects[i]->Update(dt, &coObjects);
-	}
-	for (int i = 0; i < listEffects.size(); i++)
-	{
-		listEffects[i]->Update(dt);
-	}
-	for (int i = 0; i < listItems.size(); i++)
-	{
-		listItems[i]->Update(dt, &listObjects);
-	}
-#pragma endregion
 #pragma region Camera
 	float cx, cy;
 	player->ReceivePos(cx, cy);
-	//1250
-	if (idStage == STAGE_1 && player->GetPosX() >= STAGE_1_MAX_WIDTH)
+	
+	if (player->GetPosX() >= camMaxWidth)
 	{
-		cx -= SCREEN_WIDTH / 2 - (STAGE_1_MAX_WIDTH - player->GetPosX());
+		cx -= SCREEN_WIDTH / 2 - (camMaxWidth - player->GetPosX());
 	}
-	else
-		if (idStage == STAGE_2_1 && player->GetPosX() >= STAGE_2_1_MAX_WIDTH)
-		{
-			cx -= SCREEN_WIDTH / 2 - (STAGE_2_1_MAX_WIDTH - player->GetPosX());
-		}
-		else
-			if (idStage == STAGE_2_2 && player->GetPosX() >= STAGE_2_2_MAX_WIDTH)
-			{
-				cx -= SCREEN_WIDTH / 2 - (STAGE_2_2_MAX_WIDTH - player->GetPosX());
-			}
-			else
-				if (idStage == STAGE_3_1 && player->GetPosX() >= STAGE_3_1_MAX_WIDTH)
-				{
-					cx -= SCREEN_WIDTH / 2 - (STAGE_3_1_MAX_WIDTH - player->GetPosX());
-				}
-				else
-					if (idStage == STAGE_3_2 && player->GetPosX() >= STAGE_3_2_MAX_WIDTH)
-					{
-						cx -= SCREEN_WIDTH / 2 - (STAGE_3_2_MAX_WIDTH - player->GetPosX());
-					}
 	else
 	{
 		if (player->GetPosX() < SCREEN_WIDTH / 2)
@@ -812,10 +809,10 @@ void PlayScene::Update(DWORD dt)
 #pragma endregion
 
 	WeaponCollision();
+	PlayerCollideBone();
 	PlayerCollideItem();
 	PlayerGotGate(); 
-	//PlayerGotStairs();
-	PlayerFailDown();
+	//PlayerFailDown();
 	EasterEggEvent();
 	if(idStage == STAGE_3_1)
 		PlayerInSightGhost();
@@ -823,6 +820,35 @@ void PlayScene::Update(DWORD dt)
 	gameTime->Update(dt);
 	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera
 
+	gameGrid->ResetGrid(listObjectsToGrid);
+
+	if (player->IsRespawning() && !triggerResetGame)
+	{
+		ResetGame();
+	}
+	else if (!player->IsRespawning()) triggerResetGame = false;
+
+#pragma region Objects Updates
+	vector<LPGAMEENTITY> coObjects;
+	for (int i = 0; i < listObjects.size(); i++)
+	{
+		coObjects.push_back(listObjects[i]);
+	}
+	player->Update(dt, &coObjects);
+	for (int i = 0; i < listObjects.size(); i++)
+	{
+		if(!player->IsUpgrading())
+			listObjects[i]->Update(dt, &coObjects);
+	}
+	for (int i = 0; i < listEffects.size(); i++)
+	{
+		listEffects[i]->Update(dt);
+	}
+	for (int i = 0; i < listItems.size(); i++)
+	{
+		listItems[i]->Update(dt, &listObjects);
+	}
+#pragma endregion
 }
 
 void PlayScene::Render()
@@ -881,7 +907,7 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			else 
 				if (playScene->idStage == STAGE_3_1)
 				{
-					simon->SetPosition(400, 350);//1440
+					simon->SetPosition(1440, 350);
 				}
 				else 
 					if (playScene->idStage == STAGE_3_2)
@@ -896,6 +922,19 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		simon->SetVx(0);
 		simon->SetVy(0);
 		simon->SetState(PLAYER_STATE_IDLE);
+		break;
+	case DIK_3:
+		if (simon->GetPlayerSupWeaponType() == EntityType::NONE || simon->GetPlayerSupWeaponType() == EntityType::WATERPOTION)
+			simon->SetPlayerSupWeaponType(EntityType::DAGGER);
+		else if (simon->GetPlayerSupWeaponType() == EntityType::DAGGER)
+			simon->SetPlayerSupWeaponType(EntityType::AXE);
+		else if (simon->GetPlayerSupWeaponType() == EntityType::AXE)
+			simon->SetPlayerSupWeaponType(EntityType::BOOMERANG);
+		else if (simon->GetPlayerSupWeaponType() == EntityType::BOOMERANG)
+			simon->SetPlayerSupWeaponType(EntityType::WATERPOTION);
+		break;
+	case DIK_4:
+		simon->AddHealth(-4);
 		break;
 	case DIK_R:
 		for (int i = 0; i < listObj.size(); i++)
@@ -1137,9 +1176,12 @@ void PlayScene::_ParseSection_SCENEFILEPATH(string line)
 {
 	vector<string> tokens = split(line);
 
-	if (tokens.size() < 1) return;
+	if (tokens.size() < 3) return;
 
 	listSceneFilePath.push_back(ToLPCWSTR(tokens[0]));
+	mapWidth = atoi(tokens[1].c_str());
+	mapHeight = atoi(tokens[2].c_str());
+	//Hien tai chi lay mapWidth/Height cua list cuoi cung` :P co the dem vo tung file scene rieng de phan biet (hoac khong can, camera co chay toi duoc dau)
 }
 
 void PlayScene::_ParseSection_TILEMAP(string line)
@@ -1159,6 +1201,8 @@ void PlayScene::_ParseSection_TILEMAP(string line)
 	gameMap->LoadMap(atoi(tokens[0].c_str()), 
 		ToLPCWSTR(tokens[1]), atoi(tokens[2].c_str()), atoi(tokens[3].c_str()),
 		ToLPCWSTR(tokens[4]), atoi(tokens[5].c_str()), atoi(tokens[6].c_str()));
+
+	camMaxWidth = atoi(tokens[7].c_str());
 }
 
 /*
@@ -1181,25 +1225,25 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CANDLE:
 	{
 		int extras = atoi(tokens[3].c_str());
-		listObjects.push_back(new Candle(x, y, extras));
+		listObjectsToGrid.push_back(new Candle(x, y, extras));
 		break;
 	}
 	case OBJECT_TYPE_BRICK:
 	{
 		int extras = atoi(tokens[3].c_str());
-		listObjects.push_back(new Brick(x, y, extras));
+		listObjectsToGrid.push_back(new Brick(x, y, extras));
 		break;
 	}
 	case OBJECT_TYPE_TORCH:
 	{
 		int extras = atoi(tokens[3].c_str());
-		listObjects.push_back(new Torch(x, y, extras));
+		listObjectsToGrid.push_back(new Torch(x, y, extras));
 		break; 
 	}
 	case OBJECT_TYPE_GATE:
 	{
 		int extras = atoi(tokens[3].c_str());
-		listObjects.push_back(new Gate(x, y, extras));
+		listObjectsToGrid.push_back(new Gate(x, y, extras));
 		break;
 	}
 	case OBJECT_TYPE_STAIRS:
@@ -1216,31 +1260,44 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	{
 		//player tao truoc nen kh sao
 		int extras1 = atoi(tokens[3].c_str());
-		listObjects.push_back(new DarkenBat(x, y, extras1, player));
+		listObjectsToGrid.push_back(new DarkenBat(x, y, extras1, player));
 		break;
 	}
 	case OBJECT_TYPE_KNIGHT:
 	{
 		int extras1 = atoi(tokens[3].c_str());
 		int extras2 = atoi(tokens[4].c_str());
-		listObjects.push_back(new Knight(x, y, extras1, extras2));
+		listObjectsToGrid.push_back(new Knight(x, y, extras1, extras2));
 		break;
 	}
 	case OBJECT_TYPE_BREAKABLEBRICK:
 	{
 		int extras1 = atoi(tokens[3].c_str());
-		listObjects.push_back(new BreakableBrick(x, y, extras1));
+		listObjectsToGrid.push_back(new BreakableBrick(x, y, extras1));
 		break;
 	}
 	case OBJECT_TYPE_MOVING_PLATFORM:
 	{
-		listObjects.push_back(new MovingPlatform(x, y));
+		listObjectsToGrid.push_back(new MovingPlatform(x, y));
 		break;
 	}
 	case OBJECT_TYPE_HUNCHMAN:
 	{
 		//player tao truoc nen kh sao
-		listObjects.push_back(new Hunchman(x, y, player));
+		listObjectsToGrid.push_back(new Hunchman(x, y, player));
+		break;
+	}
+	case OBJECT_TYPE_RAVEN:
+	{
+		//player tao truoc nen kh sao
+		int extras1 = atoi(tokens[3].c_str());
+		listObjectsToGrid.push_back(new Raven(x, y, extras1, player));
+		break;
+	}
+	case OBJECT_TYPE_SKELETON:
+	{
+		//player tao truoc nen kh sao
+		listObjectsToGrid.push_back(new Skeleton(x, y, player));
 		break;
 	}
 	default:
@@ -1360,6 +1417,10 @@ void PlayScene::LoadSceneObjects()
 
 void PlayScene::Unload()
 {
+	/*for (int i = 0; i < listObjectsToGrid.size(); i++)
+		delete listObjectsToGrid[i];
+	for (int i = 0; i < listObjectsFromGrid.size(); i++)
+		delete listObjectsFromGrid[i];*/
 	for (int i = 0; i < listObjects.size(); i++)
 		delete listObjects[i];
 	for (int i = 0; i < listEffects.size(); i++)
@@ -1370,9 +1431,28 @@ void PlayScene::Unload()
 		delete listStairs[i];
 	for (int i = 0; i < listStairsEx.size(); i++)
 		delete listStairsEx[i];
+	listObjectsToGrid.clear();
+	listObjectsFromGrid.clear();
 	listObjects.clear();
 	listEffects.clear();
 	listItems.clear();
 	listStairs.clear();
 	listStairsEx.clear();
+}
+
+void PlayScene::ResetGame()
+{
+	listObjectsToGrid.clear();
+	listObjectsFromGrid.clear();
+	listObjects.clear();
+
+	ChooseMap(idStage);
+
+	gameTime->ResetGameTime();
+
+	player->SetPlayerSupWeaponType(EntityType::NONE);
+	player->SetMana(55);
+	player->AddScore(-player->GetScore());
+
+	triggerResetGame = true;
 }

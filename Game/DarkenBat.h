@@ -2,8 +2,10 @@
 #include "Entity.h"
 
 #define DARKBAT_FLYING_SPEED_X			0.15f
+#define DARKBAT_FLYING_SPEED_PHASE2		3.0f
 #define DARKBAT_FLYING_SPEED_Y			0.02f
 #define DARKBAT_AMPLITUDE_HORIZONTAL	40	
+#define DARKBAT_MAX_DISTANCE_PHASE1		150
 
 #define DARKBAT_BBOX_WIDTH				32
 #define DARKBAT_BBOX_HEIGHT				32
@@ -17,6 +19,8 @@ class DarkenBat : public Entity
 	float tempY;
 	int directionY;
 	LPGAMEENTITY target;
+	float firstPosX;
+	bool isDonePhase1;	//Phase 1: A curve-shape movement || Phase 2: Fly toward target
 public:
 	DarkenBat(float posX, float posY, int directionX, LPGAMEENTITY target);
 	~DarkenBat();

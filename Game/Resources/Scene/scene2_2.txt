@@ -152,4 +152,4 @@
 
 #idStage -- mapFilePath -- RowMap -- ColumnMap -- tilesetFilePath -- RowTileset -- ColumnTileset
 [TILEMAP]
-1500	Resources/TileMap/TilesetStage2_2Text.txt	12	33	Resources/TileMap/TilesetStage2.png	4	7
+1500	Resources/TileMap/TilesetStage2_2Text.txt	12	33	Resources/TileMap/TilesetStage2.png	4	7	776

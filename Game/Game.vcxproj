@@ -136,6 +136,7 @@
     <ClCompile Include="Axe.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="BigHeart.cpp" />
+    <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Boomerang.cpp" />
     <ClCompile Include="BreakableBrick.cpp" />
     <ClCompile Include="Brick.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="Ghost.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Hit.cpp" />
     <ClCompile Include="Hunchman.cpp" />
     <ClCompile Include="IntroScene.cpp" />
@@ -171,9 +173,11 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="Raven.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Score.cpp" />
+    <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="SmallHeart.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Stairs.cpp" />
@@ -193,6 +197,7 @@
     <ClInclude Include="Axe.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="BigHeart.h" />
+    <ClInclude Include="Bone.h" />
     <ClInclude Include="Boomerang.h" />
     <ClInclude Include="BreakableBrick.h" />
     <ClInclude Include="Brick.h" />
@@ -211,6 +216,7 @@
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="Ghost.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="Hit.h" />
     <ClInclude Include="Hunchman.h" />
     <ClInclude Include="IntroScene.h" />
@@ -228,9 +234,11 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="HealthBar.h" />
     <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="Raven.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Score.h" />
+    <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SmallHeart.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Stairs.h" />

@@ -29,6 +29,8 @@ Player::Player(float posX, float posY)
 
 	mainWeapon = new MorningStar();		//Simon's main/basic weapon is MorningStar
 	supWeapon = NULL;
+	supWeaponAtDouble = NULL;
+	supWeaponAtTriple = NULL;
 	currentSupWeaponType = EntityType::NONE;		//	non ((:
 }
 
@@ -36,7 +38,12 @@ Player::~Player(){}
 
 void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {	
-	if (health <= 0 && !isRespawning)
+	//if (posY > 450 && state != PLAYER_STATE_DIE) //Instead PlayerFailDown
+	//{
+	//	health = 0;
+	//}
+
+	if ((health <= 0 || posY > 450) && !isRespawning)
 	{
 		live -= 1;
 		SetState(PLAYER_STATE_DIE);
@@ -50,7 +57,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		isImmortaling = true;
 	}
 
-	if (!isWalking && !isJumping && !isOnMF && !isOnStairs)	//Attack tren mat dat thi dung yen, attack khi dang jump thi di chuyen duoc
+	if (!isWalking && !isJumping && !isOnMF && !isOnStairs && !isHurting)	//Attack tren mat dat thi dung yen, attack khi dang jump thi di chuyen duoc
 	{
 		vX = 0;
 		//explain: state_walking: jump false (collision with brick), transfer to state_attack: walking false too -> vX = 0
@@ -97,6 +104,26 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				supWeapon->ResetDelay();
 			}
 		}
+		if (supWeaponAtDouble != NULL)
+		{
+			if (supWeaponAtDouble->GetType() == EntityType::DAGGER ||
+				supWeaponAtDouble->GetType() == EntityType::BOOMERANG ||
+				supWeaponAtDouble->GetType() == EntityType::AXE ||
+				supWeaponAtDouble->GetType() == EntityType::WATERPOTION)
+			{
+				supWeaponAtDouble->ResetDelay();
+			}
+		}
+		if (supWeaponAtTriple != NULL)
+		{
+			if (supWeaponAtTriple->GetType() == EntityType::DAGGER ||
+				supWeaponAtTriple->GetType() == EntityType::BOOMERANG ||
+				supWeaponAtTriple->GetType() == EntityType::AXE ||
+				supWeaponAtTriple->GetType() == EntityType::WATERPOTION)
+			{
+				supWeaponAtTriple->ResetDelay();
+			}
+		}
 	}
 
 	if ((state == PLAYER_STATE_ATTACK && animationSet->at(PLAYER_STATE_ATTACK)->IsRenderOver()) ||
@@ -119,7 +146,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	Entity::Update(dt);
 
 	// simple fall down
-	if (!isOnStairs && !isWalkingOnStairs) 
+	if (!isOnStairs && !isWalkingOnStairs && !isRespawning) //Khi chet se reload stage -> mat brick -> tat trong luc de khong bi xet' chet 2 lan
 	{
 		vY += PLAYER_GRAVITY * dt;
 	}
@@ -161,37 +188,10 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		// block 
 		if (!isWalkingOnStairs)
 		{
-			posX += min_tx * dx + nx * 0.4f;
-			posY += min_ty * dy + ny * 0.4f;
-
-			/*if (ny == -1)
-			{
-				vY = 0.1f;
-				dy = vY * dt;
-
-				if (isJumping)
-				{
-					isJumping = false;
-					isAllowJump = true;
-					isHurting = false;
-				}
-			}
-
-			if (nx != 0) vX = 0;
-			if (ny != 0) vY = 0;
-			if (nx != 0 && ny != 0)
-			{
-				vX = 0;
-				vY = 0;
-				isHurting = false;
-			}
-			if (state == PLAYER_STATE_GOING_UP_STAIRS || state == PLAYER_STATE_GOING_DOWN_STAIRS)
-			{
-				if (nx != 0) posX -= nx * 0.1f;
-			}*/
+			posX += min_tx * dx + nx * 0.1f;
+			posY += min_ty * dy + ny * 0.1f;
 		}
 		
-
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
@@ -200,7 +200,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			{
 				if (e->ny != 0)
 				{
-					if (e->ny == -1)
+					if (e->ny == -1 && !isHurting)
 					{
 						vY = 0.1f;
 						dy = vY * dt;
@@ -216,9 +216,9 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					{
 						posY += dy;
 					}
-					if (nx != 0) vX = 0;
-					if (ny != 0) vY = 0;
-					if (nx != 0 && ny != 0)
+					if (nx != 0 && !isHurting) vX = 0;
+					if (ny != 0 && !isHurting) vY = 0;
+					if (nx != 0 && ny != 0 && !isHurting)
 					{
 						vX = 0;
 						vY = 0;
@@ -227,7 +227,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				}
 				if (state == PLAYER_STATE_GOING_UP_STAIRS || state == PLAYER_STATE_GOING_DOWN_STAIRS)
 				{
-					if (nx != 0) posX -= nx * 0.4f;
+					if (nx != 0) posX -= nx * 0.1f;
 				}
 			}
 			if (!isImmortaling) 
@@ -237,7 +237,9 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					e->obj->GetType() == EntityType::ZOMBIE ||
 					e->obj->GetType() == EntityType::KNIGHT ||
 					e->obj->GetType() == EntityType::HUNCHMAN ||
-					e->obj->GetType() == EntityType::GHOST)
+					e->obj->GetType() == EntityType::GHOST ||
+					e->obj->GetType() == EntityType::RAVEN ||
+					e->obj->GetType() == EntityType::SKELETON)
 				{
 					if (e->nx != 0 || e->ny != 0)
 					{
@@ -249,7 +251,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 							isImmortaling = true;
 							SetState(PLAYER_STATE_HURTING);
 							if (e->obj->GetType() == EntityType::BAT ||
-								e->obj->GetType() == EntityType::DARKENBAT)
+								e->obj->GetType() == EntityType::DARKENBAT ||
+								e->obj->GetType() == EntityType::RAVEN)
 							{
 								e->obj->AddHealth(-1);
 							}
@@ -319,6 +322,30 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			supWeapon->Update(dt, coObjects);
 		}
 	}
+	if (supWeaponAtDouble != NULL)
+	{
+		if (!supWeaponAtDouble->GetIsDone())
+		{
+			if (!supWeaponAtDouble->GetIsReceivedPos())
+			{
+				supWeaponAtDouble->SetPosition(posX, posY);
+				supWeaponAtDouble->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
+			}
+			supWeaponAtDouble->Update(dt, coObjects);
+		}
+	}
+	if (supWeaponAtTriple != NULL)
+	{
+		if (!supWeaponAtTriple->GetIsDone())
+		{
+			if (!supWeaponAtTriple->GetIsReceivedPos())
+			{
+				supWeaponAtTriple->SetPosition(posX, posY);
+				supWeaponAtTriple->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
+			}
+			supWeaponAtTriple->Update(dt, coObjects);
+		}
+	}
 
 }
 
@@ -339,6 +366,20 @@ void Player::Render()
 		if (!supWeapon->GetIsDone())
 		{
 			supWeapon->Render();
+		}
+	}
+	if (supWeaponAtDouble != NULL)
+	{
+		if (!supWeaponAtDouble->GetIsDone())
+		{
+			supWeaponAtDouble->Render();
+		}
+	}
+	if (supWeaponAtTriple != NULL)
+	{
+		if (!supWeaponAtTriple->GetIsDone())
+		{
+			supWeaponAtTriple->Render();
 		}
 	}
 
@@ -427,7 +468,7 @@ void Player::SetState(int state)
 		isAttacking = false;
 		if (isSitting)	isSitting = false;
 		isOnStairs = false;
-		vX = PLAYER_DEFLECT_SPEED_X * direction;
+		vX = PLAYER_DEFLECT_SPEED_X * -direction;
 		vY = -PLAYER_DEFLECT_SPEED_Y;
 		break;
 	case PLAYER_STATE_SITTING:
@@ -488,73 +529,37 @@ void Player::Attack(EntityType weaponType)
 	if (isAttacking || isUpgrading)	
 		return;
 	
-	switch (weaponType)
-	{
-	case EntityType::MORNINGSTAR:
+	if (weaponType == EntityType::MORNINGSTAR)
 	{
 		if (mainWeapon->GetIsDone())
 		{
 			isAttacking = true;
 			mainWeapon->Attack(posX, direction);
 		}
-		break; 
 	}
-	case EntityType::DAGGER:
-	{
-		if (mana > 0)
+	else 
+		if (weaponType == EntityType::DAGGER ||
+			weaponType == EntityType::BOOMERANG ||
+			weaponType == EntityType::AXE ||
+			weaponType == EntityType::WATERPOTION)
 		{
-			if (supWeapon->GetIsDone())
+			if (mana > 0)
 			{
-				AddMana(-1);
-				isAttacking = true;
-				supWeapon->Attack(posX, direction);
+				if (supWeapon->GetIsDone())
+				{
+					AddMana(-1);
+					isAttacking = true;
+					supWeapon->Attack(posX, direction);
+				}
+				else if (!supWeapon->GetIsDone() && isGettingDouble)
+				{
+					AddMana(-1);
+					isAttacking = true;
+					supWeaponAtDouble->Attack(posX, direction);
+				}
 			}
 		}
-		break;
-	}
-	case EntityType::BOOMERANG:
-	{
-		if (mana > 0)
-		{
-			if (supWeapon->GetIsDone())
-			{
-				AddMana(-2);
-				isAttacking = true;
-				supWeapon->Attack(posX, direction);
-			}
-		}
-		break;
-	}
-	case EntityType::AXE:
-	{
-		if (mana > 0)
-		{
-			if (supWeapon->GetIsDone())
-			{
-				AddMana(-3);
-				isAttacking = true;
-				supWeapon->Attack(posX, direction);
-			}
-		}
-		break;
-	}
-	case EntityType::WATERPOTION:
-	{
-		if (mana > 0)
-		{
-			if (supWeapon->GetIsDone())
-			{
-				AddMana(-5);
-				isAttacking = true;
-				supWeapon->Attack(posX, direction);
-			}
-		}
-		break;
-	}
-	default:
-		break;
-	}
-	
+
 }
 
 void Player::UpgradingMorningStar()
@@ -575,20 +580,32 @@ void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
 	case EntityType::DAGGER:
 		currentSupWeaponType = EntityType::DAGGER;
 		supWeapon = new Dagger();
+		supWeaponAtDouble = new Dagger();
+		supWeaponAtTriple = new Dagger();
 		break;
 	case EntityType::BOOMERANG:
 		currentSupWeaponType = EntityType::BOOMERANG;
 		supWeapon = new Boomerang(this);
+		supWeaponAtDouble = new Boomerang(this);
+		supWeaponAtTriple = new Boomerang(this);
 		break;
 	case EntityType::AXE:
 		currentSupWeaponType = EntityType::AXE;
 		supWeapon = new Axe();
+		supWeaponAtDouble = new Axe();
+		supWeaponAtTriple = new Axe();
 		break;
 	case EntityType::WATERPOTION:
 		currentSupWeaponType = EntityType::WATERPOTION;
 		supWeapon = new WaterPotion();
+		supWeaponAtDouble = new WaterPotion();
+		supWeaponAtTriple = new WaterPotion();
 		break;
 	default:
+		currentSupWeaponType = EntityType::NONE;
+		supWeapon = NULL;
+		supWeaponAtDouble = NULL;
+		supWeaponAtTriple = NULL;
 		break;
 	}
 }
@@ -618,6 +635,8 @@ void Player::Respawn()
 		posY = 200;
 		break;
 	default:
+		posX = 100;
+		posY = 280;
 		break;
 	}
 

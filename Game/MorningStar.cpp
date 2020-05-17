@@ -5,6 +5,7 @@ MorningStar::MorningStar()
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_MS));
 	tag = EntityType::MORNINGSTAR;
 	level = 1;
+	isDidDamage = false;
 }
 
 MorningStar::~MorningStar(){}
@@ -15,7 +16,6 @@ void MorningStar::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	if (animationSet->at(level - 1)->GetCurrentFrame() == 3)
 	{
-		isDidDamage = false;
 		isDone = true;
 	}
 }
@@ -65,6 +65,7 @@ void MorningStar::GetBoundingBox(float &left, float &top, float &right, float &b
 
 void MorningStar::Attack(float posX, int direction)
 {
+	isDidDamage = false;
 	Weapon::Attack(posX, direction);
 	animationSet->at(level - 1)->ResetCurrentFrame();
 	animationSet->at(level - 1)->StartAnimation();
@@ -80,8 +81,12 @@ void MorningStar::ArticulatedPlayerPos(bool isSitting)
 
 bool MorningStar::IsCollidingObject(Entity* Obj)
 {
-	if (animationSet->at(level - 1)->GetCurrentFrame() == 2)
+	if (animationSet->at(level - 1)->GetCurrentFrame() == 2 && !isDidDamage)
+	{
+		if(Weapon::IsCollidingObject(Obj))	//Important: Neu khong xet co the xay ra truong hop 'khong va cham - va khong vao if nay nua')
+			isDidDamage = true;
 		return Weapon::IsCollidingObject(Obj);
+	}
 
 	return false;
 }

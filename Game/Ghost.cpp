@@ -19,7 +19,7 @@ Ghost::~Ghost() {}
 
 void Ghost::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0)
+	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 3)// || target->GetState() == 0)
 	{
 		SetState(GHOST_STATE_DIE);
 		return;

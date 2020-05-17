@@ -13,7 +13,7 @@
 #define PLAYER_PASSING_STAGE_SPEED				0.035f
 #define PLAYER_JUMP_SPEED_Y						0.55f	//0.8
 #define PLAYER_GRAVITY							0.002f	//0.025
-#define PLAYER_DEFLECT_SPEED_X					0.8f
+#define PLAYER_DEFLECT_SPEED_X					0.105f
 #define PLAYER_DEFLECT_SPEED_Y					0.3f
 #define PLAYER_MAXHEALTH						16
 #define PLAYER_ON_STAIRS_SPEED_X				0.05f
@@ -109,6 +109,8 @@ class Player : public Entity
 
 	Weapon* mainWeapon;
 	Weapon* supWeapon;
+	Weapon* supWeaponAtDouble;
+	Weapon* supWeaponAtTriple;
 	EntityType currentSupWeaponType;
 public:
 	Player(float posX, float posY);
@@ -120,6 +122,7 @@ public:
 	void SetState(int state);
 
 	int GetMana() { return mana; }
+	void SetMana(int mana) { this->mana = mana; }
 	void AddMana(int BonusMana) { mana += BonusMana; }
 
 	int GetScore() { return score; }
@@ -147,6 +150,9 @@ public:
 	void SetGettingTriple(bool b) { isGettingTriple = b; }
 
 	void SetOnStair(bool onStair) { isOnStairs = onStair; }
+	void SetImmortal(bool immo) { isImmortaling = immo; }
+	void StartHurtingTimer(){ hurtingTimer->Start(); }
+	void StartImmortalingTimer(){ immortalTimer->Start(); }
 	
 	Weapon* GetPlayerMainWeapon() { return mainWeapon; }
 	Weapon* GetPlayerSupWeapon() { return supWeapon; }

@@ -1,7 +1,39 @@
+# Id	FilePath			R	G	B
+[TEXTURES]
+85	Resources/Enemies/Raven.png	116	116	116
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+
+#Raven
+197	0	0	32	32	85
+198	32	0	64	32	85
+199	64	0	96	32	85
+200	96	0	128	32	85
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+
+#Raven
+158	197	100
+159	198	120	199	120	200	120
+
+#
+# id	ani1	ani2	ani3
+# id tuan theo define
+[ANIMATION_SETS]
+
+#Raven
+85	158	159
+
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 1 = Brick, 2 = Torch, 3 = Gate, 4 = Stairs
-# 5 = DarkenBat, 6 = Knight, 7 = BreakableBrick, 8 = Candle, 9 = Moving Flatform
+# 5 = DarkenBat, 6 = Knight, 7 = BreakableBrick, 8 = Candle, 9 = Moving Flatform 
+# 11 = Raven
+
+# Raven
+11	560	157	-1
 
 #Candle
 8	320	217	100
@@ -138,4 +170,4 @@
 
 #idStage -- mapFilePath -- RowMap -- ColumnMap -- tilesetFilePath -- RowTileset -- ColumnTileset
 [TILEMAP]
-2500	Resources/TileMap/TilesetStage3_2Text.txt	12	48	Resources/TileMap/TilesetStage3.png	5	12
+2500	Resources/TileMap/TilesetStage3_2Text.txt	12	48	Resources/TileMap/TilesetStage3.png	5	12	1282

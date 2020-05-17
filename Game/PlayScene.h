@@ -11,6 +11,7 @@
 #include "Timer.h"
 #include "UI.h"
 #include "Map.h"
+#include "Grid.h"
 #include "SmallHeart.h"
 #include "BigHeart.h"
 #include "MoneyBags.h"
@@ -37,6 +38,8 @@
 #include "Knight.h"
 #include "Ghost.h"
 #include "Hunchman.h"
+#include "Raven.h"
+#include "Skeleton.h"
 #include "BreakableBrick.h"
 #include "Candle.h"
 #include "MovingPlatform.h"
@@ -55,6 +58,8 @@
 #define OBJECT_TYPE_CANDLE				8
 #define OBJECT_TYPE_MOVING_PLATFORM		9
 #define OBJECT_TYPE_HUNCHMAN			10
+#define OBJECT_TYPE_RAVEN				11
+#define OBJECT_TYPE_SKELETON			12
 
 using namespace std;
 
@@ -69,6 +74,8 @@ class PlayScene : public Scene
 protected:
 	Player* player;
 	std::vector<LPGAMEENTITY> listObjects;
+	std::vector<LPGAMEENTITY> listObjectsToGrid;	//Parse Object from file to this, Grid receive this list
+	std::vector<LPGAMEENTITY> listObjectsFromGrid;	//temp list to transfer from Grid to listObj
 	std::vector<LPGAMEEFFECT> listEffects;
 	std::vector<LPGAMEITEM> listItems;
 	std::vector<LPCWSTR> listSceneFilePath;
@@ -78,8 +85,11 @@ protected:
 	GameTime* gameTime;		
 	Camera* gameCamera;
 	Map* gameMap;
+	Grid* gameGrid;
 
 	int idStage; 
+	int mapWidth, mapHeight;
+	int camMaxWidth;
 
 	int counterZombie;
 	bool isTimeToSpawnZombie;
@@ -93,6 +103,7 @@ protected:
 	//testing Scan
 	//bool isScanned;
 	//Timer* scanningGameTimer = new Timer(SCANING_GAME_DELAY);
+	bool triggerResetGame;
 
 	int easterEgg_Stage2_1;	//bien dem khi pha gach stage 2-1
 	int easterEgg_Stage2_2;
@@ -118,7 +129,9 @@ public:
 	virtual void Render();
 	virtual void Unload();
 
+	void GetObjectFromGrid();
 	Effect* CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY);
+	Item* RandomItem(float posX, float posY);
 	Item* DropItem(EntityType createrType, float posX, float posY, int idCreater = 0);
 	void WeaponInteractObj(UINT i, Weapon* weapon);
 	void WeaponCollision();
@@ -130,6 +143,8 @@ public:
 	void EasterEggEvent();	//EEE
 	void PlayerFailDown();
 	void PlayerInSightGhost();
+	void ResetGame();
+	void PlayerCollideBone();
 
 	std::vector<LPGAMEENTITY> GetListStairs() { return listStairs; }
 	std::vector<LPGAMEENTITY> GetListStairsEx() { return listStairsEx; }

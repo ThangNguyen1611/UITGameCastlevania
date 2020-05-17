@@ -6,7 +6,6 @@ class Weapon : public Entity
 protected:
 	bool isDone;
 	bool isReceivedPos;
-	bool isDidDamage;
 	float timeDelayed, timeDelayMax;
 public:
 	Weapon();
@@ -24,9 +23,6 @@ public:
 
 	bool GetIsReceivedPos() { return isReceivedPos; }
 	void SetIsReceivedPos(bool istime) { isReceivedPos = istime; }
-
-	bool GetIsDidDamage() { return isDidDamage; }
-	void SetIsDidDamage(bool isDid) { isDidDamage = isDid; }
 
 	bool CheckIsOutCamera(float posX);
 	virtual bool IsCollidingObject(Entity* Obj);	//Not inherit from Entity cause this func return the result from Entity

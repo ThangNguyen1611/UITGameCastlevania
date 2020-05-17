@@ -1,17 +1,17 @@
-#include "Hunchman.h"
+#include "Skeleton.h"
 
-Hunchman::Hunchman(float posX, float posY, LPGAMEENTITY target)
+Skeleton::Skeleton(float posX, float posY, LPGAMEENTITY target)
 {
-	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_HUNCHMAN));
-	tag = EntityType::HUNCHMAN;	//BEST BOY CUA NAM ((:
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_SKELETON));
+	tag = EntityType::SKELETON;	
 
 	this->posX = posX;
 	this->posY = posY;
 	this->target = target;
 
-	SetState(HUNCHMAN_STATE_ACTIVE);
+	SetState(SKELETON_STATE_ACTIVE);
 
-	health = 1;
+	health = 3;
 	isDead = false;
 
 	targetDetected = false;
@@ -19,21 +19,30 @@ Hunchman::Hunchman(float posX, float posY, LPGAMEENTITY target)
 	targetSwitchDirection = false;
 	isJumping = false;
 	triggerJump = false;
+
+	mainWeapon = new Bone();
+	triggerResetDelay = false;
 }
 
-Hunchman::~Hunchman() {}
+Skeleton::~Skeleton() {}
 
-void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
+void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
 	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 3 || posY > 450)
 	{
-		SetState(HUNCHMAN_STATE_DIE);
+		SetState(SKELETON_STATE_DIE);
 		return;
 	}
 
 	Entity::Update(dt);
-	
-	vY += HUNCHMAN_GRAVITY * dt;
+
+	vY += SKELETON_GRAVITY * dt;
+
+	if (!triggerResetDelay)
+	{
+		mainWeapon->ResetDelay();
+		triggerResetDelay = true;
+	}
 
 #pragma region Collision Logic
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -48,7 +57,7 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			bricks.push_back(coObjects->at(i));
 
 	// turn off collision when die 
-	if (state != HUNCHMAN_STATE_DIE)
+	if (state != SKELETON_STATE_DIE)
 		CalcPotentialCollisions(&bricks, coEvents);
 
 	// No collision occured, proceed normally
@@ -69,7 +78,7 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 		if (nx != 0 && ny == 0)
 		{
-			if (target->GetPosX() < posX && direction == 1 || 
+			if (target->GetPosX() < posX && direction == 1 ||
 				target->GetPosX() > posX && direction == -1)		//Wrong Chase-Direction
 				TurnAround();
 		}
@@ -82,7 +91,7 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				if (isJumping)
 				{
 					isJumping = false;
-					jumpingTimer->AddToTimer(HUNCHMAN_JUMP_TIME);
+					jumpingTimer->AddToTimer(SKELETON_JUMP_TIME);	//Day timer den IsTimeUp va end Jump
 				}
 			}
 	}
@@ -97,8 +106,8 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	else
 	{
-		vX = HUNCHMAN_WALKING_SPEED * direction;
-#pragma region ShortJump Logic
+		vX = SKELETON_WALKING_SPEED * direction;
+#pragma region Jump Logic
 		if (!isJumping && !triggerJump)
 		{
 			waitingJumpTimer->Start();
@@ -112,7 +121,8 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		}
 		if (!jumpingTimer->IsTimeUp())
 		{
-			ShortJump();
+			Attack();
+			Jump();
 		}
 		else
 		{
@@ -120,24 +130,13 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			isJumping = false;
 		}
 #pragma endregion
-
-		//LongJump aka Dodge Logic
-		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 100 && //Trong tam nhin 3 o gach cua mob
-			target->GetDirection() != this->direction &&	//Doi dien nhau -> Nguy co chet vi bi danh
-			(target->GetAnimationSet()->at(4)->GetCurrentFrame() == 0 ||	//Frame dau cua attack
-			target->GetAnimationSet()->at(7)->GetCurrentFrame() == 0 || 
-			target->GetAnimationSet()->at(9)->GetCurrentFrame() == 0 || 
-			target->GetAnimationSet()->at(10)->GetCurrentFrame() == 0))
-		{
-			LongJump();
-		}
 	}
 
 	if (!activated)
 	{
 		if (target != NULL)
 		{
-			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 300 && target->GetState() != 0)
+			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 300 && target->GetState() != 0) //Ngan xac simon kich hoat 
 			{
 				if (!targetDetected)
 				{
@@ -153,13 +152,14 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		readyTimer->Reset();
 		targetDetected = false;
 		activated = true;
-		LongJump();
+		FirstJump();
 	}
+
 #pragma endregion
 #pragma region Switch Direction React
 	if (target != NULL)
 	{
-		if (target->GetPosX() < posX && direction == 1 || 
+		if (target->GetPosX() < posX && direction == 1 ||
 			target->GetPosX() > posX && direction == -1)		//Wrong Chase-Direction
 		{
 			if (!targetSwitchDirection)
@@ -178,29 +178,45 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		targetSwitchDirection = false;
 	}
 #pragma endregion
+
+	if (!mainWeapon->GetIsDone())
+	{
+		if (!mainWeapon->GetIsReceivedPos())
+		{
+			mainWeapon->SetPosition(posX, posY);
+			mainWeapon->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
+		}
+		mainWeapon->Update(dt, coObjects);
+	}
 }
 
-void Hunchman::TurnAround()
+void Skeleton::TurnAround()
 {
 	direction *= -1;
 	vX *= -1;
 }
 
-void Hunchman::ShortJump()
+void Skeleton::Jump()
 {
 	isJumping = true;
-	vY = -HUNCHMAN_JUMP_SPEED_Y;
+	vY = -SKELETON_JUMP_SPEED_Y;
 }
 
-void Hunchman::LongJump()
+void Skeleton::FirstJump()
 {
-	if (isJumping)	//Tranh danh ShortJump boi` them LongJump
-		return;
 	isJumping = true;
-	vY = -HUNCHMAN_HIGHJUMP_SPEED_Y;
+	vY = -SKELETON_FIRST_JUMP_SPEED_Y;
 }
 
-void Hunchman::Render()
+void Skeleton::Attack()
+{
+	if (mainWeapon->GetIsDone())
+	{
+		mainWeapon->Attack(posX, direction);
+	}
+}
+
+void Skeleton::Render()
 {
 	if (isDead)
 		return;
@@ -208,14 +224,19 @@ void Hunchman::Render()
 	animationSet->at(0)->Render(direction, posX, posY);
 
 	RenderBoundingBox();
+
+	if (!mainWeapon->GetIsDone())
+	{
+		mainWeapon->Render();
+	}
 }
 
-void Hunchman::SetState(int state)
+void Skeleton::SetState(int state)
 {
 	Entity::SetState(state);
 	switch (state)
 	{
-	case HUNCHMAN_STATE_DIE:
+	case SKELETON_STATE_DIE:
 		vX = 0;
 		vY = 0;
 		isDead = true;
@@ -223,14 +244,14 @@ void Hunchman::SetState(int state)
 	}
 }
 
-void Hunchman::GetBoundingBox(float &l, float &t, float &r, float &b)
+void Skeleton::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
 	//not clean
 	if (!isDead)
 	{
 		l = posX - 15;
 		t = posY;
-		r = posX + HUNCHMAN_BBOX_WIDTH;
-		b = posY + HUNCHMAN_BBOX_HEIGHT;
+		r = posX + SKELETON_BBOX_WIDTH;
+		b = posY + SKELETON_BBOX_HEIGHT;
 	}
 }
