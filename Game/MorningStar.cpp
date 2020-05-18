@@ -6,6 +6,8 @@ MorningStar::MorningStar()
 	tag = EntityType::MORNINGSTAR;
 	level = 1;
 	isDidDamage = false;
+
+	damage = 1;
 }
 
 MorningStar::~MorningStar(){}

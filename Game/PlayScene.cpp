@@ -87,15 +87,27 @@ Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, f
 Item* PlayScene::RandomItem(float posX, float posY)
 {
 	int bagrandom = rand() % 100; 
-	int random = rand() % 1000;
-	if (random <= 200)
+	int random = rand() % 1200;
+	if (random <= 100)
 		return new SmallHeart(posX, posY);
-	else if (200 < random && random <= 400)
+	else if (100 < random && random <= 200)
 		return new BigHeart(posX, posY);
-	else if (400 < random && random <= 600)
+	else if (200 < random && random <= 300)
 		return new YummiChickenLeg(posX, posY);
-	else if (600 < random && random <= 800)
+	else if (300 < random && random <= 400)
 		return new UpgradeMorningStar(posX, posY);
+	else if (400 < random && random <= 500)
+		return new ItemDagger(posX, posY);
+	else if (500 < random && random <= 600)
+		return new ItemAxe(posX, posY);
+	else if (600 < random && random <= 700)
+		return new ItemBoomerang(posX, posY);
+	else if (700 < random && random <= 800)
+		return new ItemWaterPotion(posX, posY);
+	else if (800 < random && random <= 900)
+		return new ItemStopWatch(posX, posY);
+	else if (900 < random && random <= 1000)	//1000 -> 1100 cho Invipotion
+		return new Cross(posX, posY);
 	else
 	{
 		if (bagrandom <= 33)
@@ -166,6 +178,41 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 			
 }
 
+void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
+{
+	if (weapon->GetType() == EntityType::BOOMERANG)
+	{
+		Boomerang* bmr = dynamic_cast<Boomerang*>(player->GetPlayerSupWeapon());
+		if (listObjects[i]->GetHealth() == 1 && bmr->GetIsDidDamageTurn1())	//Hit nay se chet 
+		{
+			player->AddScore(scoreGive);
+			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		}
+		if (!bmr->GetIsDidDamageTurn1() && bmr->GetOwnerDirection() == bmr->GetDirection())
+		{
+			listObjects[i]->AddHealth(-weapon->GetDamage());
+			bmr->SetIsDidDamageTurn1(true);
+		}
+		if (!bmr->GetIsDidDamageTurn2() && bmr->GetOwnerDirection() != bmr->GetDirection())
+		{
+			listObjects[i]->AddHealth(-weapon->GetDamage());
+			bmr->SetIsDidDamageTurn2(true);
+		}
+	}
+	else
+	{
+		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
+		{
+			player->AddScore(scoreGive);
+			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		}
+		listObjects[i]->AddHealth(-weapon->GetDamage());
+	}
+	listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+	listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+
+}
+
 void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 {
 	//Co 1 phuong an de delay DropItem la trigger Start timer o day, o update thi lien tuc check timer de push
@@ -173,47 +220,16 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 	switch (listObjects[i]->GetType())
 	{
 	case EntityType::BAT:
-		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
-		{
-			player->AddScore(500);
-			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		}
-		//Add Heart(-1) nen thay the bang damage cua weapon
-		listObjects[i]->AddHealth(-1);
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		SlayEnemies(i, weapon, 200);
 		break;
 	case EntityType::DARKENBAT:
-		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
-		{
-			player->AddScore(500);
-			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		}
-		listObjects[i]->AddHealth(-1);
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		SlayEnemies(i, weapon, 500);
 		break;
 	case EntityType::GHOST:
-		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
-		{
-			player->AddScore(100);
-			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		}
-		//Add Heart(-1) nen thay the bang damage cua weapon
-		listObjects[i]->AddHealth(-1);
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		SlayEnemies(i, weapon, 700); 
 		break;
 	case EntityType::ZOMBIE:
-		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
-		{
-			player->AddScore(100);
-			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		}
-		listObjects[i]->AddHealth(-1);
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		
+		SlayEnemies(i, weapon, 300);
 		counterZombie--;
 		if (counterZombie == 0)
 		{
@@ -223,69 +239,21 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 		}
 		break;
 	case EntityType::KNIGHT:
-		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
-		{
-			player->AddScore(200);
-			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		}
-
-		if (weapon->GetType() ==  EntityType::BOOMERANG)
-		{
-			Boomerang* bmr = dynamic_cast<Boomerang*>(player->GetPlayerSupWeapon());
-			if (!bmr->GetIsDidDamageTurn1() && bmr->GetOwnerDirection() == bmr->GetDirection())
-			{
-				listObjects[i]->AddHealth(-1);
-				bmr->SetIsDidDamageTurn1(true);
-			}
-			if (!bmr->GetIsDidDamageTurn2() && bmr->GetOwnerDirection() != bmr->GetDirection())
-			{
-				listObjects[i]->AddHealth(-1);
-				bmr->SetIsDidDamageTurn2(true);
-			}
-		}
-		else
-			listObjects[i]->AddHealth(-1);
-
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		SlayEnemies(i, weapon, 1000); 
 		break;
 	case EntityType::HUNCHMAN:
-		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
-		{
-			player->AddScore(1000);
-			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		}
-		//Add Heart(-1) nen thay the bang damage cua weapon
-		listObjects[i]->AddHealth(-1);
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		SlayEnemies(i, weapon, 2000); 
 		break;
 	case EntityType::SKELETON:
-		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
-		{
-			player->AddScore(3000);
-			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		}
-		//Add Heart(-1) nen thay the bang damage cua weapon
-		listObjects[i]->AddHealth(-1);
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		SlayEnemies(i, weapon, 3000); 
 		break;
 	case EntityType::RAVEN:
-		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
-		{
-			player->AddScore(1500);
-			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		}
-		//Add Heart(-1) nen thay the bang damage cua weapon
-		listObjects[i]->AddHealth(-1);
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		SlayEnemies(i, weapon, 1500); 
 		break;
 	case EntityType::TORCH:
 	{
 		Torch* torch = dynamic_cast<Torch*>(listObjects[i]);	//Extension cua DropItem
-		listObjects[i]->AddHealth(-1);
+		listObjects[i]->AddHealth(-weapon->GetDamage());
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), torch->GetIdTorch()));
@@ -294,7 +262,7 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 	case EntityType::CANDLE:
 	{
 		Candle* candle = dynamic_cast<Candle*>(listObjects[i]);	//Extension cua DropItem
-		listObjects[i]->AddHealth(-1);
+		listObjects[i]->AddHealth(-weapon->GetDamage());
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), candle->GetIdCandle()));
@@ -474,6 +442,35 @@ void PlayScene::PlayerCollideItem()
 					player->SetPlayerSupWeaponType(EntityType::WATERPOTION);
 					listItems[i]->SetIsDone(true);
 					break;
+				}
+				case EntityType::ITEMSTOPWATCH:
+				{
+					player->SetPlayerSupWeaponType(EntityType::STOPWATCH);
+					listItems[i]->SetIsDone(true);
+					break;
+				}
+				case EntityType::CROSS:
+				{
+					for (UINT i = 0; i < listObjects.size(); i++)
+					{
+						//Them if xet trong tam` camera 
+						//Thuc ra da~ duoc xet tren Grid nhung tam` Grid xa hon camera
+						if (listObjects[i]->GetType() == EntityType::BAT ||
+							listObjects[i]->GetType() == EntityType::DARKENBAT ||
+							listObjects[i]->GetType() == EntityType::ZOMBIE ||
+							listObjects[i]->GetType() == EntityType::KNIGHT ||
+							listObjects[i]->GetType() == EntityType::HUNCHMAN ||
+							listObjects[i]->GetType() == EntityType::GHOST ||
+							listObjects[i]->GetType() == EntityType::RAVEN ||
+							listObjects[i]->GetType() == EntityType::SKELETON)
+						{
+							listObjects[i]->AddHealth(-listObjects[i]->GetHealth());
+							listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+							listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+							listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+						}
+					}
+					listItems[i]->SetIsDone(true);
 				}
 				default:
 					break;
@@ -837,7 +834,7 @@ void PlayScene::Update(DWORD dt)
 	player->Update(dt, &coObjects);
 	for (int i = 0; i < listObjects.size(); i++)
 	{
-		if(!player->IsUpgrading())
+		if(!player->IsUpgrading() && !player->IsTimeStop())
 			listObjects[i]->Update(dt, &coObjects);
 	}
 	for (int i = 0; i < listEffects.size(); i++)
@@ -924,7 +921,7 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		simon->SetState(PLAYER_STATE_IDLE);
 		break;
 	case DIK_3:
-		if (simon->GetPlayerSupWeaponType() == EntityType::NONE || simon->GetPlayerSupWeaponType() == EntityType::WATERPOTION)
+		if (simon->GetPlayerSupWeaponType() == EntityType::NONE || simon->GetPlayerSupWeaponType() == EntityType::STOPWATCH)
 			simon->SetPlayerSupWeaponType(EntityType::DAGGER);
 		else if (simon->GetPlayerSupWeaponType() == EntityType::DAGGER)
 			simon->SetPlayerSupWeaponType(EntityType::AXE);
@@ -932,6 +929,8 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			simon->SetPlayerSupWeaponType(EntityType::BOOMERANG);
 		else if (simon->GetPlayerSupWeaponType() == EntityType::BOOMERANG)
 			simon->SetPlayerSupWeaponType(EntityType::WATERPOTION);
+		else if (simon->GetPlayerSupWeaponType() == EntityType::WATERPOTION)
+			simon->SetPlayerSupWeaponType(EntityType::STOPWATCH);
 		break;
 	case DIK_4:
 		simon->AddHealth(-4);

@@ -142,6 +142,7 @@
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Candle.cpp" />
+    <ClCompile Include="Cross.cpp" />
     <ClCompile Include="Crown.cpp" />
     <ClCompile Include="Dagger.cpp" />
     <ClCompile Include="DarkenBat.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="ItemAxe.cpp" />
     <ClCompile Include="ItemBoomerang.cpp" />
     <ClCompile Include="ItemDagger.cpp" />
+    <ClCompile Include="ItemStopWatch.cpp" />
     <ClCompile Include="ItemWaterPotion.cpp" />
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -181,6 +183,7 @@
     <ClCompile Include="SmallHeart.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Stairs.cpp" />
+    <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -203,6 +206,7 @@
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Candle.h" />
+    <ClInclude Include="Cross.h" />
     <ClInclude Include="Crown.h" />
     <ClInclude Include="Dagger.h" />
     <ClInclude Include="DarkenBat.h" />
@@ -224,6 +228,7 @@
     <ClInclude Include="ItemAxe.h" />
     <ClInclude Include="ItemBoomerang.h" />
     <ClInclude Include="ItemDagger.h" />
+    <ClInclude Include="ItemStopWatch.h" />
     <ClInclude Include="ItemWaterPotion.h" />
     <ClInclude Include="KeyboardHandler.h" />
     <ClInclude Include="Knight.h" />
@@ -242,6 +247,7 @@
     <ClInclude Include="SmallHeart.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Stairs.h" />
+    <ClInclude Include="StopWatch.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Timer.h" />

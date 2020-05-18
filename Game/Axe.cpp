@@ -6,6 +6,7 @@ Axe::Axe()
 	tag = EntityType::AXE;
 	timeDelayed = 0;
 	timeDelayMax = MAX_AXE_DELAY;
+	damage = 1;
 }
 
 Axe::~Axe() {}

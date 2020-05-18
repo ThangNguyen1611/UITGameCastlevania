@@ -31,6 +31,7 @@ class Skeleton : public Entity
 	bool isJumping, triggerJump;
 	Timer* jumpingTimer = new Timer(SKELETON_JUMP_TIME);
 	Timer* waitingJumpTimer = new Timer(SKELETON_WAIT_JUMP_TIME);
+	int randomJump;
 
 	Bone* mainWeapon;
 	bool triggerResetDelay;
@@ -45,6 +46,7 @@ public:
 
 	void TurnAround();
 	void Jump();
+	void JumpBack();
 	void FirstJump();
 	void Attack();
 

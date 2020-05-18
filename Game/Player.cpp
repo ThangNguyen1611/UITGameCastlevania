@@ -90,6 +90,11 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		isRespawning = false;
 		respawningTimer->Reset();
 	}
+	if (isTimeStop && timeStopTimer->IsTimeUp())
+	{
+		isTimeStop = false;
+		timeStopTimer->Reset();
+	}
 #pragma endregion
 
 	if (animationSet->at(PLAYER_STATE_SUPWEAPON_ATTACK)->GetCurrentFrame() == 0 || animationSet->at(PLAYER_STATE_SUPWEAPON_SIT_ATTACK)->GetCurrentFrame() == 0)
@@ -559,6 +564,17 @@ void Player::Attack(EntityType weaponType)
 				}
 			}
 		}
+		else
+			if (weaponType == EntityType::STOPWATCH)
+			{
+				if (mana > 5)
+				{
+					AddMana(-5);
+					isTimeStop = true;
+					timeStopTimer->Start();
+					SetPlayerSupWeaponType(EntityType::NONE);
+				}
+			}
 
 }
 
@@ -600,6 +616,12 @@ void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
 		supWeapon = new WaterPotion();
 		supWeaponAtDouble = new WaterPotion();
 		supWeaponAtTriple = new WaterPotion();
+		break;
+	case EntityType::STOPWATCH:
+		currentSupWeaponType = EntityType::STOPWATCH;
+		supWeapon = new StopWatch();
+		supWeaponAtDouble = new StopWatch();
+		supWeaponAtTriple = new StopWatch();
 		break;
 	default:
 		currentSupWeaponType = EntityType::NONE;

@@ -11,6 +11,8 @@ Boomerang::Boomerang(LPGAMEENTITY owner)
 	this->owner = owner;
 	isDidDamageTurn1 = false;
 	isDidDamageTurn2 = false;
+
+	damage = 1;
 }
 
 Boomerang::~Boomerang() {}

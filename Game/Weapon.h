@@ -7,6 +7,7 @@ protected:
 	bool isDone;
 	bool isReceivedPos;
 	float timeDelayed, timeDelayMax;
+	int damage;
 public:
 	Weapon();
 	~Weapon();
@@ -20,6 +21,7 @@ public:
 	void ResetDelay() { timeDelayed = 0; }
 	bool GetIsDone() { return isDone; }
 	void SetIsDone(bool isdone) { isDone = isdone; }
+	int GetDamage() { return damage; }
 
 	bool GetIsReceivedPos() { return isReceivedPos; }
 	void SetIsReceivedPos(bool istime) { isReceivedPos = istime; }

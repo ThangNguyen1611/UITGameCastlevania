@@ -7,6 +7,8 @@ Dagger::Dagger()
 	ownerPosX = 0;
 	timeDelayed = 0;
 	timeDelayMax = MAX_DAGGER_DELAY;
+
+	damage = 1;
 }
 
 Dagger::~Dagger(){}

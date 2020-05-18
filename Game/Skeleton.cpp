@@ -106,7 +106,8 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	else
 	{
-		vX = SKELETON_WALKING_SPEED * direction;
+		if(!isJumping)
+			vX = SKELETON_WALKING_SPEED * direction;
 #pragma region Jump Logic
 		if (!isJumping && !triggerJump)
 		{
@@ -118,11 +119,15 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			jumpingTimer->Start();
 			waitingJumpTimer->Reset();
 			triggerJump = false;
+			randomJump = rand() % 100;				//////////????????????
 		}
 		if (!jumpingTimer->IsTimeUp())
 		{
 			Attack();
-			Jump();
+			if (randomJump <= 50)
+				Jump();
+			else
+				JumpBack();
 		}
 		else
 		{
@@ -199,12 +204,21 @@ void Skeleton::TurnAround()
 void Skeleton::Jump()
 {
 	isJumping = true;
+	vX = SKELETON_WALKING_SPEED * direction;
+	vY = -SKELETON_JUMP_SPEED_Y;
+}
+
+void Skeleton::JumpBack()
+{
+	isJumping = true;
+	vX = -SKELETON_WALKING_SPEED * direction;
 	vY = -SKELETON_JUMP_SPEED_Y;
 }
 
 void Skeleton::FirstJump()
 {
 	isJumping = true;
+	vX = SKELETON_WALKING_SPEED * direction;
 	vY = -SKELETON_FIRST_JUMP_SPEED_Y;
 }
 

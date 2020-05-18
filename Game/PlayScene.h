@@ -17,10 +17,12 @@
 #include "MoneyBags.h"
 #include "YummiChickenLeg.h"
 #include "UpgradeMorningStar.h"
+#include "Cross.h"
 #include "ItemDagger.h"
 #include "ItemBoomerang.h"
 #include "ItemAxe.h"
 #include "ItemWaterPotion.h"
+#include "ItemStopWatch.h"
 #include "Hit.h"
 #include "Fire.h"
 #include "Score.h"
@@ -134,6 +136,7 @@ public:
 	Item* RandomItem(float posX, float posY);
 	Item* DropItem(EntityType createrType, float posX, float posY, int idCreater = 0);
 	void WeaponInteractObj(UINT i, Weapon* weapon);
+	void SlayEnemies(UINT i, Weapon* weapon, int scoreGive);
 	void WeaponCollision();
 	void PlayerCollideItem();
 	void CheckObjAlive();

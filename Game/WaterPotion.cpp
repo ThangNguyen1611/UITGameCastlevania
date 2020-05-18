@@ -6,6 +6,8 @@ WaterPotion::WaterPotion()
 	tag = EntityType::WATERPOTION;
 	timeDelayed = 0;
 	timeDelayMax = MAX_WATPOT_DELAY;
+
+	damage = 1;
 }
 
 WaterPotion::~WaterPotion() {}

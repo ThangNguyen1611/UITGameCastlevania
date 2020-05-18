@@ -6,6 +6,7 @@
 #include "Boomerang.h"
 #include "Axe.h"
 #include "WaterPotion.h"
+#include "StopWatch.h"
 #include "Timer.h"
 #include <map>
 
@@ -65,6 +66,7 @@
 #define PLAYER_IMMORTAL_TIMECOUNTER				1200
 #define PLAYER_UPGRADING_TIMECOUNTER			1200
 #define PLAYER_RESPAWNING_TIMECOUNTER			2400
+#define PLAYER_TIMESTOP_TIMECOUNTER				3000
 
 class Player : public Entity
 {
@@ -82,7 +84,8 @@ class Player : public Entity
 		isPassingStage,
 		isRespawning,
 		isOnStairs,
-		isOnMF;
+		isOnMF,
+		isTimeStop;
 	float backupVx;
 
 	bool canMoveDown;
@@ -106,6 +109,7 @@ class Player : public Entity
 	//Immortal != Invincible !!!!! You may be Immortal, but you are not Invincible! - a Prince of Persia said.
 	Timer* upgradeTimer = new Timer(PLAYER_UPGRADING_TIMECOUNTER);
 	Timer* respawningTimer = new Timer(PLAYER_RESPAWNING_TIMECOUNTER);
+	Timer* timeStopTimer = new Timer(PLAYER_TIMESTOP_TIMECOUNTER);
 
 	Weapon* mainWeapon;
 	Weapon* supWeapon;
@@ -143,6 +147,7 @@ public:
 	bool IsPassingStage() { return isPassingStage; }
 	bool IsRespawning() { return isRespawning; }
 	bool IsOnStairs() { return isOnStairs; }
+	bool IsTimeStop() { return isTimeStop; }
 
 	bool IsGettingDouble() { return isGettingDouble; }
 	void SetGettingDouble(bool b) { isGettingDouble = b; }
