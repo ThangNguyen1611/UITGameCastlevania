@@ -32,8 +32,18 @@
 # 5 = DarkenBat, 6 = Knight, 7 = BreakableBrick, 8 = Candle, 9 = Moving Flatform 
 # 11 = Raven
 
+#Gate
+3	1504	281	6
+
 # Raven
-11	560	157	-1
+11	560	157	-1	1
+11	848	253	-1	1
+11	976	189	-1	1
+11	1072	405	-1	-1
+
+# Skeleton
+12	720	345
+12	1328	345
 
 #Candle
 8	320	217	100

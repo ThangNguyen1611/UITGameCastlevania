@@ -137,7 +137,7 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if (target != NULL)
 		{
-			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 300 && target->GetState() != 0)
+			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 250 && target->GetState() != 0)
 			{
 				if (!targetDetected)
 				{

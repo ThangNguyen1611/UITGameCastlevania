@@ -35,13 +35,6 @@ void PlayScene::ChooseMap(int whatMap)
 	{
 	case STAGE_2_1:
 		easterEgg_Stage2_1 = 0;
-		////Zombie Logic
-		//counterZombie = 0;
-		//isTimeToSpawnZombie = true;		//vua vao spawn luon
-		//triggerSpawnZombie = false;
-		////Bat Logic
-		//isTimeToSpawnBat = true;
-		//triggerSpawnBat = true;
 		break;
 	case STAGE_2_2:
 		easterEgg_Stage2_2 = 0;
@@ -49,6 +42,18 @@ void PlayScene::ChooseMap(int whatMap)
 	case STAGE_3_1:
 		triggerSpawnGhost = true;
 		break;
+	case STAGE_3_2:
+		easterEgg_Stage3_2 = 1;
+		triggerSpawnGhost = true;
+		break;
+	case STAGE_4:
+		//Zombie Logic
+		counterZombie = 0;
+		isTimeToSpawnZombie = true;		//vua vao spawn luon
+		triggerSpawnZombie = false;
+		//Bat Logic
+		isTimeToSpawnBat = true;
+		triggerSpawnBat = true;
 	default:
 		break;
 	}
@@ -123,7 +128,7 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 {
 	if (createrType == EntityType::NONE)		//special case
 	{
-		if (idStage == STAGE_2_1)
+		if (idStage == STAGE_2_1 || idStage == STAGE_3_2)
 			return new Crown(posX, posY);
 		else
 			if (idStage == STAGE_2_2)
@@ -164,18 +169,24 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 			}
 		}
 		else
-			if (createrType == EntityType::KNIGHT || 
-				createrType == EntityType::DARKENBAT ||
-				createrType == EntityType::GHOST ||
-				createrType == EntityType::HUNCHMAN ||
-				createrType == EntityType::RAVEN || 
-				createrType == EntityType::SKELETON)
+			if (createrType == EntityType::BREAKABLEBRICK)
 			{
-				RandomItem(posX, posY);
+				return new YummiChickenLeg(posX, posY);
 			}
 			else
-				return new BigHeart(posX, posY);
-			
+				if (createrType == EntityType::KNIGHT ||
+					createrType == EntityType::DARKENBAT ||
+					createrType == EntityType::GHOST ||
+					createrType == EntityType::HUNCHMAN ||
+					createrType == EntityType::RAVEN ||
+					createrType == EntityType::SKELETON ||
+					createrType == EntityType::BAT ||
+					createrType == EntityType::ZOMBIE)
+				{
+					RandomItem(posX, posY);
+				}
+				else
+					return new BigHeart(posX, posY);
 }
 
 void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
@@ -281,6 +292,10 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 				{
 					easterEgg_Stage2_2++;
 				}
+				else
+				{
+					listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+				}
 			listObjects[i]->AddHealth(-1);
 			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
@@ -299,7 +314,11 @@ void PlayScene::SetSubWeaponDone(UINT i)
 		listObjects[i]->GetType() == EntityType::TORCH ||
 		listObjects[i]->GetType() == EntityType::DARKENBAT ||
 		listObjects[i]->GetType() == EntityType::KNIGHT ||
-		listObjects[i]->GetType() == EntityType::BREAKABLEBRICK)
+		listObjects[i]->GetType() == EntityType::BREAKABLEBRICK ||
+		listObjects[i]->GetType() == EntityType::HUNCHMAN ||
+		listObjects[i]->GetType() == EntityType::GHOST ||
+		listObjects[i]->GetType() == EntityType::SKELETON ||
+		listObjects[i]->GetType() == EntityType::RAVEN)
 	{
 		switch (player->GetPlayerSupWeaponType())
 		{
@@ -537,7 +556,7 @@ void PlayScene::PlayerGotGate()
 				}
 				else if (idStage == STAGE_2_2)
 				{
-					if (gate->GetIdScene() == 4)
+					if (gate->GetIdScene() == (STAGE_3_1 / STAGE_1))
 					{
 						if (PlayerPassingStage(listObjects[i]->GetPosX() , -1))
 						{
@@ -550,7 +569,7 @@ void PlayScene::PlayerGotGate()
 						}
 					}
 					else
-						if (gate->GetIdScene() == 2)
+						if (gate->GetIdScene() == (STAGE_2_1 / STAGE_1))
 						{
 							Unload();
 							gameCamera->SetCamPos(0, 0);
@@ -563,7 +582,7 @@ void PlayScene::PlayerGotGate()
 				}
 				else if (idStage == STAGE_3_1)
 				{
-					if (gate->GetIdScene() == 5)
+					if (gate->GetIdScene() == (STAGE_3_2 / STAGE_1))
 					{
 						Unload();
 						ChooseMap(STAGE_3_2);
@@ -573,7 +592,7 @@ void PlayScene::PlayerGotGate()
 						player->SetState(PLAYER_STATE_GOING_UP_STAIRS);
 					}
 					else
-						if (gate->GetIdScene() == 3)
+						if (gate->GetIdScene() == (STAGE_2_2 / STAGE_1))
 						{
 							Unload();
 							gameCamera->SetCamPos(0, 0);
@@ -586,7 +605,7 @@ void PlayScene::PlayerGotGate()
 				}
 				else if (idStage == STAGE_3_2)
 				{
-					if (gate->GetIdScene() == 4)
+					if (gate->GetIdScene() == (STAGE_3_1 / STAGE_1))
 					{
 						Unload();
 						ChooseMap(STAGE_3_1);
@@ -595,6 +614,21 @@ void PlayScene::PlayerGotGate()
 						player->SetVy(0);
 						player->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
 					}
+					else
+						if (gate->GetIdScene() == (STAGE_4 / STAGE_1))
+						{
+							if (PlayerPassingStage(listObjects[i]->GetPosX() + 10.0f, 1))
+							{
+								Unload();
+								gameCamera->SetCamPos(0, 0);
+								ChooseMap(STAGE_4);
+								player->SetPosition(50, 200);
+								player->SetVx(0);
+								player->SetVy(0);
+								player->SetState(PLAYER_STATE_IDLE);
+							}
+						}
+
 				}
 				else // CASE: STAGE UNDEFINED BUT HAD GATES
 					//neu can sua theo huong file thi co the luu thong tin quan trong nhu positon, camera pos, state vao gate de luu lai
@@ -644,136 +678,119 @@ void PlayScene::EasterEggEvent()
 				easterEgg_Stage2_2 = 0;
 			}
 		}
+		else
+			if (idStage == STAGE_3_2)
+			{
+				if (player->GetPosX() > 1060 && player->GetPosX() < 1070 && player->IsSitting() && easterEgg_Stage3_2 == 1)
+				{
+					listItems.push_back(DropItem(EntityType::NONE, 885.0f, 300.0f));
+					easterEgg_Stage3_2 = 0;
+				}
+			}
 }
 
 void PlayScene::PlayerInSightGhost()
 {
-	if (player->GetPosX() > 1100 && player->GetPosX() < 1110)
+	if (idStage == STAGE_3_1)
 	{
-		if (triggerSpawnGhost)
+		if (player->GetPosX() > 1150 && player->GetPosX() < 1160)
 		{
-			listObjectsToGrid.push_back(new Ghost(1350, 345, player));
-			triggerSpawnGhost = false;
+			if (triggerSpawnGhost)
+			{
+				listObjectsToGrid.push_back(new Ghost(1350, 345, player));
+				triggerSpawnGhost = false;
+			}
 		}
 	}
+	else
+		if (idStage == STAGE_3_2)
+		{
+			if (player->GetPosX() > 390 && player->GetPosX() < 400)
+			{
+				if (triggerSpawnGhost)
+				{
+					listObjectsToGrid.push_back(new Ghost(200, 200, player));
+					triggerSpawnGhost = false;
+				}
+			}
+		}
 }
 
-void PlayScene::CheckObjAlive()
+void PlayScene::CountingZombie()
 {
 	for (UINT i = 0; i < listObjects.size(); i++)
 	{
-		LPGAMEENTITY coO = listObjects[i];
-		if (coO->GetHealth() > 0)	//Xet object con song	//object health < 0 con xu li o trong zombie.cpp update
-			switch (coO->GetType())
+		if (listObjects[i]->GetPosX() < SCREEN_WIDTH * 1.9f && listObjects[i]->GetPosX() > 1)
+		{
+			if (listObjects[i]->GetType() == EntityType::ZOMBIE && (listObjects[i]->GetPosX() < 10 || listObjects[i]->GetPosX() > SCREEN_WIDTH * 1.85f))
 			{
-			case EntityType::BAT:
-				if (coO->GetPosX() < 0 || coO->GetPosX() > SCREEN_WIDTH * 2)
+				counterZombie--;
+				if (counterZombie == 0)
 				{
-					coO->SetState(BAT_STATE_DIE);
+					spawningZombieTimer->Start();
+					triggerSpawnZombie = true;
+					isTimeToSpawnZombie = false;
 				}
-				break;
-			case EntityType::ZOMBIE:
-				if (coO->GetPosY() > SCREEN_HEIGHT + 200)
-				{
-					coO->SetState(ZOMBIE_STATE_DIE);
-					counterZombie--;
-					if (counterZombie == 0)
-					{
-						spawningZombieTimer->Start();
-						triggerSpawnZombie = true;
-						isTimeToSpawnZombie = false;	//De khong vao if voi
-					}
-				}
-				break;
-			default:
-				break;
 			}
+		}
 	}
 }
 
-void PlayScene::Update(DWORD dt)
+void PlayScene::SpawnZombie()
 {
-	GetObjectFromGrid();
-#pragma region Scan Game Periodically
-	//Nen co 1 lan quet toan bo object cua game moi 100 hoac 1000 lan update
-	/*if (!isScanned && scanningGameTimer->IsTimeUp())
-	{
-		isScanned = true;
-		if (isScanned)
-		{
-			ScanEntitiesPeriodically(listObjects);
-			isScanned = false;
-		}
-		scanningGameTimer->Reset();
-		scanningGameTimer->Start();
-	}*/
-#pragma endregion
-#pragma region Checking alive object is in screen
-	CheckObjAlive();
-#pragma endregion
-#pragma region Spawning Zombie Logic
-#pragma region Failed Operation Spawning Each Zombie
-	////auto if = true neu counter chua len 3 do spawningTimer kh thay doi
-	//if (isTimeToSpawnZombie) {
-	//	if (counterZombie <= 3 && spawningZombieTimer->IsTimeUp())
-	//	{
-	//		if (delaySpawningZombieTimer->IsTimeUp())	//IsTimeUp nay vao duoc do co Start o dieu kien duoi
-	//		{
-	//			listObjects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
-	//			counterZombie++;
-
-	//			delaySpawningZombieTimer->Reset();		//Reset va start su dung nhu 1 vong lap (ap dung ham Update)
-	//			delaySpawningZombieTimer->Start();
-	//		}
-	//		if (counterZombie == 3)	//counter len 3 thay doi spawningTimer de thoat khoi if thu nhat
-	//		{
-	//			spawningZombieTimer->Reset();
-	//			counterZombie = 0;
-	//			isTimeToSpawnZombie = false;
-	//		}
-	//	}
-	//	if (triggerSpawnZombie)	//STAR: Dat Dieu kien Start sau counter++
-	//	{
-	//		spawningZombieTimer->Start();
-	//		//start dau tien cua delay de co the vao IsTimeUp cua no
-	//		delaySpawningZombieTimer->Start();
-	//		triggerSpawnZombie = false;	//Bien trigger giup cho spawning zombie chi thuc hien khi dang co 0 hoac 3 zombie
-	//	}
-	//}
-#pragma endregion
 	if (isTimeToSpawnZombie)
 	{
-		if (delaySpawningZombieTimer->IsTimeUp()) 
+		if (delaySpawningZombieTimer->IsTimeUp())
 		{
 			if (counterZombie < 3)
 			{
-				listObjects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
+				int randomAbove = rand() % 100;
+				if (randomAbove <= 50)
+					listObjectsToGrid.push_back(new Zombie(SCREEN_WIDTH, SCREEN_HEIGHT - 290, -1));	//spawn o bac tren
+				else
+				{
+					int randomRight = rand() % 100;
+					if (randomRight <= 50)
+						listObjectsToGrid.push_back(new Zombie(SCREEN_WIDTH, SCREEN_HEIGHT - 120, -1));	//spawn ben phai
+					else
+						listObjectsToGrid.push_back(new Zombie(20, SCREEN_HEIGHT - 120, 1));	//spawn ben trai
+				}
 				counterZombie++;
 				if (counterZombie >= 3)
 				{
-					isTimeToSpawnZombie = false;	//out ra khoi if nay
-					triggerSpawnZombie = false;		//out ra ca if sau
+					isTimeToSpawnZombie = false;	
+					triggerSpawnZombie = false;		
 				}
 				delaySpawningZombieTimer->Start();
 			}
+			else
+				counterZombie--;
 		}
 	}
 	else
 	{
 		if (triggerSpawnZombie)
 		{
-			if(spawningZombieTimer->IsTimeUp())
+			if (spawningZombieTimer->IsTimeUp())
 			{
 				isTimeToSpawnZombie = true;
 			}
 		}
 	}
-#pragma endregion
-#pragma region Spawning Bat Logic
+}
+
+void PlayScene::SpawnBat()
+{
 	if (isTimeToSpawnBat) {
 		if (spawningBatTimer->IsTimeUp())
 		{
-			listObjects.push_back(new Bat(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT - 150, 1));
+			int randomY = rand() % 290 + 90;
+			int randomX = rand() % 100;
+			if (randomX <= 50)
+				listObjectsToGrid.push_back(new Bat(SCREEN_WIDTH * 1.25f, SCREEN_HEIGHT - randomY, -1));
+			else
+				listObjectsToGrid.push_back(new Bat(1, SCREEN_HEIGHT - randomY, 1));
+
 			spawningBatTimer->Reset(SPAWNING_BAT_DELAY + (rand() % 3000));
 			triggerSpawnBat = true;	//Dung 1 cho thi se spawn bat mai mai, cho den khi di den khu vuc ma trigger o do = false
 		}
@@ -783,10 +800,13 @@ void PlayScene::Update(DWORD dt)
 			triggerSpawnBat = false;
 		}
 	}
-#pragma endregion
+}
+
+void PlayScene::Update(DWORD dt)
+{
+	GetObjectFromGrid();
 #pragma region Camera
-	float cx, cy;
-	player->ReceivePos(cx, cy);
+	float cx = player->GetPosX();
 	
 	if (player->GetPosX() >= camMaxWidth)
 	{
@@ -795,13 +815,10 @@ void PlayScene::Update(DWORD dt)
 	else
 	{
 		if (player->GetPosX() < SCREEN_WIDTH / 2)
-			//cx -= SCREEN_WIDTH / 2 - (SCREEN_WIDTH / 2 - player->GetPosX());
 			cx = 0;
 		else
 			cx -= SCREEN_WIDTH / 2;
 	}
-	cy -= SCREEN_HEIGHT / 2;
-
 	gameCamera->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
 #pragma endregion
 
@@ -809,12 +826,18 @@ void PlayScene::Update(DWORD dt)
 	PlayerCollideBone();
 	PlayerCollideItem();
 	PlayerGotGate(); 
-	//PlayerFailDown();
 	EasterEggEvent();
-	if(idStage == STAGE_3_1)
+	if(idStage == STAGE_3_1 || idStage == STAGE_3_2)
 		PlayerInSightGhost();
+	if (idStage == STAGE_4 && player->GetPosX() < 800)
+	{
+		SpawnBat();
+		CountingZombie();
+		SpawnZombie();
+	}
 
-	gameTime->Update(dt);
+	if (!player->IsTimeStop())
+		gameTime->Update(dt);
 	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera
 
 	gameGrid->ResetGrid(listObjectsToGrid);
@@ -1290,7 +1313,8 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	{
 		//player tao truoc nen kh sao
 		int extras1 = atoi(tokens[3].c_str());
-		listObjectsToGrid.push_back(new Raven(x, y, extras1, player));
+		int extras2 = atoi(tokens[4].c_str());
+		listObjectsToGrid.push_back(new Raven(x, y, extras1, extras2, player));
 		break;
 	}
 	case OBJECT_TYPE_SKELETON:

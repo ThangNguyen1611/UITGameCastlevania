@@ -41,7 +41,7 @@ class Raven : public Entity
 	Timer* waitingTimer = new Timer(RAVEN_WAITING_TIME);
 	Timer* readyTimer = new Timer(RAVEN_READY_TIME_TO_ATTACK);
 public:
-	Raven(float posX, float posY, int directionX, LPGAMEENTITY target);
+	Raven(float posX, float posY, int directionX, int firstDirY, LPGAMEENTITY target);
 	~Raven();
 	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects);
 	virtual void Render();

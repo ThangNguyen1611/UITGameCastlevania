@@ -9,9 +9,6 @@
 13	Resources/UI/ExtraShot.png	255	0	255
 20	Resources/Objects/Ground.png	255	0	255
 
-80	Resources/Enemies/VampireBat.png	255	0	255
-81	Resources/Enemies/Zombie.png	255	0	255
-
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # Simon
@@ -106,16 +103,6 @@
 102	64	0	96	32	20
 103	96	0	128	32	20
 
-# VampireBat
-180	0	0	32	32	80
-181	32	0	64	32	80
-182	64	0	96	32	80
-183	96	0	128	32	80
-
-# Zombie
-184	0	0	32	64	81
-185	32	0	64	64	81
-
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 # Simon
@@ -176,13 +163,6 @@
 72	102	100
 73	103	100
 
-# VampireBat
-150	180	100
-151	181	120	182	120	183	120
-
-# Zombie
-152	184	120	185	120
-
 #
 # id	ani1	ani2	ani3
 # id tuan theo define
@@ -204,12 +184,6 @@
 # Brick
 20	70	71	72	73
 
-# VampireBat
-80	150	151
-
-# Zombie
-81	152
-
 [SCENE]
 #Stage1
 Resources/Scene/scene1.txt	1575	490
@@ -221,6 +195,8 @@ Resources/Scene/scene2_2.txt	1050	490
 Resources/Scene/scene3_1.txt	1575	490
 #Stage3_2
 Resources/Scene/scene3_2.txt	1575	490
+#Stage4
+Resources/Scene/scene4.txt	1575	490
 #Test
 Resources/Scene/scene1.txt	1575	490
 Resources/Scene/scene3_1.txt	1575	490

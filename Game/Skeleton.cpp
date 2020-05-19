@@ -11,7 +11,7 @@ Skeleton::Skeleton(float posX, float posY, LPGAMEENTITY target)
 
 	SetState(SKELETON_STATE_ACTIVE);
 
-	health = 3;
+	health = 2;
 	isDead = false;
 
 	targetDetected = false;
@@ -141,7 +141,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if (target != NULL)
 		{
-			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 300 && target->GetState() != 0) //Ngan xac simon kich hoat 
+			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 235 && target->GetState() != 0) //Ngan xac simon kich hoat 
 			{
 				if (!targetDetected)
 				{

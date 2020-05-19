@@ -37,6 +37,7 @@
 #define STAGE_2_2					1500
 #define STAGE_3_1					2000
 #define STAGE_3_2					2500
+#define STAGE_4						3000
 
 #define STAGE_1_MAX_WIDTH			1250
 #define STAGE_2_1_MAX_WIDTH			262

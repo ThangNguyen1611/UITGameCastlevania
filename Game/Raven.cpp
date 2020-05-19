@@ -1,6 +1,6 @@
 #include "Raven.h"
 
-Raven::Raven(float posX, float posY, int directionX, LPGAMEENTITY target)
+Raven::Raven(float posX, float posY, int directionX, int firstDirY, LPGAMEENTITY target)
 {
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_RAVEN));
 	tag = EntityType::RAVEN;
@@ -8,7 +8,7 @@ Raven::Raven(float posX, float posY, int directionX, LPGAMEENTITY target)
 	this->posX = posX;
 	this->posY = posY;
 	destinationPosXPhase1 = posX + RAVEN_DIST_TO_DEST_POSX_PHASE1;
-	destinationPosYPhase1 = posY + RAVEN_DIST_TO_DEST_POSY_PHASE1;
+	destinationPosYPhase1 = posY + RAVEN_DIST_TO_DEST_POSY_PHASE1 * firstDirY;
 	this->direction = directionX;
 
 	this->SetState(RAVEN_STATE_INACTIVE);
@@ -29,7 +29,7 @@ Raven::~Raven() {}
 
 void Raven::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 3 || target->GetState() == 0)
+	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 3)
 	{
 		SetState(RAVEN_STATE_DIE);
 		return;
@@ -37,7 +37,7 @@ void Raven::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	if (target != NULL)
 	{
-		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 250)
+		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 250 && target->GetState() != 0)
 		{
 			SetState(RAVEN_STATE_FLYING);
 			activated = true;

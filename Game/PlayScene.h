@@ -109,6 +109,7 @@ protected:
 
 	int easterEgg_Stage2_1;	//bien dem khi pha gach stage 2-1
 	int easterEgg_Stage2_2;
+	int easterEgg_Stage3_2;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
@@ -130,8 +131,8 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
-
 	void GetObjectFromGrid();
+
 	Effect* CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY);
 	Item* RandomItem(float posX, float posY);
 	Item* DropItem(EntityType createrType, float posX, float posY, int idCreater = 0);
@@ -139,7 +140,6 @@ public:
 	void SlayEnemies(UINT i, Weapon* weapon, int scoreGive);
 	void WeaponCollision();
 	void PlayerCollideItem();
-	void CheckObjAlive();
 	void SetSubWeaponDone(UINT i);
 	bool PlayerPassingStage(float DistanceXWant, int directionGo);
 	void PlayerGotGate();
@@ -148,6 +148,9 @@ public:
 	void PlayerInSightGhost();
 	void ResetGame();
 	void PlayerCollideBone();
+	void CountingZombie();
+	void SpawnZombie();
+	void SpawnBat();
 
 	std::vector<LPGAMEENTITY> GetListStairs() { return listStairs; }
 	std::vector<LPGAMEENTITY> GetListStairsEx() { return listStairsEx; }

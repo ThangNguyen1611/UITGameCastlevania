@@ -19,7 +19,7 @@ Zombie::~Zombie() {}
 
 void Zombie::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posY > SCREEN_HEIGHT + 200)
+	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 2 || posY > 450)
 	{
 		SetState(ZOMBIE_STATE_DIE);
 		return;
