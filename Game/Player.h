@@ -86,7 +86,7 @@ class Player : public Entity
 		isOnStairs,
 		isOnMF,
 		isTimeStop,
-		isHideOnBush;		//Need ?
+		isHideOnBush;		//Need ? A fan of Fekar :v
 	float backupVx;
 
 	bool canMoveDown;
