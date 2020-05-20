@@ -8,6 +8,7 @@ Entity::Entity()
 
 	health = 1;
 	isDead = false;
+	unsighted = false;
 
 	bbARGB = 0;
 }

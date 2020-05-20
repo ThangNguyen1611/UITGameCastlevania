@@ -8,9 +8,14 @@
 
 #define GHOST_STATE_FLYING			1
 #define GHOST_STATE_DIE				-1
+
+#define GHOST_RANDOM_TIMECYCLE		3000
 class Ghost : public Entity
 {
 	LPGAMEENTITY target;
+	DWORD currentTotalTime;
+	int randomPosX, randomPosY;
+	int dirY;
 public:
 	Ghost(float posX, float posY, LPGAMEENTITY owner);
 	~Ghost();

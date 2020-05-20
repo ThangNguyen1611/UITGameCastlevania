@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Entity.h"
 #include "MorningStar.h"
 #include "Dagger.h"
@@ -63,10 +62,11 @@
 #define PLAYER_ANI_ATTACK_DOWN_STAIRS_END		20
 
 #define PLAYER_HURTING_DELAY					600
-#define PLAYER_IMMORTAL_TIMECOUNTER				1200
-#define PLAYER_UPGRADING_TIMECOUNTER			1200
-#define PLAYER_RESPAWNING_TIMECOUNTER			2400
-#define PLAYER_TIMESTOP_TIMECOUNTER				3000
+#define PLAYER_IMMORTAL_TIMECOUNTER				2000
+#define PLAYER_UPGRADING_TIMECOUNTER			1500
+#define PLAYER_RESPAWNING_TIMECOUNTER			3000
+#define PLAYER_TIMESTOP_TIMECOUNTER				5000
+#define PLAYER_INVISIBLE_TIMECOUNTER			10000
 
 class Player : public Entity
 {
@@ -85,7 +85,8 @@ class Player : public Entity
 		isRespawning,
 		isOnStairs,
 		isOnMF,
-		isTimeStop;
+		isTimeStop,
+		isHideOnBush;		//Need ?
 	float backupVx;
 
 	bool canMoveDown;
@@ -110,6 +111,7 @@ class Player : public Entity
 	Timer* upgradeTimer = new Timer(PLAYER_UPGRADING_TIMECOUNTER);
 	Timer* respawningTimer = new Timer(PLAYER_RESPAWNING_TIMECOUNTER);
 	Timer* timeStopTimer = new Timer(PLAYER_TIMESTOP_TIMECOUNTER);
+	Timer* invisibleTimer = new Timer(PLAYER_INVISIBLE_TIMECOUNTER);
 
 	Weapon* mainWeapon;
 	Weapon* supWeapon;
@@ -177,12 +179,12 @@ public:
 	bool GetCannotMoveDown() { return cannotMoveDown; }
 	void SetCannotMoveDown(bool b) { cannotMoveDown = b; }
 	int GetStairsDirectionPlayerColliding() { return stairDirection; }
-
 	bool GetIsWalkingOnStairs() { return isWalkingOnStairs; }
-
 	void PlayerUpStairs();
 	void PlayerDownStairs();
 	bool PlayerStandOnStairs();
 
+	void StartInvisible();
+	void StopInvisible();
 };
 

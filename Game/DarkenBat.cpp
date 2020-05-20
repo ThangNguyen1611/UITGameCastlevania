@@ -26,7 +26,7 @@ DarkenBat::~DarkenBat(){}
 
 void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 3)	//Player die
+	if (health <= 0 || posX < 5 || posX > SCREEN_WIDTH * 2.85f)	//Player die
 	{
 		SetState(DARKBAT_STATE_DIE);
 		return;
@@ -34,7 +34,7 @@ void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	if (target != NULL)
 	{
-		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 200)
+		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 200 && !target->IsUnsighted())
 		{
 			SetState(DARKBAT_STATE_FLYING);
 		}
@@ -51,7 +51,7 @@ void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 			vY += DARKBAT_FLYING_SPEED_Y * directionY;
 		}
-		if (posX > DARKBAT_MAX_DISTANCE_PHASE1 + firstPosX)
+		if (posX > DARKBAT_MAX_DISTANCE_PHASE1 + firstPosX)	//Bat co song am nen tang hinh vo dung :D
 		{
 			isDonePhase1 = true;
 		}

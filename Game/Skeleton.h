@@ -3,7 +3,8 @@
 #include "Timer.h"
 #include "Bone.h"
 
-#define SKELETON_WALKING_SPEED			0.165f
+#define SKELETON_WALKING_SPEED			0.135f
+#define SKELETON_JUMP_SPEED_X			0.165f
 #define SKELETON_JUMP_SPEED_Y			0.25f
 #define SKELETON_FIRST_JUMP_SPEED_Y		0.65f
 #define SKELETON_GRAVITY				0.002f
@@ -17,7 +18,7 @@
 #define SKELETON_WAITING_TIME			900
 #define SKELETON_REACT_DELAY			450
 #define SKELETON_JUMP_TIME				265
-#define SKELETON_WAIT_JUMP_TIME			900
+#define SKELETON_WAIT_JUMP_TIME			750
 
 class Skeleton : public Entity
 {

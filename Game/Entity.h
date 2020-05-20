@@ -42,6 +42,8 @@ protected:
 	int health;
 	bool isDead;
 	LPANIMATION_SET animationSet;
+	bool unsighted;	//Dat trong entity vi cac thuc the cung co the bi xet den viec co the bi nhin thay hay khong 
+	// (vd nhu bush-mechanism trong lol)
 
 	int state;
 	int bbARGB;
@@ -86,6 +88,8 @@ public:
 	void SetVy(float VY) { vY = VY; }
 	void AddVx(float VX) { this->SetVx(this->GetVx() + VX); }
 	void AddVy(float VY) { this->SetVy(this->GetVy() + VY); }
+
+	bool IsUnsighted() { return unsighted; }
 
 	EntityType GetType() { return tag; }
 

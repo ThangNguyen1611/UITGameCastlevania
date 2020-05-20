@@ -25,7 +25,7 @@ Hunchman::~Hunchman() {}
 
 void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 3 || posY > 450)
+	if (health <= 0 || posX < 5 || posX > SCREEN_WIDTH * 2.85f || posY > 450)
 	{
 		SetState(HUNCHMAN_STATE_DIE);
 		return;
@@ -124,6 +124,7 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		//LongJump aka Dodge Logic
 		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 100 && //Trong tam nhin 3 o gach cua mob
 			target->GetDirection() != this->direction &&	//Doi dien nhau -> Nguy co chet vi bi danh
+			!target->IsUnsighted() &&
 			(target->GetAnimationSet()->at(4)->GetCurrentFrame() == 0 ||	//Frame dau cua attack
 			target->GetAnimationSet()->at(7)->GetCurrentFrame() == 0 || 
 			target->GetAnimationSet()->at(9)->GetCurrentFrame() == 0 || 
@@ -137,7 +138,7 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if (target != NULL)
 		{
-			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 250 && target->GetState() != 0)
+			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 250 && target->GetState() != 0 && !target->IsUnsighted())
 			{
 				if (!targetDetected)
 				{
@@ -172,8 +173,17 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	if (targetSwitchDirection && reactTimer->IsTimeUp())
 	{
-		if (target->GetPosX() < posX) direction = -1;
-		else direction = 1;
+		if (!target->IsUnsighted())
+		{
+			if (target->GetPosX() < posX) direction = -1;
+			else direction = 1;
+		}
+		else
+		{
+			int random = rand() % 100;
+			if (random <= 50)
+				direction *= -1;
+		}
 		reactTimer->Reset();
 		targetSwitchDirection = false;
 	}

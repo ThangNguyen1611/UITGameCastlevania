@@ -95,6 +95,11 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		isTimeStop = false;
 		timeStopTimer->Reset();
 	}
+	if (unsighted && invisibleTimer->IsTimeUp() && !isHideOnBush)
+	{
+		unsighted = false;
+		invisibleTimer->Reset();
+	}
 #pragma endregion
 
 	if (animationSet->at(PLAYER_STATE_SUPWEAPON_ATTACK)->GetCurrentFrame() == 0 || animationSet->at(PLAYER_STATE_SUPWEAPON_SIT_ATTACK)->GetCurrentFrame() == 0)
@@ -166,16 +171,34 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	vector<LPGAMEENTITY> listObjMayCollide;			//Khong xet va cham voi torch
+	vector<LPGAMEENTITY> listBush;
 	coEvents.clear();
 	listObjMayCollide.clear();
 	for (UINT i = 0; i < coObjects->size(); i++)
+	{
 		if (coObjects->at(i)->GetType() != EntityType::TORCH &&
 			coObjects->at(i)->GetType() != EntityType::STAIRS &&
-			coObjects->at(i)->GetType() != EntityType::CANDLE)
+			coObjects->at(i)->GetType() != EntityType::CANDLE&&
+			coObjects->at(i)->GetType() != EntityType::BUSH)
 			listObjMayCollide.push_back(coObjects->at(i));
+		if (coObjects->at(i)->GetType() == EntityType::BUSH)
+			listBush.push_back(coObjects->at(i));
+	}
 
-	// turn off collision when die 
-	//if (state != PLAYER_STATE_DIE)
+	for (UINT i = 0; i < listBush.size(); i++)
+	{
+		if (IsCollidingObject(listBush[i]))
+		{
+			StartInvisible();
+			invisibleTimer->AddToTimer(PLAYER_INVISIBLE_TIMECOUNTER - 1000);	//Khi ra khoi bush thi se co 1s tang hinh
+			isHideOnBush = true;
+		}
+		else
+		{
+			isHideOnBush = false;
+		}
+	}
+
 	CalcPotentialCollisions(&listObjMayCollide, coEvents);
 
 	// No collision occured, proceed normally
@@ -235,7 +258,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					if (nx != 0) posX -= nx * 0.1f;
 				}
 			}
-			if (!isImmortaling) 
+			
+			if (!isImmortaling && !unsighted && !isHideOnBush) 
 			{
 				if (e->obj->GetType() == EntityType::BAT || 
 					e->obj->GetType() == EntityType::DARKENBAT ||
@@ -359,8 +383,10 @@ void Player::Render()
 	int alpha = 255;
 	if (isImmortaling)
 		alpha = 150;
+	if (unsighted)
+		alpha = 50;
 
-	animationSet->at(state)->Render(direction, posX, posY);
+	animationSet->at(state)->Render(direction, posX, posY, alpha);
 
 	if (!mainWeapon->GetIsDone())
 	{
@@ -534,6 +560,9 @@ void Player::Attack(EntityType weaponType)
 	if (isAttacking || isUpgrading)	
 		return;
 	
+	if (unsighted)	//Attack khi dang tang hinh se mat tang hinh
+		StopInvisible();
+
 	if (weaponType == EntityType::MORNINGSTAR)
 	{
 		if (mainWeapon->GetIsDone())
@@ -670,6 +699,7 @@ void Player::Respawn()
 	health = PLAYER_MAXHEALTH;
 	immortalTimer->Start();
 	isImmortaling = true;
+	StopInvisible();
 }
 
 bool Player::SimonCollideWithStair(vector<LPGAMEENTITY>* listStairs)
@@ -874,4 +904,16 @@ bool Player::PlayerStandOnStairs()
 	}
 
 	return false;
+}
+
+void Player::StartInvisible()
+{
+	invisibleTimer->Start();
+	unsighted = true;
+}
+
+void Player::StopInvisible()
+{
+	invisibleTimer->Reset();
+	unsighted = false;
 }

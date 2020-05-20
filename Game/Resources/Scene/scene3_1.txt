@@ -1,5 +1,7 @@
 # Id	FilePath			R	G	B
 [TEXTURES]
+27	Resources/Objects/Bush.png	116	116	116
+
 84	Resources/Enemies/Ghost.png	116	116	116
 86	Resources/Enemies/Hunchman.png	116	116	116
 87	Resources/Enemies/Skeleton.png	116	116	116
@@ -7,6 +9,9 @@
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
+
+#Bush
+120	0	0	120	68	27
 
 #Ghost
 193	0	0	32	32	84
@@ -28,6 +33,9 @@
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 
+# Bush
+90	120	100
+
 # Ghost
 156	193	120	194	120
 
@@ -45,6 +53,9 @@
 # id tuan theo define
 [ANIMATION_SETS]
 
+# Bush
+27	90
+
 # Ghost
 84	156
 
@@ -61,7 +72,11 @@
 # type	x	y	extra_settings per object type
 # type: 1 = Brick, 2 = Torch, 3 = Gate, 4 = Stairs
 # 5 = DarkenBat, 6 = Knight, 7 = BreakableBrick, 8 = Candle, 9 = Moving Flatform
-# 10 = Hunchman, 12 = Skeleton
+# 10 = Hunchman, 12 = Skeleton, 13 = Bush
+
+# Bush
+13	432	393
+13	736	393
 
 # Skeleton
 12	112	217

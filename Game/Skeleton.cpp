@@ -28,7 +28,7 @@ Skeleton::~Skeleton() {}
 
 void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 3 || posY > 450)
+	if (health <= 0 || posX < 5 || posX > SCREEN_WIDTH * 2.85f || posY > 450)
 	{
 		SetState(SKELETON_STATE_DIE);
 		return;
@@ -82,18 +82,18 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				target->GetPosX() > posX && direction == -1)		//Wrong Chase-Direction
 				TurnAround();
 		}
-		else
-			if (ny == -1)
-			{
-				vY = 0.1f;
-				dy = vY * dt;
+		//else	//Bo doan nay se kh bi 'leo tuong'
+		//	if (ny == -1)
+		//	{
+		//		vY = 0.1f;
+		//		dy = vY * dt;
 
-				if (isJumping)
-				{
-					isJumping = false;
-					jumpingTimer->AddToTimer(SKELETON_JUMP_TIME);	//Day timer den IsTimeUp va end Jump
-				}
-			}
+		//		if (isJumping)
+		//		{
+		//			isJumping = false;
+		//			jumpingTimer->AddToTimer(SKELETON_JUMP_TIME);	//Day timer den IsTimeUp va end Jump
+		//		}
+		//	}
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
@@ -107,7 +107,10 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	else
 	{
 		if(!isJumping)
-			vX = SKELETON_WALKING_SPEED * direction;
+			if(randomJump <= 50)
+				vX = SKELETON_WALKING_SPEED * direction;
+			else
+				vX = -SKELETON_WALKING_SPEED * direction;
 #pragma region Jump Logic
 		if (!isJumping && !triggerJump)
 		{
@@ -119,17 +122,22 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			jumpingTimer->Start();
 			waitingJumpTimer->Reset();
 			triggerJump = false;
-			randomJump = rand() % 100;				//////////????????????
+			randomJump = rand() % 100;				//Random here to make sure we just random once right before jump
 		}
 		if (!jumpingTimer->IsTimeUp())
 		{
-			Attack();
+			if(!target->IsUnsighted())				//Khong thay target thi khong danh lung tung
+				Attack();
 			if (randomJump <= 50)
+			{
 				Jump();
+			}
 			else
+			{
 				JumpBack();
+			}
 		}
-		else
+		else if (jumpingTimer->IsTimeUp())
 		{
 			jumpingTimer->Reset();
 			isJumping = false;
@@ -141,7 +149,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if (target != NULL)
 		{
-			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 235 && target->GetState() != 0) //Ngan xac simon kich hoat 
+			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 235 && target->GetState() != 0 && !target->IsUnsighted()) //Ngan xac simon kich hoat 
 			{
 				if (!targetDetected)
 				{
@@ -177,8 +185,17 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	if (targetSwitchDirection && reactTimer->IsTimeUp())
 	{
-		if (target->GetPosX() < posX) direction = -1;
-		else direction = 1;
+		if (!target->IsUnsighted())
+		{
+			if (target->GetPosX() < posX) direction = -1;
+			else direction = 1;
+		}
+		else
+		{
+			int random = rand() % 100;
+			if (random <= 50)
+				direction *= -1;
+		}
 		reactTimer->Reset();
 		targetSwitchDirection = false;
 	}
@@ -204,21 +221,21 @@ void Skeleton::TurnAround()
 void Skeleton::Jump()
 {
 	isJumping = true;
-	vX = SKELETON_WALKING_SPEED * direction;
+	vX = SKELETON_JUMP_SPEED_X * direction;
 	vY = -SKELETON_JUMP_SPEED_Y;
 }
 
 void Skeleton::JumpBack()
 {
 	isJumping = true;
-	vX = -SKELETON_WALKING_SPEED * direction;
+	vX = -SKELETON_JUMP_SPEED_X * direction;
 	vY = -SKELETON_JUMP_SPEED_Y;
 }
 
 void Skeleton::FirstJump()
 {
 	isJumping = true;
-	vX = SKELETON_WALKING_SPEED * direction;
+	vX = SKELETON_JUMP_SPEED_X * direction;
 	vY = -SKELETON_FIRST_JUMP_SPEED_Y;
 }
 

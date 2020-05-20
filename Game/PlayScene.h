@@ -23,6 +23,7 @@
 #include "ItemAxe.h"
 #include "ItemWaterPotion.h"
 #include "ItemStopWatch.h"
+#include "Drug.h"
 #include "Hit.h"
 #include "Fire.h"
 #include "Score.h"
@@ -45,6 +46,7 @@
 #include "BreakableBrick.h"
 #include "Candle.h"
 #include "MovingPlatform.h"
+#include "Bush.h"
 
 #include <iostream>
 #include <fstream>
@@ -62,6 +64,7 @@
 #define OBJECT_TYPE_HUNCHMAN			10
 #define OBJECT_TYPE_RAVEN				11
 #define OBJECT_TYPE_SKELETON			12
+#define OBJECT_TYPE_BUSH				13
 
 using namespace std;
 

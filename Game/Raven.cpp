@@ -29,7 +29,7 @@ Raven::~Raven() {}
 
 void Raven::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 3)
+	if (health <= 0 || posX < 5 || posX > SCREEN_WIDTH * 2.85f)
 	{
 		SetState(RAVEN_STATE_DIE);
 		return;
@@ -37,7 +37,7 @@ void Raven::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	if (target != NULL)
 	{
-		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 250 && target->GetState() != 0)
+		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 250 && target->GetState() != 0 && !target->IsUnsighted())
 		{
 			SetState(RAVEN_STATE_FLYING);
 			activated = true;

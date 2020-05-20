@@ -29,6 +29,7 @@ void PlayScene::ChooseMap(int whatMap)
 	idStage = whatMap;
 	Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
 	player->ReceiveCurrentStage(idStage);
+	player->StopInvisible();
 	gameTime->ResetGameTime();
 
 	switch (idStage)
@@ -111,8 +112,10 @@ Item* PlayScene::RandomItem(float posX, float posY)
 		return new ItemWaterPotion(posX, posY);
 	else if (800 < random && random <= 900)
 		return new ItemStopWatch(posX, posY);
-	else if (900 < random && random <= 1000)	//1000 -> 1100 cho Invipotion
+	else if (900 < random && random <= 1000)	
 		return new Cross(posX, posY);
+	else if (1000 < random && random <= 1100)	
+		return new Drug(posX, posY);
 	else
 	{
 		if (bagrandom <= 33)
@@ -490,6 +493,12 @@ void PlayScene::PlayerCollideItem()
 						}
 					}
 					listItems[i]->SetIsDone(true);
+				}
+				case EntityType::INVIPOTION:
+				{
+					player->StartInvisible();
+					listItems[i]->SetIsDone(true);
+					break;
 				}
 				default:
 					break;
@@ -958,6 +967,12 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_4:
 		simon->AddHealth(-4);
 		break;
+	case DIK_5:
+		simon->SetHealth(16);
+		break;
+	case DIK_6:
+		simon->StartInvisible();
+		break;
 	case DIK_R:
 		for (int i = 0; i < listObj.size(); i++)
 		{
@@ -1321,6 +1336,12 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	{
 		//player tao truoc nen kh sao
 		listObjectsToGrid.push_back(new Skeleton(x, y, player));
+		break;
+	}
+	case OBJECT_TYPE_BUSH:
+	{
+		//player tao truoc nen kh sao
+		listObjectsToGrid.push_back(new Bush(x, y, player));
 		break;
 	}
 	default:
