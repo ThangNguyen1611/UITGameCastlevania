@@ -143,7 +143,7 @@ public:
 	void SlayEnemies(UINT i, Weapon* weapon, int scoreGive);
 	void WeaponCollision();
 	void PlayerCollideItem();
-	void SetSubWeaponDone(UINT i);
+	void SetSubWeaponDone(UINT i, bool isAtDouble);
 	bool PlayerPassingStage(float DistanceXWant, int directionGo);
 	void PlayerGotGate();
 	void EasterEggEvent();	//EEE

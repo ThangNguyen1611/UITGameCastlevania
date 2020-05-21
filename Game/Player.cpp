@@ -26,6 +26,7 @@ Player::Player(float posX, float posY)
 	isPassingStage = false;
 	isRespawning = false;
 	isOnStairs = false;
+	isAttackingDouble = false;
 
 	mainWeapon = new MorningStar();		//Simon's main/basic weapon is MorningStar
 	supWeapon = NULL;
@@ -99,6 +100,10 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		unsighted = false;
 		invisibleTimer->Reset();
+	}
+	if (isAttackingDouble && supWeaponAtDouble->GetIsDone())	//WeaponAtDouble phai Done thi isAttackingDouble moi duoc reset
+	{
+		isAttackingDouble = false;
 	}
 #pragma endregion
 
@@ -339,43 +344,9 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		mainWeapon->ArticulatedPlayerPos(isSitting);		//Fixing weapon pos
 		mainWeapon->Update(dt, coObjects);
 	}
-	if (supWeapon != NULL)
-	{
-		if (!supWeapon->GetIsDone())
-		{
-			if (!supWeapon->GetIsReceivedPos())
-			{
-				supWeapon->SetPosition(posX, posY);
-				supWeapon->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
-			}
-			supWeapon->Update(dt, coObjects);
-		}
-	}
-	if (supWeaponAtDouble != NULL)
-	{
-		if (!supWeaponAtDouble->GetIsDone())
-		{
-			if (!supWeaponAtDouble->GetIsReceivedPos())
-			{
-				supWeaponAtDouble->SetPosition(posX, posY);
-				supWeaponAtDouble->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
-			}
-			supWeaponAtDouble->Update(dt, coObjects);
-		}
-	}
-	if (supWeaponAtTriple != NULL)
-	{
-		if (!supWeaponAtTriple->GetIsDone())
-		{
-			if (!supWeaponAtTriple->GetIsReceivedPos())
-			{
-				supWeaponAtTriple->SetPosition(posX, posY);
-				supWeaponAtTriple->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
-			}
-			supWeaponAtTriple->Update(dt, coObjects);
-		}
-	}
-
+	SupWeaponUpdate(supWeapon, dt, coObjects);
+	SupWeaponUpdate(supWeaponAtDouble, dt, coObjects);
+	SupWeaponUpdate(supWeaponAtTriple, dt, coObjects);
 }
 
 void Player::Render()
@@ -392,27 +363,9 @@ void Player::Render()
 	{
 		mainWeapon->Render();
 	}
-	if (supWeapon != NULL)
-	{
-		if (!supWeapon->GetIsDone())
-		{
-			supWeapon->Render();
-		}
-	}
-	if (supWeaponAtDouble != NULL)
-	{
-		if (!supWeaponAtDouble->GetIsDone())
-		{
-			supWeaponAtDouble->Render();
-		}
-	}
-	if (supWeaponAtTriple != NULL)
-	{
-		if (!supWeaponAtTriple->GetIsDone())
-		{
-			supWeaponAtTriple->Render();
-		}
-	}
+	SupWeaponRender(supWeapon);
+	SupWeaponRender(supWeaponAtDouble);
+	SupWeaponRender(supWeaponAtTriple);
 
 	RenderBoundingBox();
 }
@@ -557,7 +510,7 @@ void Player::GetBoundingBox(float &left, float &top, float &right, float &bottom
 
 void Player::Attack(EntityType weaponType)
 {
-	if (isAttacking || isUpgrading)	
+	if (isAttacking || isUpgrading || isAttackingDouble)	
 		return;
 	
 	if (unsighted)	//Attack khi dang tang hinh se mat tang hinh
@@ -581,15 +534,19 @@ void Player::Attack(EntityType weaponType)
 			{
 				if (supWeapon->GetIsDone())
 				{
+					if (isGettingDouble && isAttackingDouble)	//Dang dung WeaponAtDouble thi khong duoc dung Weapon goc'
+						return;
 					AddMana(-1);
 					isAttacking = true;
 					supWeapon->Attack(posX, direction);
+					return;
 				}
-				else if (!supWeapon->GetIsDone() && isGettingDouble)
+				else if (supWeaponAtDouble->GetIsDone() && !supWeapon->GetIsDone() && isGettingDouble)	//A completely NEW and SUPER COMPACT version of double attack :D 
 				{
 					AddMana(-1);
-					isAttacking = true;
+					isAttackingDouble = true;
 					supWeaponAtDouble->Attack(posX, direction);
+					return;
 				}
 			}
 		}
@@ -658,6 +615,33 @@ void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
 		supWeaponAtDouble = NULL;
 		supWeaponAtTriple = NULL;
 		break;
+	}
+}
+
+void Player::SupWeaponUpdate(Weapon* weapon, DWORD dt, vector<LPGAMEENTITY> *coObjects)
+{
+	if (weapon != NULL)
+	{
+		if (!weapon->GetIsDone())
+		{
+			if (!weapon->GetIsReceivedPos())
+			{
+				weapon->SetPosition(posX, posY);
+				weapon->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
+			}
+			weapon->Update(dt, coObjects);
+		}
+	}
+}
+
+void Player::SupWeaponRender(Weapon* weapon)
+{
+	if (weapon != NULL)
+	{
+		if (!weapon->GetIsDone())
+		{
+			weapon->Render();
+		}
 	}
 }
 

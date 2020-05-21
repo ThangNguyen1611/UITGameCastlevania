@@ -132,7 +132,7 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 	if (createrType == EntityType::NONE)		//special case
 	{
 		if (idStage == STAGE_2_1 || idStage == STAGE_3_2)
-			return new Crown(posX, posY);
+			return new ExtraShot(posX, posY - 100, 2);//Crown(posX, posY);
 		else
 			if (idStage == STAGE_2_2)
 				return new ExtraShot(posX, posY, 2);
@@ -197,20 +197,29 @@ void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
 	if (weapon->GetType() == EntityType::BOOMERANG)
 	{
 		Boomerang* bmr = dynamic_cast<Boomerang*>(player->GetPlayerSupWeapon());
-		if (listObjects[i]->GetHealth() == 1 && bmr->GetIsDidDamageTurn1())	//Hit nay se chet 
-		{
-			player->AddScore(scoreGive);
-			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		}
 		if (!bmr->GetIsDidDamageTurn1() && bmr->GetOwnerDirection() == bmr->GetDirection())
 		{
 			listObjects[i]->AddHealth(-weapon->GetDamage());
 			bmr->SetIsDidDamageTurn1(true);
+			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+			if (listObjects[i]->GetHealth() == 0)
+			{
+				player->AddScore(scoreGive);
+				listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+			}
 		}
 		if (!bmr->GetIsDidDamageTurn2() && bmr->GetOwnerDirection() != bmr->GetDirection())
 		{
 			listObjects[i]->AddHealth(-weapon->GetDamage());
 			bmr->SetIsDidDamageTurn2(true);
+			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+			if (listObjects[i]->GetHealth() == 0)
+			{
+				player->AddScore(scoreGive);
+				listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+			}
 		}
 	}
 	else
@@ -221,10 +230,10 @@ void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
 			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		}
 		listObjects[i]->AddHealth(-weapon->GetDamage());
-	}
-	listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-	listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 
+	}
 }
 
 void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
@@ -310,7 +319,7 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 	}
 }
 
-void PlayScene::SetSubWeaponDone(UINT i)
+void PlayScene::SetSubWeaponDone(UINT i, bool isAtDouble)
 {
 	if (listObjects[i]->GetType() == EntityType::BAT ||
 		listObjects[i]->GetType() == EntityType::ZOMBIE ||
@@ -326,7 +335,10 @@ void PlayScene::SetSubWeaponDone(UINT i)
 		switch (player->GetPlayerSupWeaponType())
 		{
 		case EntityType::DAGGER:
-			player->GetPlayerSupWeapon()->SetIsDone(true);
+			if (!isAtDouble)
+				player->GetPlayerSupWeapon()->SetIsDone(true);
+			else
+				player->GetPlayerSupWeaponAtDouble()->SetIsDone(true);
 		default:
 			break;
 		}
@@ -348,7 +360,12 @@ void PlayScene::WeaponCollision()
 					&& player->GetPlayerSupWeapon()->IsCollidingObject(listObjects[i]))
 				{
 					WeaponInteractObj(i, player->GetPlayerSupWeapon());
-					SetSubWeaponDone(i);
+					SetSubWeaponDone(i, false);
+					if (player->IsGettingDouble())
+					{
+						WeaponInteractObj(i, player->GetPlayerSupWeaponAtDouble());	//	1 bug here
+						SetSubWeaponDone(i, true);
+					}
 				}
 		}
 	}

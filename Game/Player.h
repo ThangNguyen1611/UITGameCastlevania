@@ -86,7 +86,8 @@ class Player : public Entity
 		isOnStairs,
 		isOnMF,
 		isTimeStop,
-		isHideOnBush;		//Need ? A fan of Fekar :v
+		isHideOnBush,		//Need ? A fan of Fekar :v
+		isAttackingDouble;
 	float backupVx;
 
 	bool canMoveDown;
@@ -137,7 +138,9 @@ public:
 	int GetLive() { return live; }
 	void AddLive(int BonusLive) { live += BonusLive; }
 
-	void Attack(EntityType weaponType);	
+	void Attack(EntityType weaponType);
+	void SupWeaponUpdate(Weapon* weapon, DWORD dt, vector<LPGAMEENTITY> *colliable_objects);	//Do khong dung list va khong muon viet lai nen viet ham nay
+	void SupWeaponRender(Weapon* weapon);
 	bool IsWalking() { return isWalking; }
 	bool IsJumping() { return isJumping; }
 	bool IsAllowJump() { return isAllowJump; }
@@ -163,6 +166,8 @@ public:
 	
 	Weapon* GetPlayerMainWeapon() { return mainWeapon; }
 	Weapon* GetPlayerSupWeapon() { return supWeapon; }
+	Weapon* GetPlayerSupWeaponAtDouble() { return supWeaponAtDouble; }
+	Weapon* GetPlayerSupWeaponAtTriple() { return supWeaponAtTriple; }
 
 	void UpgradingMorningStar();
 
