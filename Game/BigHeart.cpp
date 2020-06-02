@@ -9,9 +9,9 @@ BigHeart::BigHeart(float posX, float posY)
 	this->posY = posY;
 	
 	vY = BIGHEART_GRAVITY;
-	displayTimer = new Timer(BIGHEART_TIMEDISPLAYMAX);
+	displayTimer = new Timer(BIGHEART_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = BIGHERAT_TIMEDELAYMAX;
+	delayLimit = BIGHEART_DELAY;
 }
 
 BigHeart::~BigHeart(){}

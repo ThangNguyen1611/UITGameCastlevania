@@ -13,8 +13,9 @@ Knight::Knight(float posX, float posY, int directionX, float maxAmplitudeX)
 
 	SetState(KNIGHT_STATE_WALKING);
 
-	health = 2;
+	health = KNIGHT_MAXHEALTH;
 	isDead = false;
+	triggerHurting = false;
 
 	randomTurnaround = false;
 }
@@ -29,9 +30,20 @@ void Knight::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		return;
 	}
 
+	if (triggerHurting && state != KNIGHT_STATE_HURTING)
+	{
+		hurtingTimer->Start();
+		SetState(KNIGHT_STATE_HURTING);
+		triggerHurting = false;
+	}
+	if (state == KNIGHT_STATE_HURTING && hurtingTimer->IsTimeUp())
+	{
+		hurtingTimer->Reset();
+		SetState(KNIGHT_STATE_WALKING);
+	}
+
 	Entity::Update(dt);
 	vY += KNIGHT_GRAVITY * dt;
-
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -109,7 +121,7 @@ void Knight::Render()
 	if (isDead)
 		return;
 
-	animationSet->at(state)->Render(direction, posX, posY);
+	animationSet->at(0)->Render(direction, posX, posY);
 
 	RenderBoundingBox();
 }
@@ -125,7 +137,10 @@ void Knight::SetState(int state)
 		isDead = true;
 		break;
 	case KNIGHT_STATE_WALKING:
-		vX = KNIGHT_WALKING_SPEED * direction;
+		vX = KNIGHT_WALKING_SPEED_X * direction;
+		break; 
+	case KNIGHT_STATE_HURTING:
+		vX = 0;
 		break;
 	}
 }
@@ -135,7 +150,7 @@ void Knight::GetBoundingBox(float &l, float &t, float &r, float &b)
 	//not clean
 	if (!isDead) 
 	{
-		l = posX - 15;
+		l = posX - KNIGHT_ARTICULATOR_POS_X;
 		t = posY;
 		r = posX + KNIGHT_BBOX_WIDTH;
 		b = posY + KNIGHT_BBOX_HEIGHT;

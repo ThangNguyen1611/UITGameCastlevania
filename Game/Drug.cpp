@@ -9,9 +9,9 @@ Drug::Drug(float posX, float posY)
 	this->posY = posY;
 
 	vY = DRUG_GRAVITY;
-	displayTimer = new Timer(DRUG_TIMEDISPLAYMAX);
+	displayTimer = new Timer(DRUG_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = DRUG_TIMEDELAYMAX;
+	delayLimit = DRUG_DELAY;
 }
 
 Drug::~Drug() {}

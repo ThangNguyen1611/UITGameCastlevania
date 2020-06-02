@@ -1,6 +1,10 @@
 #pragma once
 #include "Entity.h"
 
+#define RAVEN_MAXHEALTH						1
+#define RAVEN_DAMAGE						3
+#define RAVEN_SIGHT_RANGE					250
+#define RAVEN_CLOSED_RANGE					20
 #define RAVEN_FLYING_SPEED_PHASE1			1.25f	//Fly after Inactive
 #define RAVEN_FLYING_SPEED_PHASE2			3.0f	//Fly after Waiting
 #define RAVEN_FLYING_SPEED_PHASE3			5.0f	//Fly Toward when close enough
@@ -9,6 +13,7 @@
 #define RAVEN_DIST_TO_DEST_POSY_PHASE1		100
 #define RAVEN_DIST_TO_DEST_POSX_PHASE2		-90
 #define RAVEN_DIST_TO_DEST_POSY_PHASE2		-60
+#define RAVEN_MAX_COUNTSIDE					5
 
 #define RAVEN_BBOX_WIDTH					32
 #define RAVEN_BBOX_HEIGHT					32
@@ -47,5 +52,7 @@ public:
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	virtual void SetState(int state);
+
+	void SelfDestroy();
 };
 

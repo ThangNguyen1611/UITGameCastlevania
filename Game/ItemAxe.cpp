@@ -9,9 +9,9 @@ ItemAxe::ItemAxe(float posX, float posY)
 	this->posY = posY;
 
 	vY = ITEMAXE_GRAVITY;
-	displayTimer = new Timer(ITEMAXE_TIMEDISPLAYMAX);
+	displayTimer = new Timer(ITEMAXE_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = ITEMAXE_TIMEDELAYMAX;
+	delayLimit = ITEMAXE_DELAY;
 }
 
 ItemAxe::~ItemAxe() {}

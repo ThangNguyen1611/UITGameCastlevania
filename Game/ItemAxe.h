@@ -3,8 +3,8 @@
 
 #define ITEMAXE_GRAVITY				0.03f
 
-#define ITEMAXE_TIMEDISPLAYMAX		4500
-#define ITEMAXE_TIMEDELAYMAX		600
+#define ITEMAXE_DISPLAY_DURATION	4500
+#define ITEMAXE_DELAY				600
 
 class ItemAxe : public Item
 {

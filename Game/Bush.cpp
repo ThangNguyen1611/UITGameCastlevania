@@ -7,7 +7,7 @@ Bush::Bush(float posX, float posY, LPGAMEENTITY player)
 
 	this->posX = posX;
 	this->posY = posY;
-	health = 10;
+	health = 1;
 	isDead = false;
 	this->player = player;
 	isPlayerInside = false;
@@ -25,9 +25,9 @@ void Bush::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 void Bush::Render()
 {
-	int alpha = 255;
+	int alpha = ENTITY_ALPHA_RENDER;
 	if (isPlayerInside)
-		alpha = 75;
+		alpha = BUSH_FADED;
 
 	animationSet->at(0)->Render(-direction, posX, posY, alpha);
 

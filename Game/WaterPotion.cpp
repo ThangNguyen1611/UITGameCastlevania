@@ -5,7 +5,7 @@ WaterPotion::WaterPotion()
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_WATERPOTION));
 	tag = EntityType::WATERPOTION;
 	timeDelayed = 0;
-	timeDelayMax = MAX_WATPOT_DELAY;
+	timeDelayMax = WATPOT_DELAY;
 
 	damage = 1;
 }
@@ -31,7 +31,7 @@ void WaterPotion::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	if (state == WATPOT_STATE_POT)
 	{
-		if (tempY - posY >= WATPOT_MAX_DISTANCE_HEIGHT)
+		if (tempY - posY >= WATPOT_MAX_HEIGHT)
 			directionY = 1;
 
 		vY += WATPOT_SPEED_Y * directionY;		// += bring the parabol-shape fly

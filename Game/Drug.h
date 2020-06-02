@@ -3,8 +3,8 @@
 
 #define DRUG_GRAVITY			0.03f
 
-#define DRUG_TIMEDISPLAYMAX		4500
-#define DRUG_TIMEDELAYMAX		600
+#define DRUG_DISPLAY_DURATION	4500
+#define DRUG_DELAY				600
 
 class Drug : public Item
 {

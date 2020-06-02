@@ -10,10 +10,10 @@ IntroScene::IntroScene() : Scene()
 	texturesFilePath = ToLPCWSTR("Resources/Scene/textures_introscene.txt");
 	LoadBaseTextures();
 
-	introSceneSpr = CSprites::GetInstance()->Get(268);
+	introSceneSpr = CSprites::GetInstance()->Get(INTROSCREEN_SPRITES);
 	simonAniSet = CAnimationSets::GetInstance()->Get(ANIMATION_SET_INTROSIMON);
-	introSimonPosX = SCREEN_WIDTH / 2 - 200;
-	introSimonPosY = SCREEN_HEIGHT / 2 + 100;
+	introSimonPosX = SIMON_INIT_POS_X;
+	introSimonPosY = SIMON_INIT_POS_Y;
 	simonState = SIMON_STATE_IDLE;
 
 	timeBeginSimonDelay = 0;
@@ -123,9 +123,9 @@ void IntroScene::Render()
 	introSceneSpr->Draw(-1, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
 	if (isAllowToPlayPhase3)
-		simonAniSet->at(simonState)->Render(-1, introSimonPosX, SCREEN_HEIGHT / 2 + 150);
+		simonAniSet->at(simonState)->Render(-1, introSimonPosX, SCREEN_HEIGHT / 2 + SIMON_INIT_POS_Y_RENDER);
 	else
-		simonAniSet->at(simonState)->Render(1, introSimonPosX, SCREEN_HEIGHT / 2 + 150);
+		simonAniSet->at(simonState)->Render(1, introSimonPosX, SCREEN_HEIGHT / 2 + SIMON_INIT_POS_Y_RENDER);
 }
 
 

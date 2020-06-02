@@ -9,9 +9,9 @@ ItemStopWatch::ItemStopWatch(float posX, float posY)
 	this->posY = posY;
 
 	vY = ITEMSTOPWATCH_GRAVITY;
-	displayTimer = new Timer(ITEMSTOPWATCH_TIMEDISPLAYMAX);
+	displayTimer = new Timer(ITEMSTOPWATCH_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = ITEMSTOPWATCH_TIMEDELAYMAX;
+	delayLimit = ITEMSTOPWATCH_DELAY;
 }
 
 ItemStopWatch::~ItemStopWatch() {}

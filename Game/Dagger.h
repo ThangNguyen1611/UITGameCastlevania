@@ -1,12 +1,12 @@
 #pragma once
 #include "Weapon.h"
 
-#define DAGGER_SPEED_X		0.4f
+#define DAGGER_SPEED_X			0.4f
 
 #define DAGGER_BBOX_WIDTH		32
 #define DAGGER_BBOX_HEIGHT		18
 
-#define MAX_DAGGER_DELAY		260		//2 times simon's ani attack
+#define DAGGER_DELAY			260		//2 times simon's ani attack
 
 class Dagger : public Weapon
 {

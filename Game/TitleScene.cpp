@@ -9,7 +9,7 @@ TitleScene::TitleScene() : Scene()
 	texturesFilePath = ToLPCWSTR("Resources/Scene/textures_titlescene.txt");
 	LoadBaseTextures();
 
-	titleSceneSpr = CSprites::GetInstance()->Get(250);
+	titleSceneSpr = CSprites::GetInstance()->Get(TITLESCREEN_SPRITES);
 	batAniSet = CAnimationSets::GetInstance()->Get(ANIMATION_SET_TITLEBAT);
 	startAniSet = CAnimationSets::GetInstance()->Get(ANIMATION_SET_STARTTEXT);
 
@@ -28,7 +28,7 @@ void TitleScene::Unload()
 
 void TitleScene::Update(DWORD dt)
 {
-	if (batAniSet->at(0)->GetCurrentFrame() == 14)
+	if (batAniSet->at(0)->GetCurrentFrame() == BAT_ENDFRAME)
 	{
 		isAllowToStart = true;
 	}

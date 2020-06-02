@@ -1,7 +1,7 @@
 #pragma once
 #include "Effect.h"
 
-#define FIRE_BURN_DISPLAY	600
+#define FIRE_DISPLAY_DURATION	600
 
 class Fire : public Effect
 {

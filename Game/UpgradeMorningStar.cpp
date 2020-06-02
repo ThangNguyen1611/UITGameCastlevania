@@ -9,9 +9,9 @@ UpgradeMorningStar::UpgradeMorningStar(float posX, float posY)
 	this->posY = posY;
 
 	vY = UPGRADEMS_GRAVITY;
-	displayTimer = new Timer(UPGRADEMS_TIMEDISPLAYMAX);
+	displayTimer = new Timer(UPGRADEMS_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = UPGRADEMS_TIMEDELAYMAX;
+	delayLimit = UPGRADEMS_DELAY;
 }
 
 UpgradeMorningStar::~UpgradeMorningStar() {}

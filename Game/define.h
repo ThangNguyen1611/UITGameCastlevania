@@ -22,6 +22,7 @@
 #define BGColor D3DCOLOR_XRGB(0,0,0)
 #define SCREEN_WIDTH 525	//530
 #define SCREEN_HEIGHT 490	//480
+#define BOTTOM_SCREEN 450
 
 #define MaxFrameRate 100	//default Frame Rate is the truth
 

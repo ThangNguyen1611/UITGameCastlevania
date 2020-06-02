@@ -8,7 +8,7 @@ MovingPlatform::MovingPlatform(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 	direction = 1;
-	vX += PLAT_MOVING_SPEED;
+	vX += PLAT_FLOATING_SPEED_X;
 }
 
 MovingPlatform::~MovingPlatform() {}
@@ -67,7 +67,7 @@ void MovingPlatform::Render()
 
 void MovingPlatform::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
-	l = posX - 16;
+	l = posX - PLAT_BBOX_WIDTH / 4;
 	t = posY;
 	r = posX + PLAT_BBOX_WIDTH;
 	b = posY + PLAT_BBOX_HEIGHT;

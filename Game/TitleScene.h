@@ -3,6 +3,9 @@
 #include "Textures.h"
 #include "Animations.h"
 
+#define TITLESCREEN_SPRITES		250
+#define BAT_ENDFRAME			14
+
 class TitleScene : public Scene
 {
 	LPSPRITE titleSceneSpr;

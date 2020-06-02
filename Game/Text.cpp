@@ -11,13 +11,13 @@ void Text::Render(float posX, float posY, const string &str)
 		//Hien tai chi dung so'
 		if (str[i] >= '0' && str[i] <= '9')
 		{
-			textSpr = CSprites::GetInstance()->Get(str[i] - '0' + 84);
+			textSpr = CSprites::GetInstance()->Get(str[i] - '0' + TEXT_SPRITES);
 		}
 		else	//va dau tru	
 		{
 			textSpr = CSprites::GetInstance()->Get(94);
 		}
-		textSpr->Draw(-1, posX + i * 15, posY);
+		textSpr->Draw(-1, posX + i * TEXT_SPACE_UNIT, posY);
 	}
 }
 

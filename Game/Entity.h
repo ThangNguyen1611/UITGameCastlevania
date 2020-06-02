@@ -14,6 +14,7 @@ using namespace std;
 class Entity;
 typedef Entity * LPGAMEENTITY;
 
+#define ENTITY_ALPHA_RENDER			255
 
 struct CCollisionEvent;
 typedef CCollisionEvent * LPCOLLISIONEVENT;

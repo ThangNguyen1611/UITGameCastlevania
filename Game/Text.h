@@ -3,6 +3,9 @@
 #include <string>
 using namespace std;
 
+#define TEXT_SPACE_UNIT		15
+#define TEXT_SPRITES		84
+
 class Text
 {
 	LPSPRITE textSpr;

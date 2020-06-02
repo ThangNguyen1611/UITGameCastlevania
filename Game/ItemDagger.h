@@ -1,10 +1,10 @@
 #pragma once
 #include "Item.h"
 
-#define ITEMDAGGER_GRAVITY			0.03f
+#define ITEMDAGGER_GRAVITY				0.03f
 
-#define ITEMDAGGER_TIMEDISPLAYMAX		4500
-#define ITEMDAGGER_TIMEDELAYMAX			600
+#define ITEMDAGGER_DISPLAY_DURATION		4500
+#define ITEMDAGGER_DELAY				600
 
 class ItemDagger : public Item
 {

@@ -9,9 +9,9 @@ YummiChickenLeg::YummiChickenLeg(float posX, float posY)
 	this->posY = posY;
 
 	vY = CHICKEN_GRAVITY;
-	displayTimer = new Timer(CHICKEN_TIMEDISPLAYMAX);
+	displayTimer = new Timer(CHICKEN_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = CHICKEN_TIMEDELAYMAX;
+	delayLimit = CHICKEN_DELAY;
 }
 
 YummiChickenLeg::~YummiChickenLeg() {}

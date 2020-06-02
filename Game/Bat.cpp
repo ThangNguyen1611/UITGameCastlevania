@@ -15,7 +15,7 @@ Bat::Bat(float posX, float posY, int direction)
 
 	this->SetState(BAT_STATE_FLYING);
 
-	health = 1;
+	health = BAT_MAXHEALTH;
 	isDead = false;
 }
 

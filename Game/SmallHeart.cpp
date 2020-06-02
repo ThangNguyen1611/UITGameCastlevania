@@ -9,9 +9,9 @@ SmallHeart::SmallHeart(float posX, float posY)
 	this->posY = posY;
 	tempX = posX;
 
-	displayTimer = new Timer(SMALLHEART_TIMEDISPLAYMAX);
+	displayTimer = new Timer(SMALLHEART_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = SMALLHEART_TIMEDELAYMAX;
+	delayLimit = SMALLHEART_DELAY;
 	//Dat vX o day de vi kh co state va co the dung yen khi gap mat dat
 	vX = SMALLHEART_SPEED_X * direction;
 }

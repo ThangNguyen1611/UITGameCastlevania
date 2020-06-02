@@ -11,7 +11,7 @@ Hunchman::Hunchman(float posX, float posY, LPGAMEENTITY target)
 
 	SetState(HUNCHMAN_STATE_ACTIVE);
 
-	health = 1;
+	health = HUNCHMAN_MAXHEALTH;
 	isDead = false;
 
 	targetDetected = false;
@@ -25,7 +25,8 @@ Hunchman::~Hunchman() {}
 
 void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posX < 5 || posX > SCREEN_WIDTH * 2.85f || posY > 450)
+	if (health <= 0 || posX < 5 || posX > SCREEN_WIDTH * 2.85f || posY > BOTTOM_SCREEN ||
+		(activated && abs(this->posX - target->GetPosX()) >= SCREEN_WIDTH * 0.55))
 	{
 		SetState(HUNCHMAN_STATE_DIE);
 		return;
@@ -82,7 +83,7 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				if (isJumping)
 				{
 					isJumping = false;
-					jumpingTimer->AddToTimer(HUNCHMAN_JUMP_TIME);
+					jumpingTimer->AddToTimer(HUNCHMAN_JUMP_DURATION);
 				}
 			}
 	}
@@ -97,7 +98,7 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	else
 	{
-		vX = HUNCHMAN_WALKING_SPEED * direction;
+		vX = HUNCHMAN_WALKING_SPEED_X * direction;
 #pragma region ShortJump Logic
 		if (!isJumping && !triggerJump)
 		{
@@ -122,7 +123,7 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 #pragma endregion
 
 		//LongJump aka Dodge Logic
-		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 100 && //Trong tam nhin 3 o gach cua mob
+		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= HUNCHMAN_SIGHT_DODGE_RANGE && //Trong tam nhin 3 o gach cua mob
 			target->GetDirection() != this->direction &&	//Doi dien nhau -> Nguy co chet vi bi danh
 			!target->IsUnsighted() &&
 			(target->GetAnimationSet()->at(4)->GetCurrentFrame() == 0 ||	//Frame dau cua attack
@@ -138,7 +139,7 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if (target != NULL)
 		{
-			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 250 && target->GetState() != 0 && !target->IsUnsighted())
+			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= HUNCHMAN_SIGHT_RANGE && target->GetState() != 0 && !target->IsUnsighted())
 			{
 				if (!targetDetected)
 				{
@@ -238,7 +239,7 @@ void Hunchman::GetBoundingBox(float &l, float &t, float &r, float &b)
 	//not clean
 	if (!isDead)
 	{
-		l = posX - 15;
+		l = posX - HUNCHMAN_BBOX_WIDTH / 2;
 		t = posY;
 		r = posX + HUNCHMAN_BBOX_WIDTH;
 		b = posY + HUNCHMAN_BBOX_HEIGHT;

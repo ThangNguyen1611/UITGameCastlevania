@@ -11,7 +11,7 @@ Skeleton::Skeleton(float posX, float posY, LPGAMEENTITY target)
 
 	SetState(SKELETON_STATE_ACTIVE);
 
-	health = 2;
+	health = SKELETON_MAXHEALTH;
 	isDead = false;
 
 	targetDetected = false;
@@ -21,6 +21,8 @@ Skeleton::Skeleton(float posX, float posY, LPGAMEENTITY target)
 	triggerJump = false;
 
 	mainWeapon = new Bone();
+	mainWeaponAtDouble = new Bone();
+	mainWeaponAtTriple = new Bone();
 	triggerResetDelay = false;
 }
 
@@ -28,7 +30,8 @@ Skeleton::~Skeleton() {}
 
 void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posX < 5 || posX > SCREEN_WIDTH * 2.85f || posY > 450)
+	if (health <= 0 || posX < 5 || posX > SCREEN_WIDTH * 2.85f || posY > BOTTOM_SCREEN || 
+		(activated && abs(this->posX - target->GetPosX()) >= SCREEN_WIDTH * 0.55))
 	{
 		SetState(SKELETON_STATE_DIE);
 		return;
@@ -41,6 +44,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	if (!triggerResetDelay)
 	{
 		mainWeapon->ResetDelay();
+		mainWeaponAtDouble->ResetDelay();
 		triggerResetDelay = true;
 	}
 
@@ -82,18 +86,10 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				target->GetPosX() > posX && direction == -1)		//Wrong Chase-Direction
 				TurnAround();
 		}
-		//else	//Bo doan nay se kh bi 'leo tuong'
-		//	if (ny == -1)
-		//	{
-		//		vY = 0.1f;
-		//		dy = vY * dt;
-
-		//		if (isJumping)
-		//		{
-		//			isJumping = false;
-		//			jumpingTimer->AddToTimer(SKELETON_JUMP_TIME);	//Day timer den IsTimeUp va end Jump
-		//		}
-		//	}
+		if (ny == -1)
+		{
+			///
+		}
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
@@ -108,9 +104,9 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if(!isJumping)
 			if(randomJump <= 50)
-				vX = SKELETON_WALKING_SPEED * direction;
+				vX = SKELETON_WALKING_SPEED_X * direction;
 			else
-				vX = -SKELETON_WALKING_SPEED * direction;
+				vX = -SKELETON_WALKING_SPEED_X * direction;
 #pragma region Jump Logic
 		if (!isJumping && !triggerJump)
 		{
@@ -126,21 +122,44 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		}
 		if (!jumpingTimer->IsTimeUp())
 		{
-			if(!target->IsUnsighted())				//Khong thay target thi khong danh lung tung
-				Attack();
 			if (randomJump <= 50)
-			{
 				Jump();
-			}
 			else
-			{
 				JumpBack();
-			}
 		}
 		else if (jumpingTimer->IsTimeUp())
 		{
 			jumpingTimer->Reset();
 			isJumping = false;
+		}
+#pragma endregion
+#pragma region Attack Logic
+		if((rand() % 1000) < 50)
+			if (!target->IsUnsighted())				//Khong thay target thi khong danh lung tung
+			{
+				Attack();
+				if ((rand() % 100) < 50)
+				{
+					triggerDoubleAttack = true;
+					doubleAttackDelayTimer->Start();
+				}
+			}
+		if (triggerDoubleAttack && doubleAttackDelayTimer->IsTimeUp())
+		{
+			DoubleAttack();
+			triggerDoubleAttack = false;
+			doubleAttackDelayTimer->Reset();
+			if ((rand() % 100) < 25)
+			{
+				triggerTripleAttack = true;
+				tripleAttackDelayTimer->Start();
+			}
+		}
+		if (triggerTripleAttack && tripleAttackDelayTimer->IsTimeUp())
+		{
+			TripleAttack();
+			triggerTripleAttack = false;
+			tripleAttackDelayTimer->Reset();
 		}
 #pragma endregion
 	}
@@ -149,7 +168,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if (target != NULL)
 		{
-			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 235 && target->GetState() != 0 && !target->IsUnsighted()) //Ngan xac simon kich hoat 
+			if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= SKELETON_SIGHT_RANGE && target->GetState() != 0 && !target->IsUnsighted()) //Ngan xac simon kich hoat 
 			{
 				if (!targetDetected)
 				{
@@ -210,6 +229,24 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		}
 		mainWeapon->Update(dt, coObjects);
 	}
+	if (!mainWeaponAtDouble->GetIsDone())
+	{
+		if (!mainWeaponAtDouble->GetIsReceivedPos())
+		{
+			mainWeaponAtDouble->SetPosition(posX, posY);
+			mainWeaponAtDouble->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
+		}
+		mainWeaponAtDouble->Update(dt, coObjects);
+	}
+	if (!mainWeaponAtTriple->GetIsDone())
+	{
+		if (!mainWeaponAtTriple->GetIsReceivedPos())
+		{
+			mainWeaponAtTriple->SetPosition(posX, posY);
+			mainWeaponAtTriple->SetIsReceivedPos(true);			//Chi nhan pos 1 lan sau khi het delay
+		}
+		mainWeaponAtTriple->Update(dt, coObjects);
+	}
 }
 
 void Skeleton::TurnAround()
@@ -236,7 +273,7 @@ void Skeleton::FirstJump()
 {
 	isJumping = true;
 	vX = SKELETON_JUMP_SPEED_X * direction;
-	vY = -SKELETON_FIRST_JUMP_SPEED_Y;
+	vY = -SKELETON_FIRSTJUMP_SPEED_Y;
 }
 
 void Skeleton::Attack()
@@ -244,6 +281,22 @@ void Skeleton::Attack()
 	if (mainWeapon->GetIsDone())
 	{
 		mainWeapon->Attack(posX, direction);
+	}
+}
+
+void Skeleton::DoubleAttack()
+{
+	if (mainWeaponAtDouble->GetIsDone())
+	{
+		mainWeaponAtDouble->Attack(posX, direction);
+	}
+}
+
+void Skeleton::TripleAttack()
+{
+	if (mainWeaponAtTriple->GetIsDone())
+	{
+		mainWeaponAtTriple->Attack(posX, direction);
 	}
 }
 
@@ -259,6 +312,14 @@ void Skeleton::Render()
 	if (!mainWeapon->GetIsDone())
 	{
 		mainWeapon->Render();
+	}
+	if (!mainWeaponAtDouble->GetIsDone())
+	{
+		mainWeaponAtDouble->Render();
+	}
+	if (!mainWeaponAtTriple->GetIsDone())
+	{
+		mainWeaponAtTriple->Render();
 	}
 }
 
@@ -280,7 +341,7 @@ void Skeleton::GetBoundingBox(float &l, float &t, float &r, float &b)
 	//not clean
 	if (!isDead)
 	{
-		l = posX - 15;
+		l = posX - SKELETON_BBOX_WIDTH / 2;
 		t = posY;
 		r = posX + SKELETON_BBOX_WIDTH;
 		b = posY + SKELETON_BBOX_HEIGHT;

@@ -9,9 +9,9 @@ Cross::Cross(float posX, float posY)
 	this->posY = posY;
 
 	vY = CROSS_GRAVITY;
-	displayTimer = new Timer(CROSS_TIMEDISPLAYMAX);
+	displayTimer = new Timer(CROSS_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = CROSS_TIMEDELAYMAX;
+	delayLimit = CROSS_DELAY;
 }
 
 Cross::~Cross() {}

@@ -9,15 +9,19 @@
 #include "Timer.h"
 #include <map>
 
-#define PLAYER_WALKING_SPEED					0.20f	//0.25
-#define PLAYER_PASSING_STAGE_SPEED				0.035f
-#define PLAYER_JUMP_SPEED_Y						0.55f	//0.8
+#define PLAYER_WALKING_SPEED_X					0.20f	//0.25
+#define PLAYER_PASSING_STAGE_SPEED_X			0.035f
+#define PLAYER_JUMPING_SPEED_Y					0.55f	//0.8
 #define PLAYER_GRAVITY							0.002f	//0.025
 #define PLAYER_DEFLECT_SPEED_X					0.105f
 #define PLAYER_DEFLECT_SPEED_Y					0.3f
 #define PLAYER_MAXHEALTH						16
+#define PLAYER_INIT_MANA						55
+#define PLAYER_INIT_LIVES						3
 #define PLAYER_ON_STAIRS_SPEED_X				0.05f
 #define PLAYER_ON_STAIRS_SPEED_Y				0.05f
+#define PLAYER_IMMORTAL_ALPHA					150
+#define PLAYER_UNSIGHT_ALPHA					50
 
 #define PLAYER_BBOX_WIDTH						45		//60
 #define PLAYER_BBOX_HEIGHT						63		//66
@@ -25,8 +29,8 @@
 #define PLAYER_STATE_DIE						0
 #define PLAYER_STATE_IDLE						1
 #define PLAYER_STATE_WALKING					2
-#define PLAYER_STATE_JUMP						3
-#define PLAYER_STATE_ATTACK						4
+#define PLAYER_STATE_JUMPING					3
+#define PLAYER_STATE_ATTACKING					4
 #define PLAYER_STATE_HURTING					5
 #define PLAYER_STATE_SITTING					6
 #define PLAYER_STATE_SITTING_ATTACK				7
@@ -61,12 +65,12 @@
 #define PLAYER_ANI_ATTACK_DOWN_STAIRS_BEGIN		18
 #define PLAYER_ANI_ATTACK_DOWN_STAIRS_END		20
 
-#define PLAYER_HURTING_DELAY					600
-#define PLAYER_IMMORTAL_TIMECOUNTER				2000
-#define PLAYER_UPGRADING_TIMECOUNTER			1500
-#define PLAYER_RESPAWNING_TIMECOUNTER			3000
-#define PLAYER_TIMESTOP_TIMECOUNTER				5000
-#define PLAYER_INVISIBLE_TIMECOUNTER			10000
+#define PLAYER_HURT_DURATION					600
+#define PLAYER_IMMORTAL_DURATION				2000
+#define PLAYER_UPGRADE_DURATION					1500
+#define PLAYER_RESPAWN_DURATION					3000
+#define PLAYER_TIMESTOP_DURATION				5000
+#define PLAYER_INVISIBLE_DURATION				10000
 
 class Player : public Entity
 {
@@ -87,7 +91,8 @@ class Player : public Entity
 		isOnMF,
 		isTimeStop,
 		isHideOnBush,		//Need ? A fan of Fekar :v
-		isAttackingDouble;
+		isAttackingDouble,
+		isAttackingTriple;
 	float backupVx;
 
 	bool canMoveDown;
@@ -106,13 +111,13 @@ class Player : public Entity
 	bool isGettingDouble;
 	bool isGettingTriple;
 
-	Timer* hurtingTimer = new Timer(PLAYER_HURTING_DELAY);
-	Timer* immortalTimer = new Timer(PLAYER_IMMORTAL_TIMECOUNTER);
+	Timer* hurtingTimer = new Timer(PLAYER_HURT_DURATION);
+	Timer* immortalTimer = new Timer(PLAYER_IMMORTAL_DURATION);
 	//Immortal != Invincible !!!!! You may be Immortal, but you are not Invincible! - a Prince of Persia said.
-	Timer* upgradeTimer = new Timer(PLAYER_UPGRADING_TIMECOUNTER);
-	Timer* respawningTimer = new Timer(PLAYER_RESPAWNING_TIMECOUNTER);
-	Timer* timeStopTimer = new Timer(PLAYER_TIMESTOP_TIMECOUNTER);
-	Timer* invisibleTimer = new Timer(PLAYER_INVISIBLE_TIMECOUNTER);
+	Timer* upgradeTimer = new Timer(PLAYER_UPGRADE_DURATION);
+	Timer* respawningTimer = new Timer(PLAYER_RESPAWN_DURATION);
+	Timer* timeStopTimer = new Timer(PLAYER_TIMESTOP_DURATION);
+	Timer* invisibleTimer = new Timer(PLAYER_INVISIBLE_DURATION);
 
 	Weapon* mainWeapon;
 	Weapon* supWeapon;

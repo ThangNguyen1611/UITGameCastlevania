@@ -3,8 +3,8 @@
 
 #define BAGS_GRAVITY			0.03f
 
-#define BAGS_TIMEDISPLAYMAX		4500
-#define BAGS_TIMEDELAYMAX		600
+#define BAGS_DISPLAY_DURATION	4500
+#define BAGS_DELAY				600
 
 #define BAG_RED					0
 #define BAG_WHITE				1

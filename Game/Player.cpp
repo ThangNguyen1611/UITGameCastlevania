@@ -12,9 +12,9 @@ Player::Player(float posX, float posY)
 	this->SetState(PLAYER_STATE_IDLE);
 
 	health = PLAYER_MAXHEALTH;
-	mana = 55;
+	mana = PLAYER_INIT_MANA;
 	score = 0;
-	live = 3;
+	live = PLAYER_INIT_LIVES;
 	isDead = false;
 	isWalking = false;
 	isJumping = false;
@@ -39,12 +39,7 @@ Player::~Player(){}
 
 void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {	
-	//if (posY > 450 && state != PLAYER_STATE_DIE) //Instead PlayerFailDown
-	//{
-	//	health = 0;
-	//}
-
-	if ((health <= 0 || posY > 450) && !isRespawning)
+	if ((health <= 0 || posY > BOTTOM_SCREEN) && !isRespawning)
 	{
 		live -= 1;
 		SetState(PLAYER_STATE_DIE);
@@ -105,6 +100,10 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		isAttackingDouble = false;
 	}
+	if (isAttackingTriple && supWeaponAtTriple->GetIsDone())
+	{
+		isAttackingTriple = false;
+	}
 #pragma endregion
 
 	if (animationSet->at(PLAYER_STATE_SUPWEAPON_ATTACK)->GetCurrentFrame() == 0 || animationSet->at(PLAYER_STATE_SUPWEAPON_SIT_ATTACK)->GetCurrentFrame() == 0)
@@ -141,7 +140,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		}
 	}
 
-	if ((state == PLAYER_STATE_ATTACK && animationSet->at(PLAYER_STATE_ATTACK)->IsRenderOver()) ||
+	if ((state == PLAYER_STATE_ATTACKING && animationSet->at(PLAYER_STATE_ATTACKING)->IsRenderOver()) ||
 		(state == PLAYER_STATE_SUPWEAPON_ATTACK && animationSet->at(PLAYER_STATE_SUPWEAPON_ATTACK)->IsRenderOver()) ||
 		(state == PLAYER_STATE_SITTING_ATTACK && animationSet->at(PLAYER_STATE_SITTING_ATTACK)->IsRenderOver()) ||
 		(state == PLAYER_STATE_SUPWEAPON_SIT_ATTACK && animationSet->at(PLAYER_STATE_SUPWEAPON_SIT_ATTACK)->IsRenderOver()) ||
@@ -154,7 +153,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	if (!isAttacking)
 	{
 		if (isJumping)
-			SetState(PLAYER_STATE_JUMP);
+			SetState(PLAYER_STATE_JUMPING);
 	}
 	
 
@@ -195,7 +194,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		if (IsCollidingObject(listBush[i]))
 		{
 			StartInvisible();
-			invisibleTimer->AddToTimer(PLAYER_INVISIBLE_TIMECOUNTER - 1000);	//Khi ra khoi bush thi se co 1s tang hinh
+			invisibleTimer->AddToTimer(PLAYER_INVISIBLE_DURATION - 1000);	//Khi ra khoi bush thi se co 1s tang hinh
 			isHideOnBush = true;
 		}
 		else
@@ -221,8 +220,11 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		// block 
 		if (!isWalkingOnStairs)
 		{
-			posX += min_tx * dx + nx * 0.1f;
-			posY += min_ty * dy + ny * 0.1f;
+			posX += min_tx * dx + nx * 0.4f;
+			if (!isImmortaling && !unsighted && !isHideOnBush)
+				posY += min_ty * dy + ny * 0.0001f;
+			/*else
+				posY += min_ty * dy + ny * 0.0001f;*/
 		}
 		
 		for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -233,16 +235,14 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			{
 				if (e->ny != 0)
 				{
-					if (e->ny == -1 && !isHurting)
+					if (e->ny == -1 && !isHurting)	//Dont know how I got kick out of the map :/
 					{
-						vY = 0.1f;
-						dy = vY * dt;
+						vY = 0;
 
 						if (isJumping)
 						{
 							isJumping = false;
 							isAllowJump = true;
-							isHurting = false;
 						}
 					}
 					else if (e->ny == 1)
@@ -251,16 +251,10 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					}
 					if (nx != 0 && !isHurting) vX = 0;
 					if (ny != 0 && !isHurting) vY = 0;
-					if (nx != 0 && ny != 0 && !isHurting)
-					{
-						vX = 0;
-						vY = 0;
-						isHurting = false;
-					}
 				}
 				if (state == PLAYER_STATE_GOING_UP_STAIRS || state == PLAYER_STATE_GOING_DOWN_STAIRS)
 				{
-					if (nx != 0) posX -= nx * 0.1f;
+					if (nx != 0) posX -= nx * 0.4f;
 				}
 			}
 			
@@ -279,7 +273,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					{
 						if (!e->obj->IsDeadYet())
 						{
-							this->AddHealth(-2);
+							this->AddHealth(-3);
 							hurtingTimer->Start();
 							immortalTimer->Start();
 							isImmortaling = true;
@@ -288,48 +282,50 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 								e->obj->GetType() == EntityType::DARKENBAT ||
 								e->obj->GetType() == EntityType::RAVEN)
 							{
-								e->obj->AddHealth(-1);
+								e->obj->AddHealth(-e->obj->GetHealth());
 							}
 						}
 					}
 				}
 			}
 
-			if(currentStageLiving == STAGE_2_2)	//little cheat
-			if (e->obj->GetType() == EntityType::MOVINGPLATFORM)
+			if (currentStageLiving == STAGE_2_2)	//little cheat
 			{
-				if (e->ny < 0)
+				if (e->obj->GetType() == EntityType::MOVINGPLATFORM)
 				{
-					if (!isOnMF)
-						backupVx = vX;
-					isOnMF = true;
-					vX = e->obj->GetVx();
-					if (ny == -1)
+					if (e->ny < 0)
 					{
-						vY = 0.1f;
-						dy = vY * dt;
-
-						if (isJumping)
+						if (!isOnMF)
+							backupVx = vX;
+						isOnMF = true;
+						vX = e->obj->GetVx();
+						if (ny == -1)
 						{
-							isJumping = false;
-							isAllowJump = true;
+							vY = 0.1f;
+							dy = vY * dt;
+
+							if (isJumping)
+							{
+								isJumping = false;
+								isAllowJump = true;
+								isHurting = false;
+							}
+						}
+						if (nx != 0) vX = 0;
+						if (ny != 0) vY = 0;
+						if (nx != 0 && ny != 0)
+						{
+							vX = 0;
+							vY = 0;
 							isHurting = false;
 						}
 					}
-					if (nx != 0) vX = 0;
-					if (ny != 0) vY = 0;
-					if (nx != 0 && ny != 0)
-					{
-						vX = 0;
-						vY = 0;
-						isHurting = false;
-					}
 				}
-			}
-			else
-			{
-				isOnMF = false;
-				vX = backupVx;
+				else
+				{
+					isOnMF = false;
+					vX = backupVx;
+				}
 			}
 		}
 	}
@@ -351,11 +347,11 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 void Player::Render()
 {
-	int alpha = 255;
+	int alpha = ENTITY_ALPHA_RENDER;
 	if (isImmortaling)
-		alpha = 150;
+		alpha = PLAYER_IMMORTAL_ALPHA;
 	if (unsighted)
-		alpha = 50;
+		alpha = PLAYER_UNSIGHT_ALPHA;
 
 	animationSet->at(state)->Render(direction, posX, posY, alpha);
 
@@ -393,7 +389,7 @@ void Player::SetState(int state)
 		isWalking = true;
 		isOnStairs = false;
 		cannotMoveDown = true;
-		vX = PLAYER_WALKING_SPEED * direction;
+		vX = PLAYER_WALKING_SPEED_X * direction;
 		break;
 	case PLAYER_STATE_GOING_UP_STAIRS:
 		vX = PLAYER_ON_STAIRS_SPEED_X * direction;
@@ -421,15 +417,17 @@ void Player::SetState(int state)
 		Attack(EntityType::MORNINGSTAR);
 		isWalking = false;
 		break;
-	case PLAYER_STATE_JUMP:
+	case PLAYER_STATE_JUMPING:
 		if (!isAllowJump)
 			return;
+		if (vX != PLAYER_WALKING_SPEED_X * direction)	//MovingFlatform
+			vX = 0;
 		isJumping = true;
 		isAllowJump = false;
 		isOnStairs = false;
-		vY = -PLAYER_JUMP_SPEED_Y;
+		vY = -PLAYER_JUMPING_SPEED_Y;
 		break;
-	case PLAYER_STATE_ATTACK:
+	case PLAYER_STATE_ATTACKING:
 		animationSet->at(state)->ResetCurrentFrame();
 		animationSet->at(state)->StartAnimation();
 		Attack(EntityType::MORNINGSTAR);
@@ -492,7 +490,7 @@ void Player::SetState(int state)
 		break;
 	case PLAYER_STATE_PASSING_STAGE:
 		isWalking = true;
-		vX = PLAYER_PASSING_STAGE_SPEED * direction;
+		vX = PLAYER_PASSING_STAGE_SPEED_X * direction;
 		posX += dx;	//Khi trong state nay tuc la da va cham voi gate, o ngoai update cua simon khi co va cham kh update posX
 		isPassingStage = true;	//block control simon
 		isOnStairs = false;
@@ -510,7 +508,7 @@ void Player::GetBoundingBox(float &left, float &top, float &right, float &bottom
 
 void Player::Attack(EntityType weaponType)
 {
-	if (isAttacking || isUpgrading || isAttackingDouble)	
+	if (isAttacking || isUpgrading )	
 		return;
 	
 	if (unsighted)	//Attack khi dang tang hinh se mat tang hinh
@@ -534,7 +532,7 @@ void Player::Attack(EntityType weaponType)
 			{
 				if (supWeapon->GetIsDone())
 				{
-					if (isGettingDouble && isAttackingDouble)	//Dang dung WeaponAtDouble thi khong duoc dung Weapon goc'
+					if ((isGettingDouble && isAttackingDouble) || (isGettingTriple && isAttackingTriple))	//Dang dung WeaponAtDouble thi khong duoc dung Weapon goc'
 						return;
 					AddMana(-1);
 					isAttacking = true;
@@ -543,9 +541,18 @@ void Player::Attack(EntityType weaponType)
 				}
 				else if (supWeaponAtDouble->GetIsDone() && !supWeapon->GetIsDone() && isGettingDouble)	//A completely NEW and SUPER COMPACT version of double attack :D 
 				{
+					if (isGettingTriple && isAttackingTriple)
+						return;
 					AddMana(-1);
 					isAttackingDouble = true;
 					supWeaponAtDouble->Attack(posX, direction);
+					return;
+				}
+				else if (supWeaponAtTriple->GetIsDone() && !supWeaponAtDouble->GetIsDone() && !supWeapon->GetIsDone() && isGettingTriple)	
+				{
+					AddMana(-1);
+					isAttackingTriple = true;
+					supWeaponAtTriple->Attack(posX, direction);
 					return;
 				}
 			}
@@ -553,7 +560,7 @@ void Player::Attack(EntityType weaponType)
 		else
 			if (weaponType == EntityType::STOPWATCH)
 			{
-				if (mana > 5)
+				if (mana > 4)
 				{
 					AddMana(-5);
 					isTimeStop = true;
@@ -567,7 +574,7 @@ void Player::Attack(EntityType weaponType)
 void Player::UpgradingMorningStar()
 {
 	MorningStar* morningStar = dynamic_cast<MorningStar*>(mainWeapon);
-	if (morningStar->GetLevel() >= 3)
+	if (morningStar->GetLevel() >= MS_MAX_LEVEL)
 		return;
 
 	upgradeTimer->Start();
@@ -583,7 +590,7 @@ void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
 		currentSupWeaponType = EntityType::DAGGER;
 		supWeapon = new Dagger();
 		supWeaponAtDouble = new Dagger();
-		supWeaponAtTriple = new Dagger();
+		supWeaponAtTriple = new Axe();
 		break;
 	case EntityType::BOOMERANG:
 		currentSupWeaponType = EntityType::BOOMERANG;
@@ -744,10 +751,8 @@ bool Player::SimonCollideWithStair(vector<LPGAMEENTITY>* listStairs)
 					canMoveDown = true;
 				}
 			}
-
-			return true; // collision detected between Simon and stairs
+			return true; 
 		}
-
 	}
 	return false;
 }
@@ -780,14 +785,13 @@ void Player::AutoWalk()
 
 void Player::PlayerUpStairs()
 {
-	int stairDirTemp = stairDirection;
 	if (!canMoveUp)
 	{
 		if (isOnStairs)
 		{
 			float stairPosX, stairPosY;
 			stairCollided->ReceivePos(stairPosX, stairPosY);
-			if (stairDirTemp == 1)
+			if (stairDirection == 1)
 				stairPosX += 20;
 			else
 				stairPosX -= 30;
@@ -804,7 +808,7 @@ void Player::PlayerUpStairs()
 		ReceivePos(tempPlayerPosX, stairPosY);
 		stairCollided->ReceivePos(stairPosX, stairPosY);
 
-		if (stairDirTemp == 1)
+		if (stairDirection == 1)
 		{
 			stairPosX -= 16.0f;
 		}
@@ -815,14 +819,14 @@ void Player::PlayerUpStairs()
 
 		vY = 0;
 		SetState(PLAYER_STATE_WALKING);
-		TriggerAutoWalk(stairPosX, PLAYER_STATE_GOING_UP_STAIRS, stairDirTemp);
+		TriggerAutoWalk(stairPosX, PLAYER_STATE_GOING_UP_STAIRS, stairDirection);
 		isOnStairs = true;
 
 		return;
 	}
 	else
 	{
-		direction = stairDirTemp;
+		direction = stairDirection;
 		SetState(PLAYER_STATE_GOING_UP_STAIRS);
 	}
 
@@ -830,7 +834,6 @@ void Player::PlayerUpStairs()
 }
 void Player::PlayerDownStairs()
 {
-	int stairDirTemp = stairDirection;
 	if (!canMoveDown)
 	{
 		if (isOnStairs)
@@ -845,22 +848,22 @@ void Player::PlayerDownStairs()
 		float stairPosX, stairPosY, tempPlayerPosX;
 		ReceivePos(tempPlayerPosX, stairPosY);
 		stairCollided->ReceivePos(stairPosX, stairPosY);
-		if (stairDirTemp == 1)
+		if (stairDirection == 1)
 			stairPosX += 8.0f;
-		else stairPosX += 4.0f;
+		else stairPosX -= 8.0f;
 
 		if (stairPosX < tempPlayerPosX) direction = -1;
 		else if (stairPosX > tempPlayerPosX) direction = 1;
 		vY = 0;
 		SetState(PLAYER_STATE_WALKING);
-		TriggerAutoWalk(stairPosX, PLAYER_STATE_GOING_DOWN_STAIRS, -stairDirTemp);
+		TriggerAutoWalk(stairPosX, PLAYER_STATE_GOING_DOWN_STAIRS, -stairDirection);
 		isOnStairs = true;
 
 		return;
 	}
 	else
 	{
-		direction = -stairDirTemp;
+		direction = -stairDirection;
 		SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
 	}
 
@@ -873,12 +876,10 @@ bool Player::PlayerStandOnStairs()
 		if (state == PLAYER_STATE_DOWNSTAIRS_ATTACK && !isAttacking)
 		{
 			SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
-			//animationSet->at(state)->StartAnimation();
 		}
 		else if (state == PLAYER_STATE_UPSTARIS_ATTACK && !isAttacking)
 		{
 			SetState(PLAYER_STATE_GOING_UP_STAIRS);
-			//animationSet->at(state)->StartAnimation();
 		}
 		vX = 0;
 		vY = 0;

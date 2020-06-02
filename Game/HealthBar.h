@@ -3,9 +3,11 @@
 
 #include <vector>
 
-#define HEALTH_STATE_HAVE			0
-#define HEALTH_STATE_LOST			1
-#define HEALTH_STATE_ENEMY_HAVE		2
+#define HEALTH_TYPE_PLAYER_HAVE			0
+#define HEALTH_TYPE_PLAYER_LOST			1
+#define HEALTH_TYPE_ENEMY_HAVE			2
+
+#define HEALTH_SPACE_UNIT				10
 
 class HealthBar
 {

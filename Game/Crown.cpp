@@ -8,9 +8,9 @@ Crown::Crown(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 
-	displayTimer = new Timer(CROWN_TIMEDISPLAYMAX);
+	displayTimer = new Timer(CROWN_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = CROWN_TIMEDELAYMAX;
+	delayLimit = CROWN_DELAY;
 	isShowDone = false;
 }
 
@@ -71,9 +71,9 @@ void Crown::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	else
 	{
-		vY = -CROWN_PUSHUP_SPEED;
+		vY = -CROWN_PUSHUP_SPEED_Y;
 		posY += dy;
-		if (posY <= 409)
+		if (posY <= CROWN_POS_Y_DESTINATION)
 		{
 			isShowDone = true;
 		}

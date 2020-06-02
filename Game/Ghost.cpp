@@ -1,4 +1,5 @@
 #include "Ghost.h"
+#include "Player.h"
 
 Ghost::Ghost(float posX, float posY, LPGAMEENTITY target)
 {
@@ -11,10 +12,10 @@ Ghost::Ghost(float posX, float posY, LPGAMEENTITY target)
 
 	this->SetState(GHOST_STATE_FLYING);
 
-	health = 2;
+	health = GHOST_MAXHEALTH;
 	isDead = false;
 
-	currentTotalTime = 2000;
+	currentTotalTime = GHOST_INIT_TOTALTIME;
 }
 
 Ghost::~Ghost() {}
@@ -41,7 +42,7 @@ void Ghost::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		D3DXVECTOR2 pos = D3DXVECTOR2(posX, posY);
 		currentTotalTime += dt;
-		if (currentTotalTime >= GHOST_RANDOM_TIMECYCLE)
+		if (currentTotalTime >= GHOST_CYCLE_TIME_RANDOM)
 		{
 			randomPosX = rand() % 100 + 150; //	100->150
 			randomPosY = rand() % 70 + 50; //	50->70
@@ -57,7 +58,7 @@ void Ghost::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				dirY = 1;
 			currentTotalTime = 0;
 		}
-		if ((posY - randomPosY * dirY) > 440 || (posY - randomPosY * dirY) < 0) 
+		if ((posY - randomPosY * dirY) > BOTTOM_SCREEN || (posY - randomPosY * dirY) < 0) 
 			dirY *= -1;
 		pos += RadialMovement(D3DXVECTOR2(posX - randomPosX * direction, posY - randomPosY * dirY), pos, GHOST_FLYING_SPEED);
 		//Dau tru trong cong thuc rat QUAN TRONG //Dau tru trong cong thuc rat QUAN TRONG //Dau tru trong cong thuc rat QUAN TRONG
@@ -66,6 +67,25 @@ void Ghost::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	
 	Entity::Update(dt);
+
+	SelfDestroy();
+}
+
+void Ghost::SelfDestroy()
+{
+	if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= GHOST_CLOSED_RANGE)
+	{
+		Player* pl = dynamic_cast<Player*>(target);
+		if (!pl->IsImmortaling())
+		{
+			pl->AddHealth(-GHOST_DAMAGE);
+			pl->StartHurtingTimer();
+			pl->StartImmortalingTimer();
+			pl->SetImmortal(true);
+			pl->SetState(PLAYER_STATE_HURTING);
+		}
+		return;
+	}
 }
 
 void Ghost::Render()
@@ -86,6 +106,7 @@ void Ghost::SetState(int state)
 	case GHOST_STATE_DIE:
 		vX = 0;
 		vY = 0;
+		health = 0;
 		isDead = true;
 		break;
 	}

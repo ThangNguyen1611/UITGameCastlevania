@@ -1,4 +1,5 @@
 #include "Raven.h"
+#include "Player.h"
 
 Raven::Raven(float posX, float posY, int directionX, int firstDirY, LPGAMEENTITY target)
 {
@@ -13,7 +14,7 @@ Raven::Raven(float posX, float posY, int directionX, int firstDirY, LPGAMEENTITY
 
 	this->SetState(RAVEN_STATE_INACTIVE);
 
-	health = 1;
+	health = RAVEN_MAXHEALTH;
 	isDead = false;
 	this->target = target;
 	activated = false;
@@ -37,7 +38,7 @@ void Raven::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	if (target != NULL)
 	{
-		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 250 && target->GetState() != 0 && !target->IsUnsighted())
+		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= RAVEN_SIGHT_RANGE && target->GetState() != 0 && !target->IsUnsighted())
 		{
 			SetState(RAVEN_STATE_FLYING);
 			activated = true;
@@ -58,7 +59,7 @@ void Raven::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	if (isDonePhase1 && waitingTimer->IsTimeUp() && !isDonePhase2)	//Phase 2 : Fly around player
 	{
-		if (countChangeSide >= 5)
+		if (countChangeSide >= RAVEN_MAX_COUNTSIDE)
 		{
 			isDonePhase2 = true;
 			readyTimer->Reset();
@@ -112,6 +113,26 @@ void Raven::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		direction = -1;
 	else
 		direction = 1;
+
+	SelfDestroy();
+}
+
+void Raven::SelfDestroy()
+{
+	if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= RAVEN_CLOSED_RANGE)
+	{
+		Player* pl = dynamic_cast<Player*>(target);
+		if (!pl->IsImmortaling())
+		{
+			pl->AddHealth(-RAVEN_DAMAGE);
+			pl->StartHurtingTimer();
+			pl->StartImmortalingTimer();
+			pl->SetImmortal(true);
+			pl->SetState(PLAYER_STATE_HURTING);
+		}
+		SetState(RAVEN_STATE_DIE);
+		return;
+	}
 }
 
 void Raven::Render()
@@ -133,6 +154,7 @@ void Raven::SetState(int state)
 	case RAVEN_STATE_DIE:
 		vX = 0;
 		vY = 0;
+		health = 0;
 		isDead = true;
 		break;
 	case RAVEN_STATE_FLYING:

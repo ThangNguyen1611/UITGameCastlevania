@@ -1,20 +1,27 @@
 #pragma once
 #include "Entity.h"
+#include "Timer.h"
 
-#define KNIGHT_WALKING_SPEED			0.06f
+#define KNIGHT_WALKING_SPEED_X			0.06f
 #define KNIGHT_GRAVITY					0.002f
+#define KNIGHT_MAXHEALTH				2
 
-#define KNIGHT_BBOX_WIDTH				40
-#define KNIGHT_BBOX_HEIGHT				80
+#define KNIGHT_BBOX_WIDTH				32
+#define KNIGHT_BBOX_HEIGHT				62
+#define KNIGHT_ARTICULATOR_POS_X		10
 
 #define KNIGHT_STATE_WALKING			0
 #define KNIGHT_STATE_DIE				-1
+#define KNIGHT_STATE_HURTING			1
+
+#define KNIGHT_HURT_DELAY				500
 
 class Knight : public Entity
 {
 	float startX;
 	float maxAmplitudeX;	//Bien do toi da cho phep di
-
+	bool triggerHurting;
+	Timer* hurtingTimer = new Timer(KNIGHT_HURT_DELAY);
 	//Extension
 	bool randomTurnaround;
 public:
@@ -26,5 +33,6 @@ public:
 	virtual void SetState(int state);
 
 	void TurnAround();
+	void TriggerHurt(bool b) { triggerHurting = b; }
 };
 

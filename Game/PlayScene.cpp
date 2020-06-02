@@ -49,7 +49,7 @@ void PlayScene::ChooseMap(int whatMap)
 		break;
 	case STAGE_4:
 		//Zombie Logic
-		counterZombie = 0;
+		zombieCounter = 0;
 		isTimeToSpawnZombie = true;		//vua vao spawn luon
 		triggerSpawnZombie = false;
 		//Bat Logic
@@ -132,10 +132,10 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 	if (createrType == EntityType::NONE)		//special case
 	{
 		if (idStage == STAGE_2_1 || idStage == STAGE_3_2)
-			return new ExtraShot(posX, posY - 100, 2);//Crown(posX, posY);
+			return new Crown(posX, posY);
 		else
 			if (idStage == STAGE_2_2)
-				return new ExtraShot(posX, posY, 2);
+				return new ExtraShot(posX, posY, 3);
 	}
 
 	if (createrType == EntityType::TORCH)
@@ -202,11 +202,11 @@ void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
 			listObjects[i]->AddHealth(-weapon->GetDamage());
 			bmr->SetIsDidDamageTurn1(true);
 			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 			if (listObjects[i]->GetHealth() == 0)
 			{
 				player->AddScore(scoreGive);
 				listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+				listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 			}
 		}
 		if (!bmr->GetIsDidDamageTurn2() && bmr->GetOwnerDirection() != bmr->GetDirection())
@@ -214,25 +214,41 @@ void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
 			listObjects[i]->AddHealth(-weapon->GetDamage());
 			bmr->SetIsDidDamageTurn2(true);
 			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 			if (listObjects[i]->GetHealth() == 0)
 			{
 				player->AddScore(scoreGive);
 				listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+				listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 			}
 		}
 	}
+	else
+		if (weapon->GetType() == EntityType::MORNINGSTAR)
+		{
+			MorningStar* ms = dynamic_cast<MorningStar*>(player->GetPlayerMainWeapon());
+			if (!ms->GetDidDamage())
+			{
+				listObjects[i]->AddHealth(-weapon->GetDamage());
+				ms->SetDidDamage(true);
+				listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+				if (listObjects[i]->GetHealth() == 0)
+				{
+					player->AddScore(scoreGive);
+					listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+				}
+			}
+		}
 	else
 	{
 		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
 		{
 			player->AddScore(scoreGive);
 			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		}
 		listObjects[i]->AddHealth(-weapon->GetDamage());
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-
 	}
 }
 
@@ -253,8 +269,8 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 		break;
 	case EntityType::ZOMBIE:
 		SlayEnemies(i, weapon, 300);
-		counterZombie--;
-		if (counterZombie == 0)
+		zombieCounter--;
+		if (zombieCounter == 0)
 		{
 			spawningZombieTimer->Start();
 			triggerSpawnZombie = true;
@@ -262,8 +278,12 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 		}
 		break;
 	case EntityType::KNIGHT:
-		SlayEnemies(i, weapon, 1000); 
-		break;
+	{
+		SlayEnemies(i, weapon, 1000);
+		Knight* k9 = dynamic_cast<Knight*>(listObjects[i]);
+		k9->TriggerHurt(true);
+		break; 
+	}
 	case EntityType::HUNCHMAN:
 		SlayEnemies(i, weapon, 2000); 
 		break;
@@ -319,7 +339,7 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 	}
 }
 
-void PlayScene::SetSubWeaponDone(UINT i, bool isAtDouble)
+void PlayScene::SetSubWeaponDone(UINT i, bool isAtDouble, bool isAtTriple)
 {
 	if (listObjects[i]->GetType() == EntityType::BAT ||
 		listObjects[i]->GetType() == EntityType::ZOMBIE ||
@@ -335,10 +355,12 @@ void PlayScene::SetSubWeaponDone(UINT i, bool isAtDouble)
 		switch (player->GetPlayerSupWeaponType())
 		{
 		case EntityType::DAGGER:
-			if (!isAtDouble)
+			if (!isAtDouble && !isAtTriple)
 				player->GetPlayerSupWeapon()->SetIsDone(true);
-			else
+			else if (isAtDouble && !isAtTriple)
 				player->GetPlayerSupWeaponAtDouble()->SetIsDone(true);
+			else if (isAtDouble && isAtTriple)
+				player->GetPlayerSupWeaponAtTriple()->SetIsDone(true);
 		default:
 			break;
 		}
@@ -360,13 +382,22 @@ void PlayScene::WeaponCollision()
 					&& player->GetPlayerSupWeapon()->IsCollidingObject(listObjects[i]))
 				{
 					WeaponInteractObj(i, player->GetPlayerSupWeapon());
-					SetSubWeaponDone(i, false);
-					if (player->IsGettingDouble())
-					{
-						WeaponInteractObj(i, player->GetPlayerSupWeaponAtDouble());	//	1 bug here
-						SetSubWeaponDone(i, true);
-					}
+					SetSubWeaponDone(i, false, false);
 				}
+				else 
+					if (player->IsGettingDouble() && player->GetPlayerSupWeaponAtDouble() != NULL
+						&& player->GetPlayerSupWeaponAtDouble()->IsCollidingObject(listObjects[i]))
+					{
+						WeaponInteractObj(i, player->GetPlayerSupWeaponAtDouble());	
+						SetSubWeaponDone(i, true, false);
+					}
+					else
+						if (player->IsGettingTriple() && player->GetPlayerSupWeaponAtTriple() != NULL
+							&& player->GetPlayerSupWeaponAtTriple()->IsCollidingObject(listObjects[i]))
+						{
+							WeaponInteractObj(i, player->GetPlayerSupWeaponAtTriple());	
+							SetSubWeaponDone(i, true, true);
+						}
 		}
 	}
 }
@@ -380,11 +411,14 @@ void PlayScene::PlayerCollideBone()
 			Skeleton* skeleton = dynamic_cast<Skeleton*>(listObjects[i]);
 			if (skeleton->GetBone()->IsCollidingObject(player))
 			{
-				player->AddHealth(-1);
-				player->StartHurtingTimer();
-				player->StartImmortalingTimer();
-				player->SetImmortal(true);
-				player->SetState(PLAYER_STATE_HURTING);
+				if (!player->IsImmortaling())
+				{
+					player->AddHealth(-1);
+					player->StartHurtingTimer();
+					player->StartImmortalingTimer();
+					player->SetImmortal(true);
+					player->SetState(PLAYER_STATE_HURTING);
+				}
 			}
 		}
 	}
@@ -401,8 +435,6 @@ void PlayScene::PlayerCollideItem()
 				switch (listItems[i]->GetType())
 				{
 				case EntityType::MONEYBAGRED:
-					//Vi cai nay ma phai dem CollideItem tu Player ra ngoai -.-
-					//Ton biet bao nhieu suc
 					player->AddScore(100);
 					listItems[i]->SetIsDone(true);
 					listEffects.push_back(CreateEffect(EntityType::MONEYBAGRED, EntityType::ADDSCOREEFFECT, listItems[i]->GetPosX(), listItems[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
@@ -438,20 +470,20 @@ void PlayScene::PlayerCollideItem()
 					break;
 				case EntityType::ITEMEXTRASHOT:
 				{
-					//Xet type extra
 					ExtraShot* exs = dynamic_cast<ExtraShot*>(listItems[i]);
 					if (exs->GetTypeExtra() == 2)
 						player->SetGettingDouble(true);
 					else
 						if (exs->GetTypeExtra() == 3)
+						{
+							player->SetGettingDouble(true);
 							player->SetGettingTriple(true);
+						}
 					listItems[i]->SetIsDone(true);
 					break; 
 				}
 				case EntityType::UPGRADEMORNINGSTAR:
 				{
-					//nang cap ms
-					//Dung yen simon 1 ty
 					MorningStar* morningStarWeapon = dynamic_cast<MorningStar*>(player->GetPlayerMainWeapon());
 					player->UpgradingMorningStar();
 					morningStarWeapon->UpLevel();
@@ -558,131 +590,37 @@ void PlayScene::PlayerGotGate()
 			if (player->IsCollidingObject(listObjects[i]))
 			{
 				Gate* gate = dynamic_cast<Gate*>(listObjects[i]);
+				int tempMap = gate->GetIdScene() * STAGE_1;
+				float tempPosX = gate->newSimonPosX;
+				float tempPosY = gate->newSimonPosY;
+				int tempState = gate->newSimonState;
+				bool tempNeed = gate->isNeedResetCam;
 				if (idStage == STAGE_1)
 				{
-					if (PlayerPassingStage(listObjects[i]->GetPosX() + 20.0f, 1))
-					{
-						Unload();
-						gameCamera->SetCamPos(0, 0);		//Khi o gate stage 1, toa do X cua camera > 1500 -> draw lai ngay lap tuc khi qua stage 2 se gap bug
-						ChooseMap(STAGE_2_1);
-						player->SetPosition(100, 365);
-						player->SetVx(0);
-						player->SetVy(0);
-						player->SetState(PLAYER_STATE_IDLE);
-					}
+					if (!PlayerPassingStage(listObjects[i]->GetPosX() + 20.0f, 1))
+						return;
 				}
-				else if (idStage == STAGE_2_1)
+				else if (idStage == STAGE_2_2 && tempMap == STAGE_3_1)
 				{
-					Unload();
-					ChooseMap(STAGE_2_2);
-					player->SetPosition(828, 369);
-					player->SetVx(0);
-					player->SetVy(0);
-					player->SetState(PLAYER_STATE_GOING_UP_STAIRS);
+					if (!PlayerPassingStage(listObjects[i]->GetPosX(), -1))
+						return;
 				}
-				else if (idStage == STAGE_2_2)
+				else if (idStage == STAGE_3_2 && tempMap == STAGE_4)
 				{
-					if (gate->GetIdScene() == (STAGE_3_1 / STAGE_1))
-					{
-						if (PlayerPassingStage(listObjects[i]->GetPosX() , -1))
-						{
-							Unload();
-							ChooseMap(STAGE_3_1);
-							player->SetPosition(1440, 350);
-							player->SetVx(0);
-							player->SetVy(0);
-							player->SetState(PLAYER_STATE_IDLE);
-						}
-					}
-					else
-						if (gate->GetIdScene() == (STAGE_2_1 / STAGE_1))
-						{
-							Unload();
-							gameCamera->SetCamPos(0, 0);
-							ChooseMap(STAGE_2_1);
-							player->SetPosition(296, 97);
-							player->SetVx(0);
-							player->SetVy(0);
-							player->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
-						}
+					if (!PlayerPassingStage(listObjects[i]->GetPosX() + 10.0f, 1))
+						return;
 				}
-				else if (idStage == STAGE_3_1)
-				{
-					if (gate->GetIdScene() == (STAGE_3_2 / STAGE_1))
-					{
-						Unload();
-						ChooseMap(STAGE_3_2);
-						player->SetPosition(184, 417);
-						player->SetVx(0);
-						player->SetVy(0);
-						player->SetState(PLAYER_STATE_GOING_UP_STAIRS);
-					}
-					else
-						if (gate->GetIdScene() == (STAGE_2_2 / STAGE_1))
-						{
-							Unload();
-							gameCamera->SetCamPos(0, 0);
-							ChooseMap(STAGE_2_2);
-							player->SetPosition(56, 185);
-							player->SetVx(0);
-							player->SetVy(0);
-							player->SetState(PLAYER_STATE_IDLE);
-						}
-				}
-				else if (idStage == STAGE_3_2)
-				{
-					if (gate->GetIdScene() == (STAGE_3_1 / STAGE_1))
-					{
-						Unload();
-						ChooseMap(STAGE_3_1);
-						player->SetPosition(176, 97);
-						player->SetVx(0);
-						player->SetVy(0);
-						player->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
-					}
-					else
-						if (gate->GetIdScene() == (STAGE_4 / STAGE_1))
-						{
-							if (PlayerPassingStage(listObjects[i]->GetPosX() + 10.0f, 1))
-							{
-								Unload();
-								gameCamera->SetCamPos(0, 0);
-								ChooseMap(STAGE_4);
-								player->SetPosition(50, 200);
-								player->SetVx(0);
-								player->SetVy(0);
-								player->SetState(PLAYER_STATE_IDLE);
-							}
-						}
-
-				}
-				else // CASE: STAGE UNDEFINED BUT HAD GATES
-					//neu can sua theo huong file thi co the luu thong tin quan trong nhu positon, camera pos, state vao gate de luu lai
-					//nhung cach nay khong hoan toan toi uu (vd stage 2-2 co 2 gate dan den no, van dung if se chinh xac hon)
-				{
-					Unload();
+				Unload();
+				if(tempNeed)
 					gameCamera->SetCamPos(0, 0);
-					ChooseMap(STAGE_1);
-					player->SetPosition(100, 200);
-					player->SetVx(0);
-					player->SetVy(0);
-					player->SetState(PLAYER_STATE_IDLE);
-				}
+				ChooseMap(tempMap);
+				player->SetPosition(tempPosX, tempPosY);
+				player->SetVx(0);
+				player->SetVy(0);
+				player->SetState(tempState);
 			}
 		}
 	}
-}
-
-void PlayScene::PlayerFailDown()	//Un-used
-{
-	if (idStage == STAGE_2_2 || idStage == STAGE_3_1 || idStage == STAGE_3_2)
-	{
-		if (player->GetPosY() >= 441)
-		{
-			player->AddHealth(-player->GetHealth());
-		}
-	}
-	
 }
 
 void PlayScene::EasterEggEvent()
@@ -707,7 +645,7 @@ void PlayScene::EasterEggEvent()
 		else
 			if (idStage == STAGE_3_2)
 			{
-				if (player->GetPosX() > 1060 && player->GetPosX() < 1070 && player->IsSitting() && easterEgg_Stage3_2 == 1)
+				if (player->GetPosX() > 1060 && player->GetPosX() < 1080 && player->IsSitting() && easterEgg_Stage3_2 == 1)
 				{
 					listItems.push_back(DropItem(EntityType::NONE, 885.0f, 300.0f));
 					easterEgg_Stage3_2 = 0;
@@ -750,8 +688,9 @@ void PlayScene::CountingZombie()
 		{
 			if (listObjects[i]->GetType() == EntityType::ZOMBIE && (listObjects[i]->GetPosX() < 10 || listObjects[i]->GetPosX() > SCREEN_WIDTH * 1.85f))
 			{
-				counterZombie--;
-				if (counterZombie == 0)
+				if(zombieCounter > 0)	//
+					zombieCounter--;
+				if (zombieCounter == 0)
 				{
 					spawningZombieTimer->Start();
 					triggerSpawnZombie = true;
@@ -768,7 +707,7 @@ void PlayScene::SpawnZombie()
 	{
 		if (delaySpawningZombieTimer->IsTimeUp())
 		{
-			if (counterZombie < 3)
+			if (zombieCounter < 3)
 			{
 				int randomAbove = rand() % 100;
 				if (randomAbove <= 50)
@@ -781,8 +720,8 @@ void PlayScene::SpawnZombie()
 					else
 						listObjectsToGrid.push_back(new Zombie(20, SCREEN_HEIGHT - 120, 1));	//spawn ben trai
 				}
-				counterZombie++;
-				if (counterZombie >= 3)
+				zombieCounter++;
+				if (zombieCounter >= 3)
 				{
 					isTimeToSpawnZombie = false;	
 					triggerSpawnZombie = false;		
@@ -790,7 +729,7 @@ void PlayScene::SpawnZombie()
 				delaySpawningZombieTimer->Start();
 			}
 			else
-				counterZombie--;
+				zombieCounter--;
 		}
 	}
 	else
@@ -910,6 +849,7 @@ void PlayScene::Render()
 
 	int realIdStage = idStage / 500;
 	gameUI->Render(realIdStage, SCENEGAME_GAMETIMEMAX - gameTime->GetTime(), player);
+	
 }
 
 
@@ -940,7 +880,7 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_2:	//test jump stage
 		playScene->Unload();
-		playScene->ChooseMap(playScene->idStage + 500);
+		playScene->ChooseMap(playScene->idStage + STAGE_1);
 		if (playScene->idStage == STAGE_2_1)
 		{
 			simon->SetPosition(400, 150);
@@ -1012,7 +952,7 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_C:
 		if (simon->IsDeadYet() || simon->IsRespawning() || simon->IsAttacking() || simon->IsSitting() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage())
 			return;
-		simon->SetState(PLAYER_STATE_JUMP);
+		simon->SetState(PLAYER_STATE_JUMPING);
 		break;
 	case DIK_X:
 		if (simon->IsDeadYet() || simon->IsRespawning() || simon->IsAttacking() || simon->IsHurting() || simon->IsUpgrading() || Game::GetInstance()->IsKeyDown(DIK_UP) || simon->IsPassingStage())	//Up + X khong Whip duoc nua
@@ -1022,7 +962,7 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		else if (simon->GetState() == PLAYER_STATE_GOING_DOWN_STAIRS)
 			simon->SetState(PLAYER_STATE_DOWNSTAIRS_ATTACK);
 		else if(!simon->IsSitting() && !simon->IsOnStairs())
-			simon->SetState(PLAYER_STATE_ATTACK);
+			simon->SetState(PLAYER_STATE_ATTACKING);
 		else if(simon->IsSitting() && !simon->IsOnStairs())
 			simon->SetState(PLAYER_STATE_SITTING_ATTACK);
 		break;
@@ -1068,18 +1008,11 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 
 	if (Game::GetInstance()->IsKeyDown(DIK_DOWN))
 	{
-		if (playScene->PlayerCollideStairsEx() && simon->GetCannotMoveDown())
+		if ((playScene->PlayerCollideStairsEx() && simon->GetCannotMoveDown()) || playScene->PlayerCollideStairs())
 		{
 			simon->PlayerDownStairs();
 			return;
 		}
-
-		if (playScene->PlayerCollideStairs() == true)
-		{
-			simon->PlayerDownStairs();
-			return;
-		}
-
 		simon->SetState(PLAYER_STATE_SITTING);
 		if (Game::GetInstance()->IsKeyDown(DIK_RIGHT))
 			simon->SetDirection(1);
@@ -1089,20 +1022,12 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 	}
 	else if (Game::GetInstance()->IsKeyDown(DIK_UP))
 	{
-		if (playScene->PlayerCollideStairs())
+		if (playScene->PlayerCollideStairs() || playScene->PlayerCollideStairsEx())
 		{
 			simon->SetCannotMoveDown(false);
 			simon->PlayerUpStairs();
 			return;
 		}
-
-		if (playScene->PlayerCollideStairsEx())
-		{
-			simon->SetCannotMoveDown(false);
-			simon->PlayerUpStairs();
-			return;
-		}
-
 		simon->SetState(PLAYER_STATE_IDLE);
 		return;				//Important return //Dont change state while sitting
 	}
@@ -1296,8 +1221,12 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_GATE:
 	{
-		int extras = atoi(tokens[3].c_str());
-		listObjectsToGrid.push_back(new Gate(x, y, extras));
+		int extras1 = atoi(tokens[3].c_str());
+		float extras2 = atoi(tokens[4].c_str());
+		float extras3 = atoi(tokens[5].c_str());
+		int extras4 = atoi(tokens[6].c_str());
+		int extras5 = atoi(tokens[7].c_str());
+		listObjectsToGrid.push_back(new Gate(x, y, extras1, extras2, extras3, extras4, extras5));
 		break;
 	}
 	case OBJECT_TYPE_STAIRS:

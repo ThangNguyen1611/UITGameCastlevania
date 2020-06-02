@@ -9,9 +9,9 @@ MoneyBags::MoneyBags(float posX, float posY, EntityType typeBag)
 	this->posY = posY;
 
 	vY = BAGS_GRAVITY;
-	displayTimer = new Timer(BAGS_TIMEDISPLAYMAX);
+	displayTimer = new Timer(BAGS_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = BAGS_TIMEDELAYMAX;
+	delayLimit = BAGS_DELAY;
 }
 
 MoneyBags::~MoneyBags(){}

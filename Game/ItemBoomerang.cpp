@@ -9,9 +9,9 @@ ItemBoomerang::ItemBoomerang(float posX, float posY)
 	this->posY = posY;
 
 	vY = ITEMBOOMERANG_GRAVITY;
-	displayTimer = new Timer(ITEMBOOMERANG_TIMEDISPLAYMAX);
+	displayTimer = new Timer(ITEMBOOMERANG_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = ITEMBOOMERANG_TIMEDELAYMAX;
+	delayLimit = ITEMBOOMERANG_DELAY;
 }
 
 ItemBoomerang::~ItemBoomerang() {}

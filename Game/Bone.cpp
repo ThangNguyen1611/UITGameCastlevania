@@ -5,7 +5,7 @@ Bone::Bone()
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_BONE));
 	tag = EntityType::BONE;
 	timeDelayed = 0;
-	timeDelayMax = MAX_BONE_DELAY;
+	timeDelayMax = BONE_DELAY;
 	isDidDamage = false;
 }
 
@@ -21,12 +21,10 @@ void Bone::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		return;
 	}
 
-	if (tempY - posY >= BONE_MAX_DISTANCE_HEIGHT)
+	if (tempY - posY >= BONE_MAX_HEIGHT)
 		directionY = 1;
-	/*else if (posY - tempY >= 1)
-		isDone = true;*/
 
-	if (posY > 441) //SCREENHEIGHT - BOARDHEIGHT
+	if (posY > BOTTOM_SCREEN) 
 		isDone = true;
 
 	vY += BONE_SPEED_Y * directionY;		// += bring the parabol-shape fly
@@ -41,7 +39,7 @@ void Bone::Attack(float posX, int direction)
 {
 	isDidDamage = false;
 	Weapon::Attack(posX, direction);
-	this->posY -= 8;	
+	this->posY -= WEAPON_ARTICULATED_POS_Y;	
 	vX = BONE_SPEED_X * this->direction;
 	directionY = -1;
 	vY = 0;

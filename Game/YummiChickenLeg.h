@@ -3,8 +3,8 @@
 
 #define CHICKEN_GRAVITY				0.03f
 
-#define CHICKEN_TIMEDISPLAYMAX		4500
-#define CHICKEN_TIMEDELAYMAX		600
+#define CHICKEN_DISPLAY_DURATION	4500
+#define CHICKEN_DELAY				600
 
 class YummiChickenLeg : public Item
 {

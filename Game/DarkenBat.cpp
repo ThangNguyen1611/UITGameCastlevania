@@ -1,4 +1,5 @@
 #include "DarkenBat.h"
+#include "Player.h"
 #include <math.h>
 #define PI 3.141562535898
 
@@ -16,7 +17,7 @@ DarkenBat::DarkenBat(float posX, float posY, int directionX, LPGAMEENTITY target
 
 	this->SetState(DARKBAT_STATE_INACTIVE);
 
-	health = 1;
+	health = DARKBAT_MAXHEALTH;
 	isDead = false;
 	this->target = target;
 	isDonePhase1 = false;
@@ -26,7 +27,7 @@ DarkenBat::~DarkenBat(){}
 
 void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posX < 5 || posX > SCREEN_WIDTH * 2.85f)	//Player die
+	if (health <= 0 || posX < 5 || posX > SCREEN_WIDTH * 2.85f)
 	{
 		SetState(DARKBAT_STATE_DIE);
 		return;
@@ -34,7 +35,7 @@ void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	if (target != NULL)
 	{
-		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= 200 && !target->IsUnsighted())
+		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= DARKBAT_SIGHT_RANGE && !target->IsUnsighted())
 		{
 			SetState(DARKBAT_STATE_FLYING);
 		}
@@ -51,7 +52,7 @@ void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 			vY += DARKBAT_FLYING_SPEED_Y * directionY;
 		}
-		if (posX > DARKBAT_MAX_DISTANCE_PHASE1 + firstPosX)	//Bat co song am nen tang hinh vo dung :D
+		if (posX > DARKBAT_DISTANCE_END_PHASE1 + firstPosX)	//Bat co song am nen tang hinh vo dung :D
 		{
 			isDonePhase1 = true;
 		}
@@ -75,6 +76,25 @@ void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		posY += dy;
 	}
 
+	SelfDestroy();
+}
+
+void DarkenBat::SelfDestroy()
+{
+	if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= DARKBAT_CLOSED_RANGE)
+	{
+		Player* pl = dynamic_cast<Player*>(target);
+		if (!pl->IsImmortaling())
+		{
+			pl->AddHealth(-DARKBAT_DAMAGE);
+			pl->StartHurtingTimer();
+			pl->StartImmortalingTimer();
+			pl->SetImmortal(true);
+			pl->SetState(PLAYER_STATE_HURTING);
+		}
+		SetState(DARKBAT_STATE_DIE);
+		return;
+	}
 }
 
 void DarkenBat::Render()
@@ -96,6 +116,7 @@ void DarkenBat::SetState(int state)
 	case DARKBAT_STATE_DIE:
 		vX = 0;
 		vY = 0;
+		health = 0;
 		isDead = true;
 		break;
 	case DARKBAT_STATE_FLYING:

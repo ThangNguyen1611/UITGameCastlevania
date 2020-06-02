@@ -5,7 +5,7 @@ Axe::Axe()
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ANIMATION_SET_AXE));
 	tag = EntityType::AXE;
 	timeDelayed = 0;
-	timeDelayMax = MAX_AXE_DELAY;
+	timeDelayMax = AXE_DELAY;
 	damage = 1;
 }
 
@@ -21,12 +21,10 @@ void Axe::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		return;
 	}
 
-	if (tempY - posY >= AXE_MAX_DISTANCE_HEIGHT)
+	if (tempY - posY >= AXE_MAX_HEIGHT)
 		directionY = 1;
-	/*else if (posY - tempY >= 1)
-		isDone = true;*/
 
-	if (posY > 441) //SCREENHEIGHT - BOARDHEIGHT
+	if (posY > BOTTOM_SCREEN) //SCREENHEIGHT - BOARDHEIGHT
 		isDone = true;
 
 	vY += AXE_SPEED_Y * directionY;		// += bring the parabol-shape fly
@@ -40,7 +38,7 @@ void Axe::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 void Axe::Attack(float posX, int direction)
 {
 	Weapon::Attack(posX, direction);
-	this->posY -= 8;	//Fit Simon Hand
+	this->posY -= WEAPON_ARTICULATED_POS_Y;	//Fit Simon Hand
 	vX = AXE_SPEED_X * this->direction;
 	directionY = -1;
 	vY = 0;

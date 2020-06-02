@@ -4,7 +4,11 @@
 #include "Animations.h"
 #include "Timer.h"
 
+#define INTROSCREEN_SPRITES				268
 #define SIMON_WALKING_SPEED				0.15f
+#define SIMON_INIT_POS_X				63
+#define SIMON_INIT_POS_Y				345
+#define SIMON_INIT_POS_Y_RENDER			395
 
 #define SIMON_STATE_IDLE				0
 #define SIMON_STATE_WALKING				1

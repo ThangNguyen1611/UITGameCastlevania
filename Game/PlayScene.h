@@ -96,7 +96,7 @@ protected:
 	int mapWidth, mapHeight;
 	int camMaxWidth;
 
-	int counterZombie;
+	int zombieCounter;
 	bool isTimeToSpawnZombie;
 	bool triggerSpawnZombie;
 	Timer* spawningZombieTimer = new Timer(SPAWNING_ZOMBIE_DELAY);
@@ -143,11 +143,10 @@ public:
 	void SlayEnemies(UINT i, Weapon* weapon, int scoreGive);
 	void WeaponCollision();
 	void PlayerCollideItem();
-	void SetSubWeaponDone(UINT i, bool isAtDouble);
+	void SetSubWeaponDone(UINT i, bool isAtDouble, bool isAtTriple);
 	bool PlayerPassingStage(float DistanceXWant, int directionGo);
 	void PlayerGotGate();
 	void EasterEggEvent();	//EEE
-	void PlayerFailDown();
 	void PlayerInSightGhost();
 	void ResetGame();
 	void PlayerCollideBone();

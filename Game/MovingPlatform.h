@@ -1,10 +1,10 @@
 #pragma once
 #include "Entity.h"
 
-#define PLAT_BBOX_WIDTH			64
-#define PLAT_BBOX_HEIGHT		16
+#define PLAT_BBOX_WIDTH				64
+#define PLAT_BBOX_HEIGHT			16
 
-#define PLAT_MOVING_SPEED		0.1f	//50% player's speed		
+#define PLAT_FLOATING_SPEED_X		0.1f	//50% player's speed		
 
 class MovingPlatform : public Entity
 {

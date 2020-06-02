@@ -1,6 +1,8 @@
 #pragma once
 #include "Entity.h"
 
+#define WEAPON_ARTICULATED_POS_Y		8
+
 class Weapon : public Entity
 {
 protected:

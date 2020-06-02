@@ -6,7 +6,7 @@ Fire::Fire(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 	isDone = false;
-	animationSet->at(0)->StartAnimation(FIRE_BURN_DISPLAY);
+	animationSet->at(0)->StartAnimation(FIRE_DISPLAY_DURATION);
 }
 
 Fire::~Fire() {}

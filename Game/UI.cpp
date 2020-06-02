@@ -26,7 +26,7 @@ void UI::Render(int currentStage, int remainingTime, Player* playerInfo)
 	playerHB->Render();
 	bossHB->Render();
 
-	if (playerInfo->IsGettingDouble())
+	if (playerInfo->IsGettingDouble() && !playerInfo->IsGettingTriple())
 	{
 		UIExtraShot = CSprites::GetInstance()->Get(95);
 		UIExtraShot->Draw(-1, this->posX + 210, this->posY + 12);

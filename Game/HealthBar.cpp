@@ -34,16 +34,16 @@ void HealthBar::Render()
 		{
 			if (isAllies)
 			{
-				health[j]->at(HEALTH_STATE_HAVE)->Render(-1, posX + j * 10, posY);
+				health[j]->at(HEALTH_TYPE_PLAYER_HAVE)->Render(-1, posX + j * HEALTH_SPACE_UNIT, posY);
 			}
 			else
 			{
-				health[j]->at(HEALTH_STATE_ENEMY_HAVE)->Render(-1, posX + j * 10, posY);
+				health[j]->at(HEALTH_TYPE_ENEMY_HAVE)->Render(-1, posX + j * HEALTH_SPACE_UNIT, posY);
 			}
 		}
 		for (int l = currentOwnerHealth; l < maxOwnerHealth; l++)
 		{
-			health[l]->at(HEALTH_STATE_LOST)->Render(-1, posX + l * 10, posY);
+			health[l]->at(HEALTH_TYPE_PLAYER_LOST)->Render(-1, posX + l * HEALTH_SPACE_UNIT, posY);
 		}
 	}
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "Entity.h"
 
+#define BUSH_FADED				75
+
 #define BUSH_BBOX_WIDTH			140
 #define BUSH_BBOX_HEIGHT		68
 

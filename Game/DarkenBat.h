@@ -2,10 +2,14 @@
 #include "Entity.h"
 
 #define DARKBAT_FLYING_SPEED_X			0.15f
-#define DARKBAT_FLYING_SPEED_PHASE2		3.0f
 #define DARKBAT_FLYING_SPEED_Y			0.02f
 #define DARKBAT_AMPLITUDE_HORIZONTAL	40	
-#define DARKBAT_MAX_DISTANCE_PHASE1		150
+#define DARKBAT_DISTANCE_END_PHASE1		150
+#define DARKBAT_FLYING_SPEED_PHASE2		2.0f
+#define DARKBAT_MAXHEALTH				1
+#define DARKBAT_SIGHT_RANGE				200
+#define DARKBAT_CLOSED_RANGE			20
+#define DARKBAT_DAMAGE					3
 
 #define DARKBAT_BBOX_WIDTH				32
 #define DARKBAT_BBOX_HEIGHT				32
@@ -28,5 +32,7 @@ public:
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	virtual void SetState(int state);
+
+	void SelfDestroy();
 };
 

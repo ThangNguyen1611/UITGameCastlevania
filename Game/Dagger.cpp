@@ -6,7 +6,7 @@ Dagger::Dagger()
 	tag = EntityType::DAGGER;
 	ownerPosX = 0;
 	timeDelayed = 0;
-	timeDelayMax = MAX_DAGGER_DELAY;
+	timeDelayMax = DAGGER_DELAY;
 
 	damage = 1;
 }

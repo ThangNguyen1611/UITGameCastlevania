@@ -9,9 +9,9 @@ ItemDagger::ItemDagger(float posX, float posY)
 	this->posY = posY;
 
 	vY = ITEMDAGGER_GRAVITY;
-	displayTimer = new Timer(ITEMDAGGER_TIMEDISPLAYMAX);
+	displayTimer = new Timer(ITEMDAGGER_DISPLAY_DURATION);
 	displayTimer->Start();
-	delayLimit = ITEMDAGGER_TIMEDELAYMAX;
+	delayLimit = ITEMDAGGER_DELAY;
 }
 
 ItemDagger::~ItemDagger() {}

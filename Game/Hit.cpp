@@ -6,7 +6,7 @@ Hit::Hit(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 	isDone = false;
-	animationSet->at(0)->StartAnimation(SPARKLE_DISPLAY);
+	animationSet->at(0)->StartAnimation(SPARKLE_DISPLAY_DURATION);
 }
 
 Hit::~Hit(){}

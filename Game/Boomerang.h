@@ -7,9 +7,9 @@
 #define BOOMERANG_BBOX_WIDTH	28
 #define BOOMERANG_BBOX_HEIGHT	28
 
-#define BOOMERANG_MAX_DISTANCE	450
+#define BOOMERANG_RANGE			300
 
-#define MAX_BOOMERANG_DELAY		260		//2 times simon's ani attack
+#define BOOMERANG_DELAY			260		//2 times simon's ani attack
 
 class Boomerang : public Weapon
 {

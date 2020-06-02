@@ -6,7 +6,7 @@ Boomerang::Boomerang(LPGAMEENTITY owner)
 	tag = EntityType::BOOMERANG;
 	ownerPosX = 0;
 	timeDelayed = 0;
-	timeDelayMax = MAX_BOOMERANG_DELAY;
+	timeDelayMax = BOOMERANG_DELAY;
 
 	this->owner = owner;
 	isDidDamageTurn1 = false;
@@ -31,7 +31,7 @@ void Boomerang::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	if (ownerDirection == direction)	//state nem' di
 	{
-		if (abs(ownerPosX - this->posX) >= BOOMERANG_MAX_DISTANCE)
+		if (abs(ownerPosX - this->posX) >= BOOMERANG_RANGE)
 		{
 			direction *= -1;
 			vX *= -1;
@@ -39,7 +39,7 @@ void Boomerang::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}	
 	else	//state quay ve
 	{
-		if (IsCollidingObject(owner) || abs(ownerPosX - this->posX) >= 1.5*BOOMERANG_MAX_DISTANCE)	//cham simon
+		if (IsCollidingObject(owner) || abs(ownerPosX - this->posX) >= 1.5*BOOMERANG_RANGE)	//cham simon
 		{
 			isDone = true;
 		}
@@ -51,8 +51,10 @@ void Boomerang::Attack(float posX, int direction)
 	Weapon::Attack(posX, direction);
 	ownerPosX = posX;
 	ownerDirection = direction;
-	this->posY -= 8;	//Fit Simon Hand
+	this->posY -= WEAPON_ARTICULATED_POS_Y;	//Fit Simon Hand
 	vX = BOOMERANG_SPEED_X * this->direction;
+	isDidDamageTurn1 = false;
+	isDidDamageTurn2 = false;
 }
 
 void Boomerang::Render()

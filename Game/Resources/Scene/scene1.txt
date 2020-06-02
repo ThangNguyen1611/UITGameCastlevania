@@ -161,7 +161,7 @@
 2	1200	325	3
 
 #Gate
-3	1400	310	2
+3	1400	310	2	100	365	1	1
 
 
 #idStage -- mapFilePath -- RowMap -- ColumnMap -- tilesetFilePath -- RowTileset -- ColumnTileset
