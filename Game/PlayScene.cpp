@@ -78,7 +78,7 @@ void PlayScene::GetObjectFromGrid()
 	}
 }
 
-Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY)
+Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY, int typeBrickExplode)
 {
 	if (effectType == EntityType::HITEFFECT)
 		return new Hit(posX - HIT_EFFECT_CUSTOMIZED_POS, posY - HIT_EFFECT_CUSTOMIZED_POS);
@@ -86,6 +86,8 @@ Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, f
 		return new Fire(posX, posY);
 	else if (effectType == EntityType::ADDSCOREEFFECT)
 		return new Score(posX, posY, createrType);
+	else if (effectType == EntityType::BRICKEXPLODEEFFECT)
+		return new BrickExplode(posX, posY, typeBrickExplode);
 	else
 		return new Hit(posX - HIT_EFFECT_CUSTOMIZED_POS, posY - HIT_EFFECT_CUSTOMIZED_POS);
 }
@@ -202,7 +204,7 @@ void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
 			listObjects[i]->AddHealth(-weapon->GetDamage());
 			bmr->SetIsDidDamageTurn1(true);
 			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-			if (listObjects[i]->GetHealth() == 0)
+			if (listObjects[i]->GetHealth() <= 0)
 			{
 				player->AddScore(scoreGive);
 				listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
@@ -214,7 +216,7 @@ void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
 			listObjects[i]->AddHealth(-weapon->GetDamage());
 			bmr->SetIsDidDamageTurn2(true);
 			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-			if (listObjects[i]->GetHealth() == 0)
+			if (listObjects[i]->GetHealth() <= 0)
 			{
 				player->AddScore(scoreGive);
 				listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
@@ -231,7 +233,7 @@ void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
 				listObjects[i]->AddHealth(-weapon->GetDamage());
 				ms->SetDidDamage(true);
 				listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-				if (listObjects[i]->GetHealth() == 0)
+				if (listObjects[i]->GetHealth() <= 0)
 				{
 					player->AddScore(scoreGive);
 					listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
@@ -239,6 +241,23 @@ void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
 				}
 			}
 		}
+		else
+			if (weapon->GetType() == EntityType::AXE)
+			{
+				Axe* axe = dynamic_cast<Axe*>(player->GetPlayerSupWeapon());
+				if (!axe->GetDidDamage())
+				{
+					listObjects[i]->AddHealth(-weapon->GetDamage());
+					axe->SetDidDamage(true);
+					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+					if (listObjects[i]->GetHealth() <= 0)
+					{
+						player->AddScore(scoreGive);
+						listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+						listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+					}
+				}
+			}
 	else
 	{
 		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
@@ -265,8 +284,12 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 		SlayEnemies(i, weapon, 500);
 		break;
 	case EntityType::GHOST:
-		SlayEnemies(i, weapon, 700); 
-		break;
+	{
+		SlayEnemies(i, weapon, 700);
+		Ghost* ghost = dynamic_cast<Ghost*>(listObjects[i]);
+		ghost->TriggerHurt(true);
+		break; 
+	}
 	case EntityType::ZOMBIE:
 		SlayEnemies(i, weapon, 300);
 		zombieCounter--;
@@ -330,7 +353,10 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 				}
 			listObjects[i]->AddHealth(-1);
 			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::BRICKEXPLODEEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), EXPLODE_TYPE1));
+			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::BRICKEXPLODEEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), EXPLODE_TYPE2));
+			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::BRICKEXPLODEEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), EXPLODE_TYPE3));
+			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::BRICKEXPLODEEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), EXPLODE_TYPE4));
 		}
 		break;
 	}
@@ -465,8 +491,9 @@ void PlayScene::PlayerCollideItem()
 					listItems[i]->SetIsDone(true);
 					break;
 				case EntityType::CROWN:
-					player->AddScore(10000);
+					player->AddScore(1000);
 					listItems[i]->SetIsDone(true);
+					listEffects.push_back(CreateEffect(EntityType::CROWN, EntityType::ADDSCOREEFFECT, listItems[i]->GetPosX(), listItems[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
 					break;
 				case EntityType::ITEMEXTRASHOT:
 				{
@@ -542,6 +569,7 @@ void PlayScene::PlayerCollideItem()
 						}
 					}
 					listItems[i]->SetIsDone(true);
+					break;
 				}
 				case EntityType::INVIPOTION:
 				{

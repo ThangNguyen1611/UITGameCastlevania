@@ -86,9 +86,14 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				target->GetPosX() > posX && direction == -1)		//Wrong Chase-Direction
 				TurnAround();
 		}
-		if (ny == -1)
+		/*if (ny != 1)	//Hoi tang dong
 		{
-			///
+			Jump();
+		}*/
+		if (coEvents.size() == 1 && nx != 0)	//Cham 1 brick -> nhay //Khong biet duoc khi nhay co rot hay khong
+		{
+			if(!isJumping)
+				Jump();
 		}
 	}
 
@@ -257,6 +262,8 @@ void Skeleton::TurnAround()
 
 void Skeleton::Jump()
 {
+	if (posY < SKELETON_MAX_HIGHT_JUMP)
+		return;
 	isJumping = true;
 	vX = SKELETON_JUMP_SPEED_X * direction;
 	vY = -SKELETON_JUMP_SPEED_Y;
@@ -264,6 +271,8 @@ void Skeleton::Jump()
 
 void Skeleton::JumpBack()
 {
+	if (posY < SKELETON_MAX_HIGHT_JUMP)
+		return;
 	isJumping = true;
 	vX = -SKELETON_JUMP_SPEED_X * direction;
 	vY = -SKELETON_JUMP_SPEED_Y;

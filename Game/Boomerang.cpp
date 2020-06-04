@@ -12,7 +12,7 @@ Boomerang::Boomerang(LPGAMEENTITY owner)
 	isDidDamageTurn1 = false;
 	isDidDamageTurn2 = false;
 
-	damage = 1;
+	damage = BOOMERANG_DAMAGE;
 }
 
 Boomerang::~Boomerang() {}

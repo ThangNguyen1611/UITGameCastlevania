@@ -6,7 +6,8 @@ Axe::Axe()
 	tag = EntityType::AXE;
 	timeDelayed = 0;
 	timeDelayMax = AXE_DELAY;
-	damage = 1;
+	damage = AXE_DAMAGE;
+	isDidDamage = false;
 }
 
 Axe::~Axe() {}
@@ -37,6 +38,7 @@ void Axe::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 void Axe::Attack(float posX, int direction)
 {
+	isDidDamage = false;
 	Weapon::Attack(posX, direction);
 	this->posY -= WEAPON_ARTICULATED_POS_Y;	//Fit Simon Hand
 	vX = AXE_SPEED_X * this->direction;

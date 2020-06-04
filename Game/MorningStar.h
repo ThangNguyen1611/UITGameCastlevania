@@ -4,6 +4,7 @@
 #define MS_INIT_LEVEL				1
 #define MS_MAX_LEVEL				3
 #define MS_INIT_DAMAGE				1
+#define MS_MAX_DAMAGE				2
 #define MS_ARTICULATOR_POS_X		25
 #define MS_ARTICULATOR_POS_Y		12
 

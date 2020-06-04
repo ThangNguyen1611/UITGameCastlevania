@@ -8,7 +8,7 @@ Dagger::Dagger()
 	timeDelayed = 0;
 	timeDelayMax = DAGGER_DELAY;
 
-	damage = 1;
+	damage = DAGGER_DAMAGE;
 }
 
 Dagger::~Dagger(){}

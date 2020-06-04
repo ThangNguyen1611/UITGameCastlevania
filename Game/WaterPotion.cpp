@@ -7,7 +7,7 @@ WaterPotion::WaterPotion()
 	timeDelayed = 0;
 	timeDelayMax = WATPOT_DELAY;
 
-	damage = 1;
+	damage = WATPOT_DAMAGE;
 }
 
 WaterPotion::~WaterPotion() {}

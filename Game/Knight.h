@@ -4,7 +4,7 @@
 
 #define KNIGHT_WALKING_SPEED_X			0.06f
 #define KNIGHT_GRAVITY					0.002f
-#define KNIGHT_MAXHEALTH				2
+#define KNIGHT_MAXHEALTH				3
 
 #define KNIGHT_BBOX_WIDTH				32
 #define KNIGHT_BBOX_HEIGHT				62

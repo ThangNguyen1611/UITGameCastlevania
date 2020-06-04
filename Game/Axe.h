@@ -5,6 +5,7 @@
 #define AXE_SPEED_X			0.2f	//15
 #define AXE_SPEED_Y			0.02f	//2
 #define AXE_MAX_HEIGHT		50		//150
+#define AXE_DAMAGE			2
 
 #define AXE_BBOX_WIDTH		30
 #define AXE_BBOX_HEIGHT		28
@@ -15,6 +16,7 @@ class Axe : public Weapon
 {
 	float tempY;
 	int directionY;
+	bool isDidDamage;
 public:
 	Axe();
 	~Axe();
@@ -24,4 +26,7 @@ public:
 	void Render();
 
 	void Attack(float posX, int direction);
+
+	void SetDidDamage(bool b) { isDidDamage = b; }
+	bool GetDidDamage() { return isDidDamage; }
 };

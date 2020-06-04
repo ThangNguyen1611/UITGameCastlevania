@@ -95,5 +95,7 @@ void MorningStar::UpLevel()
 		return;
 
 	level++;
+	if (level > MS_INIT_LEVEL)	//Level 1 = 1 damage , level 2 || 3 = 2 damage
+		damage = MS_MAX_DAMAGE;
 	isDone = true;	//ngan khi vua up level thi update va render them lan nua
 }

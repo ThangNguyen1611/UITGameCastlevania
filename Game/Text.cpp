@@ -15,7 +15,7 @@ void Text::Render(float posX, float posY, const string &str)
 		}
 		else	//va dau tru	
 		{
-			textSpr = CSprites::GetInstance()->Get(94);
+			textSpr = CSprites::GetInstance()->Get(TEXT_SUBSIGN_SPRITES);
 		}
 		textSpr->Draw(-1, posX + i * TEXT_SPACE_UNIT, posY);
 	}

@@ -14,6 +14,7 @@ Ghost::Ghost(float posX, float posY, LPGAMEENTITY target)
 
 	health = GHOST_MAXHEALTH;
 	isDead = false;
+	triggerHurting = false;
 
 	currentTotalTime = GHOST_INIT_TOTALTIME;
 }
@@ -27,10 +28,24 @@ void Ghost::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		SetState(GHOST_STATE_DIE);
 		return;
 	}
+
+	if (triggerHurting && state != GHOST_STATE_HURTING)
+	{
+		hurtingTimer->Start();
+		SetState(GHOST_STATE_HURTING);
+		triggerHurting = false;
+	}
+	if (state == GHOST_STATE_HURTING && hurtingTimer->IsTimeUp())
+	{
+		hurtingTimer->Reset();
+		SetState(GHOST_STATE_FLYING);
+	}
+
 	if (!target->IsUnsighted())
 	{
 		D3DXVECTOR2 pos = D3DXVECTOR2(posX, posY);
-		pos += RadialMovement(D3DXVECTOR2(target->GetPosX(), target->GetPosY()), pos, GHOST_FLYING_SPEED);
+		if(state == GHOST_STATE_FLYING)
+			pos += RadialMovement(D3DXVECTOR2(target->GetPosX(), target->GetPosY()), pos, GHOST_FLYING_SPEED);
 		posX = pos.x;
 		posY = pos.y;
 		if (target->GetPosX() < posX)
@@ -108,6 +123,11 @@ void Ghost::SetState(int state)
 		vY = 0;
 		health = 0;
 		isDead = true;
+		break;
+	case GHOST_STATE_FLYING:
+		break;
+	case GHOST_STATE_HURTING:
+		vX = 0;
 		break;
 	}
 }

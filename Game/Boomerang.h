@@ -3,6 +3,7 @@
 #include <math.h>
 
 #define BOOMERANG_SPEED_X		0.25f
+#define BOOMERANG_DAMAGE		2
 
 #define BOOMERANG_BBOX_WIDTH	28
 #define BOOMERANG_BBOX_HEIGHT	28

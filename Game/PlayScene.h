@@ -27,6 +27,7 @@
 #include "Hit.h"
 #include "Fire.h"
 #include "Score.h"
+#include "BrickExplode.h"
 #include "Crown.h"
 #include "ExtraShot.h"
 
@@ -136,7 +137,7 @@ public:
 	virtual void Unload();
 	void GetObjectFromGrid();
 
-	Effect* CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY);
+	Effect* CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY, int typeBrickExplode = 0);
 	Item* RandomItem(float posX, float posY);
 	Item* DropItem(EntityType createrType, float posX, float posY, int idCreater = 0);
 	void WeaponInteractObj(UINT i, Weapon* weapon);
