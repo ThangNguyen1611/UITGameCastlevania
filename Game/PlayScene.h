@@ -70,10 +70,20 @@
 using namespace std;
 
 #define SPAWNING_ZOMBIE_DELAY				3000
-#define SPAWNING_DELAY_BETWEEN_2_ZOMBIE		450	
+#define SPAWNING_DELAY_BETWEEN_2_ZOMBIE		500	
 #define SPAWNING_BAT_DELAY					3000
+#define CROSS_RENDER_DURATION				2000
+#define GHOST_ACTIVATE_AREA_X_STAGE_3_1		1150
+#define GHOST_ACTIVATE_AREA_X_STAGE_3_2		390		
 
 #define HIT_EFFECT_CUSTOMIZED_POS			8
+#define HIDDEN_CROWN_POS_X_STAGE_2_1		240
+#define HIDDEN_CROWN_POS_Y_STAGE_2_1		441
+#define HIDDEN_EXTRASHOT_POS_X_STAGE_2_2	720
+#define HIDDEN_EXTRASHOT_POS_Y_STAGE_2_2	233
+#define EASTER_EGG_ACTIVATE_AREA_X_STAGE_3_2	1060
+#define HIDDEN_CROWN_POS_X_STAGE_3_2		885
+#define HIDDEN_CROWN_POS_Y_STAGE_3_2		345
 
 class PlayScene : public Scene
 {
@@ -106,10 +116,8 @@ protected:
 	bool triggerSpawnBat;
 	Timer* spawningBatTimer = new Timer(SPAWNING_BAT_DELAY);
 	bool triggerSpawnGhost;
-	//testing Scan
-	//bool isScanned;
-	//Timer* scanningGameTimer = new Timer(SCANING_GAME_DELAY);
 	bool triggerResetGame;
+	bool triggerCrossTimer;
 
 	int easterEgg_Stage2_1;	//bien dem khi pha gach stage 2-1
 	int easterEgg_Stage2_2;
@@ -126,6 +134,7 @@ protected:
 	void _ParseSection_TILEMAP(string line);
 
 public:
+	Timer* crossTimer = new Timer(CROSS_RENDER_DURATION);
 	PlayScene();
 
 	void LoadBaseObjects();

@@ -223,8 +223,6 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			posX += min_tx * dx + nx * 0.4f;
 			if (!isImmortaling && !unsighted && !isHideOnBush)
 				posY += min_ty * dy + ny * 0.0001f;
-			/*else
-				posY += min_ty * dy + ny * 0.0001f;*/
 		}
 		
 		for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -235,7 +233,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			{
 				if (e->ny != 0)
 				{
-					if (e->ny == -1 && !isHurting)	//Dont know how I got kick out of the map :/
+					if (e->ny == -1 && !isHurting)	
 					{
 						vY = 0;
 
@@ -249,8 +247,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					{
 						posY += dy;
 					}
-					if (nx != 0 && !isHurting) vX = 0;
-					if (ny != 0 && !isHurting) vY = 0;
+					if (nx != 0 && !isHurting) vX = 0;	//Chong leo tuong :D
+					if (ny == -1 && !isHurting) vY = 0;	//Cham dat -> tat Gravity
 				}
 				if (state == PLAYER_STATE_GOING_UP_STAIRS || state == PLAYER_STATE_GOING_DOWN_STAIRS)
 				{
@@ -537,22 +535,28 @@ void Player::Attack(EntityType weaponType)
 					AddMana(-1);
 					isAttacking = true;
 					supWeapon->Attack(posX, direction);
+					if (isGettingDouble)
+						doubleAttackDelay->Start();
 					return;
 				}
-				else if (supWeaponAtDouble->GetIsDone() && !supWeapon->GetIsDone() && isGettingDouble)	//A completely NEW and SUPER COMPACT version of double attack :D 
+				else if (supWeaponAtDouble->GetIsDone() && isGettingDouble && doubleAttackDelay->IsTimeUp())	//A completely NEW and SUPER COMPACT version of double attack :D 
 				{
 					if (isGettingTriple && isAttackingTriple)
 						return;
 					AddMana(-1);
 					isAttackingDouble = true;
 					supWeaponAtDouble->Attack(posX, direction);
+					doubleAttackDelay->Reset();
+					if (isGettingTriple)
+						tripleAttackDelay->Start();
 					return;
 				}
-				else if (supWeaponAtTriple->GetIsDone() && !supWeaponAtDouble->GetIsDone() && !supWeapon->GetIsDone() && isGettingTriple)	
+				else if (supWeaponAtTriple->GetIsDone() && isGettingTriple && tripleAttackDelay->IsTimeUp())
 				{
 					AddMana(-1);
 					isAttackingTriple = true;
 					supWeaponAtTriple->Attack(posX, direction);
+					tripleAttackDelay->Reset();
 					return;
 				}
 			}
@@ -590,7 +594,7 @@ void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
 		currentSupWeaponType = EntityType::DAGGER;
 		supWeapon = new Dagger();
 		supWeaponAtDouble = new Dagger();
-		supWeaponAtTriple = new Axe();
+		supWeaponAtTriple = new Dagger();
 		break;
 	case EntityType::BOOMERANG:
 		currentSupWeaponType = EntityType::BOOMERANG;

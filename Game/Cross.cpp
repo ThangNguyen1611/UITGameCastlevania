@@ -8,7 +8,6 @@ Cross::Cross(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 
-	vY = CROSS_GRAVITY;
 	displayTimer = new Timer(CROSS_DISPLAY_DURATION);
 	displayTimer->Start();
 	delayLimit = CROSS_DELAY;

@@ -8,7 +8,6 @@ BigHeart::BigHeart(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 	
-	vY = BIGHEART_GRAVITY;
 	displayTimer = new Timer(BIGHEART_DISPLAY_DURATION);
 	displayTimer->Start();
 	delayLimit = BIGHEART_DELAY;

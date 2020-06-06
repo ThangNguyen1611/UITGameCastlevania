@@ -3,14 +3,14 @@
 #include "Timer.h"
 #include "Bone.h"
 
-#define SKELETON_WALKING_SPEED_X		0.135f
-#define SKELETON_JUMP_SPEED_X			0.165f
-#define SKELETON_JUMP_SPEED_Y			0.25f
-#define SKELETON_FIRSTJUMP_SPEED_Y		0.65f
+#define SKELETON_WALKING_SPEED_X		0.14f
+#define SKELETON_JUMP_SPEED_Y			0.6f
 #define SKELETON_GRAVITY				0.002f
 #define SKELETON_MAXHEALTH				2
 #define SKELETON_SIGHT_RANGE			235
-#define SKELETON_MAX_HIGHT_JUMP			200
+#define SKELETON_SIGHT_CHASE_RANGE		180
+#define SKELETON_SIGHT_FEAR_RANGE		70
+#define SKELETON_SCORE_GIVEN			3000
 
 #define SKELETON_BBOX_WIDTH				32
 #define SKELETON_BBOX_HEIGHT			62
@@ -20,8 +20,6 @@
 
 #define SKELETON_WAITING_DURATION		900
 #define SKELETON_REACT_DELAY			450
-#define SKELETON_JUMP_DURATION			265
-#define SKELETON_JUMP_DELAY				750
 #define SKELETON_ATTACK_DELAY			500
 
 class Skeleton : public Entity
@@ -34,9 +32,6 @@ class Skeleton : public Entity
 	Timer* reactTimer = new Timer(SKELETON_REACT_DELAY);
 	//Them 1 khoang delay nho cho phan ung cua skeleton khi player doi huong
 	bool isJumping, triggerJump;
-	Timer* jumpingTimer = new Timer(SKELETON_JUMP_DURATION);
-	Timer* waitingJumpTimer = new Timer(SKELETON_JUMP_DELAY);
-	int randomJump;
 
 	Bone* mainWeapon;
 	Bone* mainWeaponAtDouble;
@@ -57,8 +52,6 @@ public:
 
 	void TurnAround();
 	void Jump();
-	void JumpBack();
-	void FirstJump();
 	void Attack();
 	void DoubleAttack();
 	void TripleAttack();

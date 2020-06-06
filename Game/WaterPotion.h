@@ -6,6 +6,7 @@
 #define WATPOT_SPEED_X					0.2f
 #define WATPOT_SPEED_Y					0.02f
 #define WATPOT_MAX_HEIGHT				25
+#define WATPOT_LOWER_DISTANCE			10			
 #define WATPOT_DAMAGE					1
 
 #define WATPOT_BBOX_WIDTH				32

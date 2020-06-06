@@ -7,6 +7,7 @@ Crown::Crown(float posX, float posY)
 
 	this->posX = posX;
 	this->posY = posY;
+	destinationY = posY - CROWN_PUSH_UP_DISTANCE;
 
 	displayTimer = new Timer(CROWN_DISPLAY_DURATION);
 	displayTimer->Start();
@@ -73,7 +74,7 @@ void Crown::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		vY = -CROWN_PUSHUP_SPEED_Y;
 		posY += dy;
-		if (posY <= CROWN_POS_Y_DESTINATION)
+		if (posY <= destinationY)
 		{
 			isShowDone = true;
 		}

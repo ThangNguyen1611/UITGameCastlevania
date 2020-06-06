@@ -8,7 +8,6 @@ MoneyBags::MoneyBags(float posX, float posY, EntityType typeBag)
 	this->posX = posX;
 	this->posY = posY;
 
-	vY = BAGS_GRAVITY;
 	displayTimer = new Timer(BAGS_DISPLAY_DURATION);
 	displayTimer->Start();
 	delayLimit = BAGS_DELAY;

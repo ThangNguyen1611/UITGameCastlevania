@@ -83,10 +83,14 @@ void Render()
 	LPDIRECT3DSURFACE9 bb = game->GetBackBuffer();
 	LPD3DXSPRITE spriteHandler = game->GetSpriteHandler();
 
+	PlayScene* playScene = dynamic_cast<PlayScene*>(SceneManager::GetInstance()->GetScene());
 	
 	if (d3ddv->BeginScene())
 	{
-		d3ddv->ColorFill(bb, NULL, BGColor);
+		if(!playScene->crossTimer->IsTimeUp() && rand() % 2 == 1)
+			d3ddv->ColorFill(bb, NULL, BGColorCrossing);
+		else
+			d3ddv->ColorFill(bb, NULL, BGColor);
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 

@@ -1,7 +1,8 @@
 #pragma once
 #include "Item.h"
 
-#define EXTRASHOT_GRAVITY			0.03f
+#define EXTRASHOT_LEVEL2			2
+#define EXTRASHOT_LEVEL3			3
 
 #define EXTRASHOT_DISPLAY_DURATION	4500
 #define EXTRASHOT_DELAY				100

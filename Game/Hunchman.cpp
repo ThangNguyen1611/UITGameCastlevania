@@ -199,13 +199,15 @@ void Hunchman::TurnAround()
 
 void Hunchman::ShortJump()
 {
+	if (isJumping)	//Tranh dang ShortJump boi` them LongJump
+		return;
 	isJumping = true;
 	vY = -HUNCHMAN_JUMP_SPEED_Y;
 }
 
 void Hunchman::LongJump()
 {
-	if (isJumping)	//Tranh danh ShortJump boi` them LongJump
+	if (isJumping)	//Tranh dang ShortJump boi` them LongJump
 		return;
 	isJumping = true;
 	vY = -HUNCHMAN_HIGHJUMP_SPEED_Y;

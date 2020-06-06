@@ -8,7 +8,6 @@ ItemDagger::ItemDagger(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 
-	vY = ITEMDAGGER_GRAVITY;
 	displayTimer = new Timer(ITEMDAGGER_DISPLAY_DURATION);
 	displayTimer->Start();
 	delayLimit = ITEMDAGGER_DELAY;

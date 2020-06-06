@@ -71,6 +71,8 @@
 #define PLAYER_RESPAWN_DURATION					3000
 #define PLAYER_TIMESTOP_DURATION				5000
 #define PLAYER_INVISIBLE_DURATION				10000
+#define PLAYER_DOUBLE_ATTACK_DELAY				300
+#define PLAYER_TRIPLE_ATTACK_DELAY				300
 
 class Player : public Entity
 {
@@ -122,7 +124,9 @@ class Player : public Entity
 	Weapon* mainWeapon;
 	Weapon* supWeapon;
 	Weapon* supWeaponAtDouble;
+	Timer* doubleAttackDelay = new Timer(PLAYER_DOUBLE_ATTACK_DELAY);
 	Weapon* supWeaponAtTriple;
+	Timer* tripleAttackDelay = new Timer(PLAYER_TRIPLE_ATTACK_DELAY);
 	EntityType currentSupWeaponType;
 public:
 	Player(float posX, float posY);

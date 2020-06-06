@@ -1,7 +1,7 @@
 #pragma once
 #include "Item.h"
 
-#define BIGHEART_GRAVITY			0.03f
+#define BIGHEART_MANA_GIVEN			5
 
 #define BIGHEART_DISPLAY_DURATION	4500
 #define BIGHEART_DELAY				600

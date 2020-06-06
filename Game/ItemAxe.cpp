@@ -8,7 +8,6 @@ ItemAxe::ItemAxe(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 
-	vY = ITEMAXE_GRAVITY;
 	displayTimer = new Timer(ITEMAXE_DISPLAY_DURATION);
 	displayTimer->Start();
 	delayLimit = ITEMAXE_DELAY;

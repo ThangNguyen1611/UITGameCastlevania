@@ -7,6 +7,7 @@ Bone::Bone()
 	timeDelayed = 0;
 	timeDelayMax = BONE_DELAY;
 	isDidDamage = false;
+	damage = BONE_DAMAGE;
 }
 
 Bone::~Bone() {}

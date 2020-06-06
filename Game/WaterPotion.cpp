@@ -47,7 +47,8 @@ void WaterPotion::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	for (UINT i = 0; i < coObjects->size(); i++)
 		if (coObjects->at(i)->GetType() != EntityType::TORCH &&
 			coObjects->at(i)->GetType() != EntityType::STAIRS&&
-			coObjects->at(i)->GetType() != EntityType::CANDLE)
+			coObjects->at(i)->GetType() != EntityType::CANDLE&&
+			coObjects->at(i)->GetType() != EntityType::BUSH)
 			listObjMayCollide.push_back(coObjects->at(i));
 
 	CalcPotentialCollisions(&listObjMayCollide, coEvents);
@@ -68,6 +69,7 @@ void WaterPotion::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 		if (nx != 0 || ny != 0)
 		{
+			posY += WATPOT_LOWER_DISTANCE;	//Burn a little bit lower to make sure do damage
 			SetState(WATPOT_STATE_BURN);
 		}
 	}
@@ -79,7 +81,7 @@ void WaterPotion::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 void WaterPotion::Attack(float posX, int direction)
 {
 	Weapon::Attack(posX, direction);
-	this->posY -= 8;	//Fit Simon Hand
+	this->posY -= WEAPON_ARTICULATED_POS_Y;	//Fit Simon Hand
 	vX = WATPOT_SPEED_X * this->direction;
 	directionY = -1;
 	state = WATPOT_STATE_POT;

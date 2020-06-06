@@ -28,6 +28,7 @@ void Item::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 
 	Entity::Update(dt);
+	vY = ITEM_GRAVITY;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;

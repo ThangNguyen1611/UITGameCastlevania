@@ -60,11 +60,9 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			coObjects->at(i)->GetType() == EntityType::BREAKABLEBRICK)
 			bricks.push_back(coObjects->at(i));
 
-	// turn off collision when die 
 	if (state != SKELETON_STATE_DIE)
 		CalcPotentialCollisions(&bricks, coEvents);
 
-	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
 		posX += dx;
@@ -86,15 +84,15 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				target->GetPosX() > posX && direction == -1)		//Wrong Chase-Direction
 				TurnAround();
 		}
-		/*if (ny != 1)	//Hoi tang dong
+		if (ny == -1)
 		{
-			Jump();
-		}*/
-		if (coEvents.size() == 1 && nx != 0)	//Cham 1 brick -> nhay //Khong biet duoc khi nhay co rot hay khong
-		{
-			if(!isJumping)
-				Jump();
+			vY = 0;
+			isJumping = false;
 		}
+
+		if (coEvents.size() == 1)	//Ria Brick
+			if (!isJumping)
+				triggerJump = true;
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
@@ -107,37 +105,13 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	else
 	{
-		if(!isJumping)
-			if(randomJump <= 50)
-				vX = SKELETON_WALKING_SPEED_X * direction;
-			else
-				vX = -SKELETON_WALKING_SPEED_X * direction;
-#pragma region Jump Logic
-		if (!isJumping && !triggerJump)
-		{
-			waitingJumpTimer->Start();
-			triggerJump = true;
-		}
-		if (triggerJump && waitingJumpTimer->IsTimeUp())
-		{
-			jumpingTimer->Start();
-			waitingJumpTimer->Reset();
-			triggerJump = false;
-			randomJump = rand() % 100;				//Random here to make sure we just random once right before jump
-		}
-		if (!jumpingTimer->IsTimeUp())
-		{
-			if (randomJump <= 50)
-				Jump();
-			else
-				JumpBack();
-		}
-		else if (jumpingTimer->IsTimeUp())
-		{
-			jumpingTimer->Reset();
-			isJumping = false;
-		}
-#pragma endregion
+		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) >= SKELETON_SIGHT_CHASE_RANGE)
+			vX = SKELETON_WALKING_SPEED_X * direction;
+		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= SKELETON_SIGHT_FEAR_RANGE)
+			vX = -SKELETON_WALKING_SPEED_X * direction;
+
+		if (triggerJump)
+			Jump();
 #pragma region Attack Logic
 		if((rand() % 1000) < 50)
 			if (!target->IsUnsighted())				//Khong thay target thi khong danh lung tung
@@ -154,7 +128,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			DoubleAttack();
 			triggerDoubleAttack = false;
 			doubleAttackDelayTimer->Reset();
-			if ((rand() % 100) < 25)
+			if ((rand() % 100) < 50)
 			{
 				triggerTripleAttack = true;
 				tripleAttackDelayTimer->Start();
@@ -189,7 +163,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		readyTimer->Reset();
 		targetDetected = false;
 		activated = true;
-		FirstJump();
+		Jump();
 	}
 
 #pragma endregion
@@ -262,27 +236,9 @@ void Skeleton::TurnAround()
 
 void Skeleton::Jump()
 {
-	if (posY < SKELETON_MAX_HIGHT_JUMP)
-		return;
 	isJumping = true;
-	vX = SKELETON_JUMP_SPEED_X * direction;
 	vY = -SKELETON_JUMP_SPEED_Y;
-}
-
-void Skeleton::JumpBack()
-{
-	if (posY < SKELETON_MAX_HIGHT_JUMP)
-		return;
-	isJumping = true;
-	vX = -SKELETON_JUMP_SPEED_X * direction;
-	vY = -SKELETON_JUMP_SPEED_Y;
-}
-
-void Skeleton::FirstJump()
-{
-	isJumping = true;
-	vX = SKELETON_JUMP_SPEED_X * direction;
-	vY = -SKELETON_FIRSTJUMP_SPEED_Y;
+	triggerJump = false;
 }
 
 void Skeleton::Attack()

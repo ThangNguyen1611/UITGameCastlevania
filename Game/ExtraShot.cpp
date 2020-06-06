@@ -8,7 +8,7 @@ ExtraShot::ExtraShot(float posX, float posY, int type)
 	this->posX = posX;
 	this->posY = posY;
 	typeExtraShot = type;
-	vY = EXTRASHOT_GRAVITY;
+
 	displayTimer = new Timer(EXTRASHOT_DISPLAY_DURATION);
 	displayTimer->Start();
 	delayLimit = EXTRASHOT_DELAY;

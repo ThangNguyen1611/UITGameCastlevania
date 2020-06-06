@@ -5,6 +5,7 @@
 #define BONE_SPEED_X					0.2f	
 #define BONE_SPEED_Y					0.02f	
 #define BONE_MAX_HEIGHT					50		
+#define BONE_DAMAGE						1
 
 #define BONE_BBOX_WIDTH					32
 #define BONE_BBOX_HEIGHT				32

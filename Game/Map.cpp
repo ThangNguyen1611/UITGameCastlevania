@@ -20,7 +20,7 @@ void Map::LoadMap(int id,
 	this->ColumnMap = ColumnMap;
 
 	CTextures * mapTexture = CTextures::GetInstance();
-	mapTexture->Add(idMap, mapFileTexture, D3DCOLOR_XRGB(255, 0, 255));
+	mapTexture->Add(idMap, mapFileTexture, D3DCOLOR_XRGB(0, 0, 0));
 	LPDIRECT3DTEXTURE9 tex = mapTexture->Get(idMap);
 
 	int TilesetRow = RowTile;

@@ -48,7 +48,7 @@ void SmallHeart::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 
 	Entity::Update(dt);
-	vY = SMALLHEART_GRAVITY * dt;
+	vY = SMALLHEART_GRAVITY;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;

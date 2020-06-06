@@ -20,6 +20,7 @@
 #define WIN_TITLE L"NewbieGame"
 
 #define BGColor D3DCOLOR_XRGB(0,0,0)
+#define BGColorCrossing D3DCOLOR_XRGB(200,200,200)
 #define SCREEN_WIDTH 525	//530
 #define SCREEN_HEIGHT 490	//480
 #define BOTTOM_SCREEN 450

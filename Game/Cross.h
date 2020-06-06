@@ -1,8 +1,6 @@
 #pragma once
 #include "Item.h"
 
-#define CROSS_GRAVITY				0.03f
-
 #define CROSS_DISPLAY_DURATION		4500
 #define CROSS_DELAY					600
 

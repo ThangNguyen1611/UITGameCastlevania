@@ -8,7 +8,6 @@ Drug::Drug(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 
-	vY = DRUG_GRAVITY;
 	displayTimer = new Timer(DRUG_DISPLAY_DURATION);
 	displayTimer->Start();
 	delayLimit = DRUG_DELAY;

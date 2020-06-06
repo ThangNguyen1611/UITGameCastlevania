@@ -5,6 +5,8 @@
 class Item;
 typedef Item* LPGAMEITEM;
 
+#define ITEM_GRAVITY			0.1f
+
 class Item : public Entity
 {
 protected:

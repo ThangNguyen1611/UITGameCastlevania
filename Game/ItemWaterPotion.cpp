@@ -8,7 +8,6 @@ ItemWaterPotion::ItemWaterPotion(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 
-	vY = ITEMWATERPOTION_GRAVITY;
 	displayTimer = new Timer(ITEMWATERPOTION_DISPLAY_DURATION);
 	displayTimer->Start();
 	delayLimit = ITEMWATERPOTION_DELAY;

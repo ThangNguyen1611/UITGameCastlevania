@@ -1,8 +1,6 @@
 #pragma once
 #include "Item.h"
 
-#define ITEMAXE_GRAVITY				0.03f
-
 #define ITEMAXE_DISPLAY_DURATION	4500
 #define ITEMAXE_DELAY				600
 

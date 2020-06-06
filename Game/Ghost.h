@@ -6,6 +6,7 @@
 #define GHOST_MAXHEALTH				3
 #define GHOST_CLOSED_RANGE			20
 #define GHOST_DAMAGE				3
+#define GHOST_SCORE_GIVEN			700
 
 #define GHOST_BBOX_WIDTH			32
 #define GHOST_BBOX_HEIGHT			32

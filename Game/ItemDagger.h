@@ -1,8 +1,6 @@
 #pragma once
 #include "Item.h"
 
-#define ITEMDAGGER_GRAVITY				0.03f
-
 #define ITEMDAGGER_DISPLAY_DURATION		4500
 #define ITEMDAGGER_DELAY				600
 

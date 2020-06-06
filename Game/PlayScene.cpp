@@ -22,6 +22,7 @@ void PlayScene::LoadBaseObjects()
 	gameCamera = Camera::GetInstance();
 	gameMap = new Map();
 	triggerResetGame = false;
+	triggerCrossTimer = false;
 }
 
 void PlayScene::ChooseMap(int whatMap)	
@@ -31,6 +32,8 @@ void PlayScene::ChooseMap(int whatMap)
 	player->ReceiveCurrentStage(idStage);
 	player->StopInvisible();
 	gameTime->ResetGameTime();
+	triggerCrossTimer = false;
+	crossTimer->Reset();
 
 	switch (idStage)
 	{
@@ -95,7 +98,7 @@ Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, f
 Item* PlayScene::RandomItem(float posX, float posY)
 {
 	int bagrandom = rand() % 100; 
-	int random = rand() % 1200;
+	int random = rand() % 1300;
 	if (random <= 100)
 		return new SmallHeart(posX, posY);
 	else if (100 < random && random <= 200)
@@ -118,6 +121,13 @@ Item* PlayScene::RandomItem(float posX, float posY)
 		return new Cross(posX, posY);
 	else if (1000 < random && random <= 1100)	
 		return new Drug(posX, posY);
+	else if (1100 < random && random <= 1200)
+	{
+		if(rand() % 100 <= 50)
+			return new ExtraShot(posX, posY, EXTRASHOT_LEVEL2);
+		else
+			return new ExtraShot(posX, posY, EXTRASHOT_LEVEL3);
+	}
 	else
 	{
 		if (bagrandom <= 33)
@@ -137,7 +147,7 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 			return new Crown(posX, posY);
 		else
 			if (idStage == STAGE_2_2)
-				return new ExtraShot(posX, posY, 3);
+				return new ExtraShot(posX, posY, EXTRASHOT_LEVEL2);
 	}
 
 	if (createrType == EntityType::TORCH)
@@ -198,7 +208,7 @@ void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
 {
 	if (weapon->GetType() == EntityType::BOOMERANG)
 	{
-		Boomerang* bmr = dynamic_cast<Boomerang*>(player->GetPlayerSupWeapon());
+		Boomerang* bmr = dynamic_cast<Boomerang*>(weapon);
 		if (!bmr->GetIsDidDamageTurn1() && bmr->GetOwnerDirection() == bmr->GetDirection())
 		{
 			listObjects[i]->AddHealth(-weapon->GetDamage());
@@ -227,7 +237,7 @@ void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
 	else
 		if (weapon->GetType() == EntityType::MORNINGSTAR)
 		{
-			MorningStar* ms = dynamic_cast<MorningStar*>(player->GetPlayerMainWeapon());
+			MorningStar* ms = dynamic_cast<MorningStar*>(weapon);
 			if (!ms->GetDidDamage())
 			{
 				listObjects[i]->AddHealth(-weapon->GetDamage());
@@ -244,7 +254,7 @@ void PlayScene::SlayEnemies(UINT i, Weapon* weapon, int scoreGive)
 		else
 			if (weapon->GetType() == EntityType::AXE)
 			{
-				Axe* axe = dynamic_cast<Axe*>(player->GetPlayerSupWeapon());
+				Axe* axe = dynamic_cast<Axe*>(weapon);
 				if (!axe->GetDidDamage())
 				{
 					listObjects[i]->AddHealth(-weapon->GetDamage());
@@ -278,20 +288,20 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 	switch (listObjects[i]->GetType())
 	{
 	case EntityType::BAT:
-		SlayEnemies(i, weapon, 200);
+		SlayEnemies(i, weapon, BAT_SCORE_GIVEN);
 		break;
 	case EntityType::DARKENBAT:
-		SlayEnemies(i, weapon, 500);
+		SlayEnemies(i, weapon, DARKBAT_SCORE_GIVEN);
 		break;
 	case EntityType::GHOST:
 	{
-		SlayEnemies(i, weapon, 700);
+		SlayEnemies(i, weapon, GHOST_SCORE_GIVEN);
 		Ghost* ghost = dynamic_cast<Ghost*>(listObjects[i]);
 		ghost->TriggerHurt(true);
 		break; 
 	}
 	case EntityType::ZOMBIE:
-		SlayEnemies(i, weapon, 300);
+		SlayEnemies(i, weapon, ZOMBIE_SCORE_GIVEN);
 		zombieCounter--;
 		if (zombieCounter == 0)
 		{
@@ -302,19 +312,19 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 		break;
 	case EntityType::KNIGHT:
 	{
-		SlayEnemies(i, weapon, 1000);
+		SlayEnemies(i, weapon, KNIGHT_SCORE_GIVEN);
 		Knight* k9 = dynamic_cast<Knight*>(listObjects[i]);
 		k9->TriggerHurt(true);
 		break; 
 	}
 	case EntityType::HUNCHMAN:
-		SlayEnemies(i, weapon, 2000); 
+		SlayEnemies(i, weapon, HUNCHMAN_SCORE_GIVEN);
 		break;
 	case EntityType::SKELETON:
-		SlayEnemies(i, weapon, 3000); 
+		SlayEnemies(i, weapon, SKELETON_SCORE_GIVEN);
 		break;
 	case EntityType::RAVEN:
-		SlayEnemies(i, weapon, 1500); 
+		SlayEnemies(i, weapon, RAVEN_SCORE_GIVEN);
 		break;
 	case EntityType::TORCH:
 	{
@@ -439,7 +449,7 @@ void PlayScene::PlayerCollideBone()
 			{
 				if (!player->IsImmortaling())
 				{
-					player->AddHealth(-1);
+					player->AddHealth(-skeleton->GetBone()->GetDamage());
 					player->StartHurtingTimer();
 					player->StartImmortalingTimer();
 					player->SetImmortal(true);
@@ -461,47 +471,47 @@ void PlayScene::PlayerCollideItem()
 				switch (listItems[i]->GetType())
 				{
 				case EntityType::MONEYBAGRED:
-					player->AddScore(100);
+					player->AddScore(BAGS_RED_SCORE_GIVEN);
 					listItems[i]->SetIsDone(true);
 					listEffects.push_back(CreateEffect(EntityType::MONEYBAGRED, EntityType::ADDSCOREEFFECT, listItems[i]->GetPosX(), listItems[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
 					break;
 				case EntityType::MONEYBAGWHITE:
-					player->AddScore(400);
+					player->AddScore(BAGS_WHITE_SCORE_GIVEN);
 					listItems[i]->SetIsDone(true);
 					listEffects.push_back(CreateEffect(EntityType::MONEYBAGWHITE, EntityType::ADDSCOREEFFECT, listItems[i]->GetPosX(), listItems[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
 					break;
 				case EntityType::MONEYBAGBLUE:
-					player->AddScore(700);
+					player->AddScore(BAGS_BLUE_SCORE_GIVEN);
 					listItems[i]->SetIsDone(true);
 					listEffects.push_back(CreateEffect(EntityType::MONEYBAGBLUE, EntityType::ADDSCOREEFFECT, listItems[i]->GetPosX(), listItems[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
 					break;
 				case EntityType::SMALLHEART:
-					player->AddMana(1);
+					player->AddMana(SMALLHEART_MANA_GIVEN);
 					listItems[i]->SetIsDone(true);
 					break;
 				case EntityType::BIGHEART:
-					player->AddMana(5);
+					player->AddMana(BIGHEART_MANA_GIVEN);
 					listItems[i]->SetIsDone(true);
 					break;
 				case EntityType::YUMMICHICKENLEG:
-					if (player->GetHealth() <= 12)
-						player->AddHealth(4);
+					if (player->GetHealth() <= PLAYER_MAXHEALTH - CHICKEN_HP_RESTORE)
+						player->AddHealth(CHICKEN_HP_RESTORE);
 					else
 						player->SetHealth(PLAYER_MAXHEALTH);
 					listItems[i]->SetIsDone(true);
 					break;
 				case EntityType::CROWN:
-					player->AddScore(1000);
+					player->AddScore(CROWN_SCORE_GIVEN);
 					listItems[i]->SetIsDone(true);
 					listEffects.push_back(CreateEffect(EntityType::CROWN, EntityType::ADDSCOREEFFECT, listItems[i]->GetPosX(), listItems[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
 					break;
 				case EntityType::ITEMEXTRASHOT:
 				{
 					ExtraShot* exs = dynamic_cast<ExtraShot*>(listItems[i]);
-					if (exs->GetTypeExtra() == 2)
+					if (exs->GetTypeExtra() == EXTRASHOT_LEVEL2)
 						player->SetGettingDouble(true);
 					else
-						if (exs->GetTypeExtra() == 3)
+						if (exs->GetTypeExtra() == EXTRASHOT_LEVEL3)
 						{
 							player->SetGettingDouble(true);
 							player->SetGettingTriple(true);
@@ -549,23 +559,38 @@ void PlayScene::PlayerCollideItem()
 				}
 				case EntityType::CROSS:
 				{
-					for (UINT i = 0; i < listObjects.size(); i++)
+					if (!triggerCrossTimer)
 					{
-						//Them if xet trong tam` camera 
-						//Thuc ra da~ duoc xet tren Grid nhung tam` Grid xa hon camera
-						if (listObjects[i]->GetType() == EntityType::BAT ||
-							listObjects[i]->GetType() == EntityType::DARKENBAT ||
-							listObjects[i]->GetType() == EntityType::ZOMBIE ||
-							listObjects[i]->GetType() == EntityType::KNIGHT ||
-							listObjects[i]->GetType() == EntityType::HUNCHMAN ||
-							listObjects[i]->GetType() == EntityType::GHOST ||
-							listObjects[i]->GetType() == EntityType::RAVEN ||
-							listObjects[i]->GetType() == EntityType::SKELETON)
+						crossTimer->Start();
+						triggerCrossTimer = true;
+						for (UINT i = 0; i < listObjects.size(); i++)
 						{
-							listObjects[i]->AddHealth(-listObjects[i]->GetHealth());
-							listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-							listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-							listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+							//Them if xet trong tam` camera 
+							//Thuc ra da~ duoc xet tren Grid nhung tam` Grid xa hon camera
+							if (listObjects[i]->GetType() == EntityType::BAT ||
+								listObjects[i]->GetType() == EntityType::DARKENBAT ||
+								listObjects[i]->GetType() == EntityType::ZOMBIE ||
+								listObjects[i]->GetType() == EntityType::KNIGHT ||
+								listObjects[i]->GetType() == EntityType::HUNCHMAN ||
+								listObjects[i]->GetType() == EntityType::GHOST ||
+								listObjects[i]->GetType() == EntityType::RAVEN ||
+								listObjects[i]->GetType() == EntityType::SKELETON)
+							{
+								listObjects[i]->AddHealth(-listObjects[i]->GetHealth());
+								if (listObjects[i]->GetType() == EntityType::ZOMBIE)
+								{
+									zombieCounter--;
+									if (zombieCounter == 0)
+									{
+										spawningZombieTimer->Start();
+										triggerSpawnZombie = true;
+										isTimeToSpawnZombie = false;
+									}
+								}
+								listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+								listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+								listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+							}
 						}
 					}
 					listItems[i]->SetIsDone(true);
@@ -657,7 +682,7 @@ void PlayScene::EasterEggEvent()
 	{
 		if (easterEgg_Stage2_1 == 2)
 		{
-			listItems.push_back(DropItem(EntityType::NONE, 240.0f, 441.0f));
+			listItems.push_back(DropItem(EntityType::NONE, HIDDEN_CROWN_POS_X_STAGE_2_1, HIDDEN_CROWN_POS_Y_STAGE_2_1));
 			easterEgg_Stage2_1 = 0;
 		}
 	}
@@ -666,16 +691,19 @@ void PlayScene::EasterEggEvent()
 		{
 			if (easterEgg_Stage2_2 == 1)
 			{
-				listItems.push_back(DropItem(EntityType::NONE, 720.0f, 233.0f));
+				listItems.push_back(DropItem(EntityType::NONE, HIDDEN_EXTRASHOT_POS_X_STAGE_2_2, HIDDEN_EXTRASHOT_POS_Y_STAGE_2_2));
 				easterEgg_Stage2_2 = 0;
 			}
 		}
 		else
 			if (idStage == STAGE_3_2)
 			{
-				if (player->GetPosX() > 1060 && player->GetPosX() < 1080 && player->IsSitting() && easterEgg_Stage3_2 == 1)
+				if (player->GetPosX() > EASTER_EGG_ACTIVATE_AREA_X_STAGE_3_2 && 
+					player->GetPosX() < EASTER_EGG_ACTIVATE_AREA_X_STAGE_3_2 + 20 && 
+					player->IsSitting() && 
+					easterEgg_Stage3_2 == 1)
 				{
-					listItems.push_back(DropItem(EntityType::NONE, 885.0f, 300.0f));
+					listItems.push_back(DropItem(EntityType::NONE, HIDDEN_CROWN_POS_X_STAGE_3_2, HIDDEN_CROWN_POS_Y_STAGE_3_2));
 					easterEgg_Stage3_2 = 0;
 				}
 			}
@@ -685,7 +713,7 @@ void PlayScene::PlayerInSightGhost()
 {
 	if (idStage == STAGE_3_1)
 	{
-		if (player->GetPosX() > 1150 && player->GetPosX() < 1160)
+		if (player->GetPosX() > GHOST_ACTIVATE_AREA_X_STAGE_3_1 && player->GetPosX() < GHOST_ACTIVATE_AREA_X_STAGE_3_1 + 10)
 		{
 			if (triggerSpawnGhost)
 			{
@@ -697,7 +725,7 @@ void PlayScene::PlayerInSightGhost()
 	else
 		if (idStage == STAGE_3_2)
 		{
-			if (player->GetPosX() > 390 && player->GetPosX() < 400)
+			if (player->GetPosX() > GHOST_ACTIVATE_AREA_X_STAGE_3_2 && player->GetPosX() < GHOST_ACTIVATE_AREA_X_STAGE_3_2 + 10)
 			{
 				if (triggerSpawnGhost)
 				{
@@ -815,13 +843,17 @@ void PlayScene::Update(DWORD dt)
 	gameCamera->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
 #pragma endregion
 
-	WeaponCollision();
-	PlayerCollideBone();
-	PlayerCollideItem();
+	if(player->IsAttacking())
+		WeaponCollision();
+	if(listItems.size() > 0)
+		PlayerCollideItem();
 	PlayerGotGate(); 
 	EasterEggEvent();
-	if(idStage == STAGE_3_1 || idStage == STAGE_3_2)
+	if (idStage == STAGE_3_1 || idStage == STAGE_3_2)
+	{
 		PlayerInSightGhost();
+		PlayerCollideBone();
+	}
 	if (idStage == STAGE_4 && player->GetPosX() < 800)
 	{
 		SpawnBat();
@@ -840,6 +872,12 @@ void PlayScene::Update(DWORD dt)
 		ResetGame();
 	}
 	else if (!player->IsRespawning()) triggerResetGame = false;
+
+	if (triggerCrossTimer && crossTimer->IsTimeUp())
+	{
+		triggerCrossTimer = false;
+		crossTimer->Reset();
+	}
 
 #pragma region Objects Updates
 	vector<LPGAMEENTITY> coObjects;
