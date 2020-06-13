@@ -98,8 +98,8 @@ Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, f
 Item* PlayScene::RandomItem(float posX, float posY)
 {
 	int bagrandom = rand() % 100; 
-	int random = rand() % 1300;
-	if (random <= 100)
+	int random = rand() % 1350;
+	/*if (random <= 100)
 		return new SmallHeart(posX, posY);
 	else if (100 < random && random <= 200)
 		return new BigHeart(posX, posY);
@@ -117,18 +117,20 @@ Item* PlayScene::RandomItem(float posX, float posY)
 		return new ItemWaterPotion(posX, posY);
 	else if (800 < random && random <= 900)
 		return new ItemStopWatch(posX, posY);
-	else if (900 < random && random <= 1000)	
+	else if (900 < random && random <= 1000)
 		return new Cross(posX, posY);
-	else if (1000 < random && random <= 1100)	
+	else if (1000 < random && random <= 1100)
 		return new Drug(posX, posY);
 	else if (1100 < random && random <= 1200)
 	{
-		if(rand() % 100 <= 50)
+		if (rand() % 100 <= 50)
 			return new ExtraShot(posX, posY, EXTRASHOT_LEVEL2);
 		else
 			return new ExtraShot(posX, posY, EXTRASHOT_LEVEL3);
 	}
-	else
+	else if (1200 < random && random <= 1250)*/
+		return new ItemPokeball(posX, posY);
+	/*else
 	{
 		if (bagrandom <= 33)
 			return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
@@ -136,7 +138,7 @@ Item* PlayScene::RandomItem(float posX, float posY)
 			return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
 		else
 			return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
-	}
+	}*/
 }
 
 Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int idCreater)
@@ -337,6 +339,7 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 	}
 	case EntityType::CANDLE:
 	{
+		if (weapon->GetType() == EntityType::POKEBALL) return;
 		Candle* candle = dynamic_cast<Candle*>(listObjects[i]);	//Extension cua DropItem
 		listObjects[i]->AddHealth(-weapon->GetDamage());
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
@@ -375,7 +378,7 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 	}
 }
 
-void PlayScene::SetSubWeaponDone(UINT i, bool isAtDouble, bool isAtTriple)
+void PlayScene::SetSubWeaponDone(UINT i, Weapon* weapon)
 {
 	if (listObjects[i]->GetType() == EntityType::BAT ||
 		listObjects[i]->GetType() == EntityType::ZOMBIE ||
@@ -388,18 +391,8 @@ void PlayScene::SetSubWeaponDone(UINT i, bool isAtDouble, bool isAtTriple)
 		listObjects[i]->GetType() == EntityType::SKELETON ||
 		listObjects[i]->GetType() == EntityType::RAVEN)
 	{
-		switch (player->GetPlayerSupWeaponType())
-		{
-		case EntityType::DAGGER:
-			if (!isAtDouble && !isAtTriple)
-				player->GetPlayerSupWeapon()->SetIsDone(true);
-			else if (isAtDouble && !isAtTriple)
-				player->GetPlayerSupWeaponAtDouble()->SetIsDone(true);
-			else if (isAtDouble && isAtTriple)
-				player->GetPlayerSupWeaponAtTriple()->SetIsDone(true);
-		default:
-			break;
-		}
+		if (player->GetPlayerSupWeaponType() == EntityType::DAGGER)
+			weapon->SetIsDone(true);
 	}
 }
 
@@ -418,21 +411,21 @@ void PlayScene::WeaponCollision()
 					&& player->GetPlayerSupWeapon()->IsCollidingObject(listObjects[i]))
 				{
 					WeaponInteractObj(i, player->GetPlayerSupWeapon());
-					SetSubWeaponDone(i, false, false);
+					SetSubWeaponDone(i, player->GetPlayerSupWeapon());
 				}
 				else 
 					if (player->IsGettingDouble() && player->GetPlayerSupWeaponAtDouble() != NULL
 						&& player->GetPlayerSupWeaponAtDouble()->IsCollidingObject(listObjects[i]))
 					{
 						WeaponInteractObj(i, player->GetPlayerSupWeaponAtDouble());	
-						SetSubWeaponDone(i, true, false);
+						SetSubWeaponDone(i, player->GetPlayerSupWeaponAtDouble());
 					}
 					else
 						if (player->IsGettingTriple() && player->GetPlayerSupWeaponAtTriple() != NULL
 							&& player->GetPlayerSupWeaponAtTriple()->IsCollidingObject(listObjects[i]))
 						{
 							WeaponInteractObj(i, player->GetPlayerSupWeaponAtTriple());	
-							SetSubWeaponDone(i, true, true);
+							SetSubWeaponDone(i, player->GetPlayerSupWeaponAtTriple());
 						}
 		}
 	}
@@ -599,6 +592,12 @@ void PlayScene::PlayerCollideItem()
 				case EntityType::INVIPOTION:
 				{
 					player->StartInvisible();
+					listItems[i]->SetIsDone(true);
+					break;
+				}
+				case EntityType::ITEMPOKEBALL:
+				{
+					player->SetPlayerSupWeaponType(EntityType::POKEBALL);
 					listItems[i]->SetIsDone(true);
 					break;
 				}
@@ -843,7 +842,10 @@ void PlayScene::Update(DWORD dt)
 	gameCamera->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
 #pragma endregion
 
-	if(player->IsAttacking())
+	if(!player->GetPlayerMainWeapon()->GetIsDone() ||
+		(player->GetPlayerSupWeapon() != NULL && !player->GetPlayerSupWeapon()->GetIsDone()) ||
+		(player->GetPlayerSupWeaponAtDouble() != NULL && !player->GetPlayerSupWeaponAtDouble()->GetIsDone()) ||
+		(player->GetPlayerSupWeaponAtTriple() != NULL && !player->GetPlayerSupWeaponAtTriple()->GetIsDone()))
 		WeaponCollision();
 	if(listItems.size() > 0)
 		PlayerCollideItem();
@@ -863,15 +865,17 @@ void PlayScene::Update(DWORD dt)
 
 	if (!player->IsTimeStop())
 		gameTime->Update(dt);
-	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera
+	if (gameTime->GetTime() >= SCENEGAME_GAMETIMEMAX)
+		player->AddHealth(-player->GetHealth());
+
+	gameUI->Update(cx + BLACKBOARD_DISTANCE_FROM_CAM_X, BLACKBOARD_POS_Y, player->GetHealth(), 16);	//move posX follow camera
 
 	gameGrid->ResetGrid(listObjectsToGrid);
 
 	if (player->IsRespawning() && !triggerResetGame)
-	{
 		ResetGame();
-	}
-	else if (!player->IsRespawning()) triggerResetGame = false;
+	else if (!player->IsRespawning()) 
+		triggerResetGame = false;
 
 	if (triggerCrossTimer && crossTimer->IsTimeUp())
 	{
@@ -882,23 +886,15 @@ void PlayScene::Update(DWORD dt)
 #pragma region Objects Updates
 	vector<LPGAMEENTITY> coObjects;
 	for (int i = 0; i < listObjects.size(); i++)
-	{
 		coObjects.push_back(listObjects[i]);
-	}
 	player->Update(dt, &coObjects);
 	for (int i = 0; i < listObjects.size(); i++)
-	{
 		if(!player->IsUpgrading() && !player->IsTimeStop())
 			listObjects[i]->Update(dt, &coObjects);
-	}
 	for (int i = 0; i < listEffects.size(); i++)
-	{
 		listEffects[i]->Update(dt);
-	}
 	for (int i = 0; i < listItems.size(); i++)
-	{
 		listItems[i]->Update(dt, &listObjects);
-	}
 #pragma endregion
 }
 
@@ -913,7 +909,7 @@ void PlayScene::Render()
 		listItems[i]->Render();
 	player->Render();
 
-	int realIdStage = idStage / 500;
+	int realIdStage = idStage / STAGE_1;
 	gameUI->Render(realIdStage, SCENEGAME_GAMETIMEMAX - gameTime->GetTime(), player);
 	
 }
@@ -1016,7 +1012,7 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			simon->GetPlayerMainWeapon()->SetBBARGB(0);
 		break;
 	case DIK_C:
-		if (simon->IsDeadYet() || simon->IsRespawning() || simon->IsAttacking() || simon->IsSitting() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage())
+		if (simon->IsDeadYet() || simon->IsRespawning() || simon->IsAttacking() || simon->IsSitting() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage() || simon->IsOnStairs())
 			return;
 		simon->SetState(PLAYER_STATE_JUMPING);
 		break;
@@ -1058,7 +1054,7 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 		return;
 	}
 
-	if (Game::GetInstance()->IsKeyDown(DIK_UP) && Game::GetInstance()->IsKeyDown(DIK_X) && !simon->IsAttacking())
+	if (Game::GetInstance()->IsKeyDown(DIK_UP) && Game::GetInstance()->IsKeyDown(DIK_X) && !simon->IsAttacking() && !simon->IsOnStairs())
 	{
 		if (simon->GetPlayerSupWeaponType() != EntityType::NONE)	//Neu chua nhat duoc vu khi phu thi khong attack
 		{
@@ -1473,10 +1469,6 @@ void PlayScene::LoadSceneObjects()
 
 void PlayScene::Unload()
 {
-	/*for (int i = 0; i < listObjectsToGrid.size(); i++)
-		delete listObjectsToGrid[i];
-	for (int i = 0; i < listObjectsFromGrid.size(); i++)
-		delete listObjectsFromGrid[i];*/
 	for (int i = 0; i < listObjects.size(); i++)
 		delete listObjects[i];
 	for (int i = 0; i < listEffects.size(); i++)

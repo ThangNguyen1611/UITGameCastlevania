@@ -3,6 +3,7 @@
 4	Resources/Weapons/Boomerang.png	255	0	255
 5	Resources/Weapons/Axe.png	255	0	255
 6	Resources/Weapons/WaterPotion.png	255	0	255
+-10	Resources/Weapons/Pokeball.png	116	116	116
 
 21	Resources/Objects/Ground.png	255	0	255
 23	Resources/Objects/Candle.png	255	0	255
@@ -21,6 +22,7 @@
 55	Resources/Items/Boomerang.png	255	0	255
 56	Resources/Items/Axe.png	255	0	255
 57	Resources/Items/WaterPotion.png	255	0	255
+-9	Resources/Items/Pokeball.png	116	116	116
 
 72	Resources/Effects/BrickExplode.png	255	0	255
 73	Resources/Effects/Score.png	255	0	255
@@ -46,6 +48,22 @@
 71	32	0	64	26	6
 72	64	0	96	26	6
 73	96	0	128	26	6
+
+# Pokeball
+450	0	0	24	29	-10
+451	24	0	48	29	-10
+452	48	0	72	29	-10
+453	72	0	96	29	-10
+454	96	0	120	29	-10
+455	120	0	144	29	-10
+456	144	0	168	29	-10
+457	168	0	192	29	-10
+458	192	0	216	29	-10
+459	216	0	240	29	-10
+460	240	0	264	29	-10
+
+# Item Pokeball
+461	0	0	22	22	-9
 
 # BreakableBrick
 104	0	0	32	32	21
@@ -142,6 +160,13 @@
 56	70	100
 57	71	120	72	120	73	120
 
+# Pokeball
+450	450	100	451	100	452	100	453	100	454	100	455	100	456	100	457	100	458	100	459	100	460	100
+451	460	100
+
+# Item Pokeball
+452	461	100
+
 # BreakableBrick
 74	104	100
 75	105	100
@@ -225,6 +250,12 @@
 
 # WaterPotion
 6	56	57
+
+# Pokeball
+-10	450	451
+
+# Item Pokeball
+-9	452
 
 # BreakableBrick
 21	74	75	76	77

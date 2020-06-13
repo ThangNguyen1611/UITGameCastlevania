@@ -105,16 +105,17 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	else
 	{
-		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) >= SKELETON_SIGHT_CHASE_RANGE)
+		if (abs(target->GetPosX() - posX) >= SKELETON_SIGHT_CHASE_RANGE && !isJumping)
 			vX = SKELETON_WALKING_SPEED_X * direction;
-		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= SKELETON_SIGHT_FEAR_RANGE)
+		if (abs(target->GetPosX() - posX) <= SKELETON_SIGHT_FEAR_RANGE && !isJumping)
 			vX = -SKELETON_WALKING_SPEED_X * direction;
 
 		if (triggerJump)
 			Jump();
 #pragma region Attack Logic
-		if((rand() % 1000) < 50)
-			if (!target->IsUnsighted())				//Khong thay target thi khong danh lung tung
+		if (!target->IsUnsighted())				//Khong thay target thi khong danh lung tung
+		{
+			if ((rand() % 1000) < 50)
 			{
 				Attack();
 				if ((rand() % 100) < 50)
@@ -123,22 +124,23 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					doubleAttackDelayTimer->Start();
 				}
 			}
-		if (triggerDoubleAttack && doubleAttackDelayTimer->IsTimeUp())
-		{
-			DoubleAttack();
-			triggerDoubleAttack = false;
-			doubleAttackDelayTimer->Reset();
-			if ((rand() % 100) < 50)
+			if (triggerDoubleAttack && doubleAttackDelayTimer->IsTimeUp())
 			{
-				triggerTripleAttack = true;
-				tripleAttackDelayTimer->Start();
+				DoubleAttack();
+				triggerDoubleAttack = false;
+				doubleAttackDelayTimer->Reset();
+				if ((rand() % 100) < 50)
+				{
+					triggerTripleAttack = true;
+					tripleAttackDelayTimer->Start();
+				}
 			}
-		}
-		if (triggerTripleAttack && tripleAttackDelayTimer->IsTimeUp())
-		{
-			TripleAttack();
-			triggerTripleAttack = false;
-			tripleAttackDelayTimer->Reset();
+			if (triggerTripleAttack && tripleAttackDelayTimer->IsTimeUp())
+			{
+				TripleAttack();
+				triggerTripleAttack = false;
+				tripleAttackDelayTimer->Reset();
+			}
 		}
 #pragma endregion
 	}
@@ -163,7 +165,6 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		readyTimer->Reset();
 		targetDetected = false;
 		activated = true;
-		Jump();
 	}
 
 #pragma endregion

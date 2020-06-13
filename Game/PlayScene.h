@@ -23,6 +23,7 @@
 #include "ItemAxe.h"
 #include "ItemWaterPotion.h"
 #include "ItemStopWatch.h"
+#include "ItemPokeball.h"
 #include "Drug.h"
 #include "Hit.h"
 #include "Fire.h"
@@ -68,6 +69,9 @@
 #define OBJECT_TYPE_BUSH				13
 
 using namespace std;
+
+#define BLACKBOARD_DISTANCE_FROM_CAM_X		260
+#define BLACKBOARD_POS_Y					35
 
 #define SPAWNING_ZOMBIE_DELAY				3000
 #define SPAWNING_DELAY_BETWEEN_2_ZOMBIE		500	
@@ -153,7 +157,7 @@ public:
 	void SlayEnemies(UINT i, Weapon* weapon, int scoreGive);
 	void WeaponCollision();
 	void PlayerCollideItem();
-	void SetSubWeaponDone(UINT i, bool isAtDouble, bool isAtTriple);
+	void SetSubWeaponDone(UINT i, Weapon* weapon);
 	bool PlayerPassingStage(float DistanceXWant, int directionGo);
 	void PlayerGotGate();
 	void EasterEggEvent();	//EEE

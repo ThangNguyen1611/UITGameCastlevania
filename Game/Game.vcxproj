@@ -167,6 +167,7 @@
     <ClCompile Include="ItemAxe.cpp" />
     <ClCompile Include="ItemBoomerang.cpp" />
     <ClCompile Include="ItemDagger.cpp" />
+    <ClCompile Include="ItemPokeball.cpp" />
     <ClCompile Include="ItemStopWatch.cpp" />
     <ClCompile Include="ItemWaterPotion.cpp" />
     <ClCompile Include="Knight.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="Pokeball.cpp" />
     <ClCompile Include="Raven.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -234,6 +236,7 @@
     <ClInclude Include="ItemAxe.h" />
     <ClInclude Include="ItemBoomerang.h" />
     <ClInclude Include="ItemDagger.h" />
+    <ClInclude Include="ItemPokeball.h" />
     <ClInclude Include="ItemStopWatch.h" />
     <ClInclude Include="ItemWaterPotion.h" />
     <ClInclude Include="KeyboardHandler.h" />
@@ -245,6 +248,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="HealthBar.h" />
     <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="Pokeball.h" />
     <ClInclude Include="Raven.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />

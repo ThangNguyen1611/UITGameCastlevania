@@ -6,6 +6,7 @@
 #include "Axe.h"
 #include "WaterPotion.h"
 #include "StopWatch.h"
+#include "Pokeball.h"
 #include "Timer.h"
 #include <map>
 
@@ -20,7 +21,7 @@
 #define PLAYER_INIT_LIVES						3
 #define PLAYER_ON_STAIRS_SPEED_X				0.07f
 #define PLAYER_ON_STAIRS_SPEED_Y				0.07f
-#define PLAYER_IMMORTAL_ALPHA					150
+#define PLAYER_IMMORTAL_ALPHA					100
 #define PLAYER_UNSIGHT_ALPHA					50
 
 #define PLAYER_BBOX_WIDTH						45		//60

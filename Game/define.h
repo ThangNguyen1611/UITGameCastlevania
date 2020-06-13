@@ -118,6 +118,8 @@
 #define ANIMATION_SET_MAPSTAGE2_2			108
 #define ANIMATION_SET_MAPSTAGE3_1			109
 #define ANIMATION_SET_MAPSTAGE3_2			110
+#define ANIMATION_SET_ITEMPOKEBALL			-9
+#define ANIMATION_SET_POKEBALL				-10
 
 //Nen define thanh nhieu lop type
 //Vd Zombie thuoc EntityType, EnemyType
@@ -203,6 +205,10 @@ enum EntityType
 	MAPSTAGE2_2 = 108,
 	MAPSTAGE3_1 = 109,
 	MAPSTAGE3_2 = 110,
+
+	//Ex
+	ITEMPOKEBALL = -9,
+	POKEBALL = -10
 };
 
 class define

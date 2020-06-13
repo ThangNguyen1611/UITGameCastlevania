@@ -15,7 +15,7 @@
 #define GHOST_STATE_DIE				-1
 #define GHOST_STATE_HURTING			2
 
-#define GHOST_HURT_DELAY			500
+#define GHOST_HURT_DELAY			175
 #define GHOST_CYCLE_TIME_RANDOM		3000
 #define GHOST_INIT_TOTALTIME		2000
 class Ghost : public Entity

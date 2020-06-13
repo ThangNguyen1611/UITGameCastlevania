@@ -346,7 +346,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 void Player::Render()
 {
 	int alpha = ENTITY_ALPHA_RENDER;
-	if (isImmortaling)
+	if (isImmortaling && rand() % 2 == 1)
 		alpha = PLAYER_IMMORTAL_ALPHA;
 	if (unsighted)
 		alpha = PLAYER_UNSIGHT_ALPHA;
@@ -526,13 +526,13 @@ void Player::Attack(EntityType weaponType)
 			weaponType == EntityType::AXE ||
 			weaponType == EntityType::WATERPOTION)
 		{
-			if (mana > 0)
+			if (mana > WEAPON_DEFAULT_MANA_COST - 1)
 			{
 				if (supWeapon->GetIsDone())
 				{
 					if ((isGettingDouble && isAttackingDouble) || (isGettingTriple && isAttackingTriple))	//Dang dung WeaponAtDouble thi khong duoc dung Weapon goc'
 						return;
-					AddMana(-1);
+					AddMana(-WEAPON_DEFAULT_MANA_COST);
 					isAttacking = true;
 					supWeapon->Attack(posX, direction);
 					if (isGettingDouble)
@@ -543,7 +543,7 @@ void Player::Attack(EntityType weaponType)
 				{
 					if (isGettingTriple && isAttackingTriple)
 						return;
-					AddMana(-1);
+					AddMana(-WEAPON_DEFAULT_MANA_COST);
 					isAttackingDouble = true;
 					supWeaponAtDouble->Attack(posX, direction);
 					doubleAttackDelay->Reset();
@@ -553,7 +553,7 @@ void Player::Attack(EntityType weaponType)
 				}
 				else if (supWeaponAtTriple->GetIsDone() && isGettingTriple && tripleAttackDelay->IsTimeUp())
 				{
-					AddMana(-1);
+					AddMana(-WEAPON_DEFAULT_MANA_COST);
 					isAttackingTriple = true;
 					supWeaponAtTriple->Attack(posX, direction);
 					tripleAttackDelay->Reset();
@@ -564,14 +564,27 @@ void Player::Attack(EntityType weaponType)
 		else
 			if (weaponType == EntityType::STOPWATCH)
 			{
-				if (mana > 4)
+				if (mana > STOPWATCH_MANA_COST - 1 && timeStopTimer->IsTimeUp())
 				{
-					AddMana(-5);
+					AddMana(-STOPWATCH_MANA_COST);
 					isTimeStop = true;
 					timeStopTimer->Start();
-					SetPlayerSupWeaponType(EntityType::NONE);
+					//SetPlayerSupWeaponType(EntityType::NONE);
 				}
 			}
+			else
+				if (weaponType == EntityType::POKEBALL)
+				{
+					if (mana > PKB_MANA_COST - 1)
+						if (supWeapon->GetIsDone())
+						{
+							AddMana(-0);
+							isAttacking = true;
+							supWeapon->Attack(posX, direction);
+							//SetPlayerSupWeaponType(EntityType::NONE);
+							return;
+						}
+				}
 
 }
 
@@ -619,6 +632,12 @@ void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
 		supWeapon = new StopWatch();
 		supWeaponAtDouble = new StopWatch();
 		supWeaponAtTriple = new StopWatch();
+		break;
+	case EntityType::POKEBALL:
+		currentSupWeaponType = EntityType::POKEBALL;
+		supWeapon = new Pokeball();
+		supWeaponAtDouble = new Pokeball();
+		supWeaponAtTriple = new Pokeball();
 		break;
 	default:
 		currentSupWeaponType = EntityType::NONE;

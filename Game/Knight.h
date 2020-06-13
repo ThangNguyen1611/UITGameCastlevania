@@ -15,7 +15,7 @@
 #define KNIGHT_STATE_DIE				-1
 #define KNIGHT_STATE_HURTING			1
 
-#define KNIGHT_HURT_DELAY				500
+#define KNIGHT_HURT_DELAY				175
 
 class Knight : public Entity
 {

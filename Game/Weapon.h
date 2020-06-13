@@ -2,6 +2,7 @@
 #include "Entity.h"
 
 #define WEAPON_ARTICULATED_POS_Y		8
+#define WEAPON_DEFAULT_MANA_COST		1
 
 class Weapon : public Entity
 {

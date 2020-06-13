@@ -1,4 +1,6 @@
 #include "Hunchman.h"
+#include "Player.h"
+#include "Brick.h"
 
 Hunchman::Hunchman(float posX, float posY, LPGAMEENTITY target)
 {
@@ -19,6 +21,7 @@ Hunchman::Hunchman(float posX, float posY, LPGAMEENTITY target)
 	targetSwitchDirection = false;
 	isJumping = false;
 	triggerJump = false;
+	triggerWaitingJump = false;
 }
 
 Hunchman::~Hunchman() {}
@@ -74,18 +77,22 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				target->GetPosX() > posX && direction == -1)		//Wrong Chase-Direction
 				TurnAround();
 		}
-		else
-			if (ny == -1)
+		if (ny == -1)
+		{
+			vY = 0;
+			isJumping = false;
+			if (!triggerWaitingJump)
 			{
-				vY = 0.1f;
-				dy = vY * dt;
-
-				if (isJumping)
-				{
-					isJumping = false;
-					jumpingTimer->AddToTimer(HUNCHMAN_JUMP_DURATION);
-				}
+				waitingJumpTimer->Start();
+				triggerWaitingJump = true;
 			}
+		}
+		if (!triggerJump && waitingJumpTimer->IsTimeUp())
+		{
+			triggerJump = true;
+			waitingJumpTimer->Reset();
+			triggerWaitingJump = false;
+		}
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
@@ -98,27 +105,18 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	else
 	{
-		vX = HUNCHMAN_WALKING_SPEED_X * direction;
-#pragma region ShortJump Logic
-		if (!isJumping && !triggerJump)
+		if(!isJumping)
+			vX = 0;
+#pragma region Jump Logic
+		if (triggerJump)
 		{
-			waitingJumpTimer->Start();
-			triggerJump = true;
-		}
-		if (triggerJump && waitingJumpTimer->IsTimeUp())
-		{
-			jumpingTimer->Start();
-			waitingJumpTimer->Reset();
-			triggerJump = false;
-		}
-		if (!jumpingTimer->IsTimeUp())
-		{
-			ShortJump();
-		}
-		else
-		{
-			jumpingTimer->Reset();
-			isJumping = false;
+			if (abs(target->GetPosX() - posX) <= HUNCHMAN_CLOSE_TARGET_RANGE && 
+				posY >= HUNCHMAN_MAX_HEIGHT_HIGHJUMP &&
+				rand() % 100 <= 66 &&
+				!IsObstacleAbove(coObjects))	//Co the gan nhung khong nhay cao
+				Jump(HUNCHMAN_HIGHJUMP_SPEED_X, HUNCHMAN_HIGHJUMP_SPEED_Y);
+			else 
+				Jump(HUNCHMAN_JUMP_SPEED_X, HUNCHMAN_JUMP_SPEED_Y);
 		}
 #pragma endregion
 
@@ -126,12 +124,13 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= HUNCHMAN_SIGHT_DODGE_RANGE && //Trong tam nhin 3 o gach cua mob
 			target->GetDirection() != this->direction &&	//Doi dien nhau -> Nguy co chet vi bi danh
 			!target->IsUnsighted() &&
-			(target->GetAnimationSet()->at(4)->GetCurrentFrame() == 0 ||	//Frame dau cua attack
-			target->GetAnimationSet()->at(7)->GetCurrentFrame() == 0 || 
-			target->GetAnimationSet()->at(9)->GetCurrentFrame() == 0 || 
-			target->GetAnimationSet()->at(10)->GetCurrentFrame() == 0))
+			(target->GetAnimationSet()->at(PLAYER_STATE_ATTACKING)->GetCurrentFrame() == 0 ||	//Frame dau cua attack
+			target->GetAnimationSet()->at(PLAYER_STATE_SITTING_ATTACK)->GetCurrentFrame() == 0 ||
+			target->GetAnimationSet()->at(PLAYER_STATE_SUPWEAPON_ATTACK)->GetCurrentFrame() == 0 ||
+			target->GetAnimationSet()->at(PLAYER_STATE_SUPWEAPON_SIT_ATTACK)->GetCurrentFrame() == 0))
 		{
-			LongJump();
+			if(rand() % 100 <= 50 && posY >= HUNCHMAN_MAX_HEIGHT_HIGHJUMP)	//Co 50% nhay ne
+				Jump(HUNCHMAN_DODGEJUMP_SPEED_X, HUNCHMAN_DODGEJUMP_SPEED_Y);
 		}
 	}
 
@@ -155,7 +154,7 @@ void Hunchman::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		readyTimer->Reset();
 		targetDetected = false;
 		activated = true;
-		LongJump();
+		Jump(HUNCHMAN_HIGHJUMP_SPEED_X, HUNCHMAN_HIGHJUMP_SPEED_Y);
 	}
 #pragma endregion
 #pragma region Switch Direction React
@@ -197,20 +196,25 @@ void Hunchman::TurnAround()
 	vX *= -1;
 }
 
-void Hunchman::ShortJump()
+void Hunchman::Jump(float vX, float vY)
 {
-	if (isJumping)	//Tranh dang ShortJump boi` them LongJump
-		return;
 	isJumping = true;
-	vY = -HUNCHMAN_JUMP_SPEED_Y;
+	this->vX = vX * direction;
+	this->vY = -vY;
+	triggerJump = false;
 }
 
-void Hunchman::LongJump()
+bool Hunchman::IsObstacleAbove(vector<LPGAMEENTITY> *coObjects)
 {
-	if (isJumping)	//Tranh dang ShortJump boi` them LongJump
-		return;
-	isJumping = true;
-	vY = -HUNCHMAN_HIGHJUMP_SPEED_Y;
+	float tempPosY = posY;
+	for (tempPosY; tempPosY > posY - HUNCHMAN_JUMP_DISTANCE; tempPosY--)
+		for (UINT i = 0; i < coObjects->size(); i++)
+			if (coObjects->at(i)->GetPosY() <= tempPosY && 
+				coObjects->at(i)->GetPosX() >= posX - BRICK_BBOX_WIDTH * 2 && 
+				coObjects->at(i)->GetPosX() <= posX + BRICK_BBOX_WIDTH * 2)
+				if (coObjects->at(i)->GetType() == EntityType::BRICK || coObjects->at(i)->GetType() == EntityType::BREAKABLEBRICK)
+					return true;
+	return false;
 }
 
 void Hunchman::Render()

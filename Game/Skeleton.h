@@ -3,12 +3,12 @@
 #include "Timer.h"
 #include "Bone.h"
 
-#define SKELETON_WALKING_SPEED_X		0.14f
-#define SKELETON_JUMP_SPEED_Y			0.6f
+#define SKELETON_WALKING_SPEED_X		0.17f		//The result of MANY trials )):
+#define SKELETON_JUMP_SPEED_Y			0.61f
 #define SKELETON_GRAVITY				0.002f
 #define SKELETON_MAXHEALTH				2
 #define SKELETON_SIGHT_RANGE			235
-#define SKELETON_SIGHT_CHASE_RANGE		180
+#define SKELETON_SIGHT_CHASE_RANGE		130
 #define SKELETON_SIGHT_FEAR_RANGE		70
 #define SKELETON_SCORE_GIVEN			3000
 

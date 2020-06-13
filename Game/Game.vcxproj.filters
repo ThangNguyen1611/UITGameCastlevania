@@ -249,6 +249,12 @@
     <ClCompile Include="Textures.cpp">
       <Filter>Header Files\Framework\Render</Filter>
     </ClCompile>
+    <ClCompile Include="ItemPokeball.cpp">
+      <Filter>Header Files\Item\WeaponItem</Filter>
+    </ClCompile>
+    <ClCompile Include="Pokeball.cpp">
+      <Filter>Header Files\Weapon</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DarkenBat.h">
@@ -448,6 +454,12 @@
     </ClInclude>
     <ClInclude Include="Textures.h">
       <Filter>Header Files\Framework\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPokeball.h">
+      <Filter>Header Files\Item\WeaponItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Pokeball.h">
+      <Filter>Header Files\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
