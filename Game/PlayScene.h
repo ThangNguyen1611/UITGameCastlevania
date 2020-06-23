@@ -132,6 +132,10 @@ protected:
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
+	void _ParseSection_CLEARTEXTURES(string line);
+	void _ParseSection_CLEARSPRITES(string line);
+	void _ParseSection_CLEARANIMATIONS(string line);
+	void _ParseSection_CLEARANIMATION_SETS(string line);
 
 	//Get stage objects' link and tilemap resources
 	void _ParseSection_SCENEFILEPATH(string line);

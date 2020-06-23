@@ -9,6 +9,7 @@ Entity::Entity()
 	health = 1;
 	isDead = false;
 	unsighted = false;
+	isStaticObj = false;
 
 	bbARGB = 0;
 }

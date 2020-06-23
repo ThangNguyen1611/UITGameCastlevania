@@ -54,3 +54,10 @@ void CSprites::Clear()
 
 	sprites.clear();
 }
+
+void CSprites::ClearAt(int i)
+{
+	LPSPRITE spr = sprites[i];
+	delete spr;
+	sprites.erase(i);
+}

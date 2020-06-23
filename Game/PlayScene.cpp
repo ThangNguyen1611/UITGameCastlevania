@@ -99,7 +99,7 @@ Item* PlayScene::RandomItem(float posX, float posY)
 {
 	int bagrandom = rand() % 100; 
 	int random = rand() % 1350;
-	/*if (random <= 100)
+	if (random <= 100)
 		return new SmallHeart(posX, posY);
 	else if (100 < random && random <= 200)
 		return new BigHeart(posX, posY);
@@ -128,9 +128,9 @@ Item* PlayScene::RandomItem(float posX, float posY)
 		else
 			return new ExtraShot(posX, posY, EXTRASHOT_LEVEL3);
 	}
-	else if (1200 < random && random <= 1250)*/
+	else if (1200 < random && random <= 1250)
 		return new ItemPokeball(posX, posY);
-	/*else
+	else
 	{
 		if (bagrandom <= 33)
 			return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
@@ -138,7 +138,7 @@ Item* PlayScene::RandomItem(float posX, float posY)
 			return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
 		else
 			return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
-	}*/
+	}
 }
 
 Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int idCreater)
@@ -889,8 +889,9 @@ void PlayScene::Update(DWORD dt)
 		coObjects.push_back(listObjects[i]);
 	player->Update(dt, &coObjects);
 	for (int i = 0; i < listObjects.size(); i++)
-		if(!player->IsUpgrading() && !player->IsTimeStop())
-			listObjects[i]->Update(dt, &coObjects);
+		if(!listObjects[i]->isStaticObj)	//Ignore Static Obstacle
+			if (!player->IsUpgrading() && !player->IsTimeStop())
+				listObjects[i]->Update(dt, &coObjects);
 	for (int i = 0; i < listEffects.size(); i++)
 		listEffects[i]->Update(dt);
 	for (int i = 0; i < listItems.size(); i++)
@@ -1148,6 +1149,14 @@ void PlayScene::_ParseSection_TEXTURES(string line)
 	CTextures::GetInstance()->Add(texID, path.c_str(), D3DCOLOR_XRGB(R, G, B));
 }
 
+void PlayScene::_ParseSection_CLEARTEXTURES(string line)
+{
+	vector<string> tokens = split(line);
+	int idClear = atoi(tokens[0].c_str());
+	CTextures::GetInstance()->ClearAt(idClear);
+	DebugOut(L"[INFO] Cleared Texture %d!\n", idClear);
+}
+
 void PlayScene::_ParseSection_SPRITES(string line)
 {
 	vector<string> tokens = split(line);
@@ -1171,6 +1180,14 @@ void PlayScene::_ParseSection_SPRITES(string line)
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
 }
 
+void PlayScene::_ParseSection_CLEARSPRITES(string line)
+{
+	vector<string> tokens = split(line);
+	int idClear = atoi(tokens[0].c_str());
+	CSprites::GetInstance()->ClearAt(idClear);
+	DebugOut(L"[INFO] Cleared Sprite %d!\n", idClear);
+}
+
 void PlayScene::_ParseSection_ANIMATIONS(string line)
 {
 	vector<string> tokens = split(line);
@@ -1188,6 +1205,14 @@ void PlayScene::_ParseSection_ANIMATIONS(string line)
 	}
 
 	CAnimations::GetInstance()->Add(ani_id, ani);
+}
+
+void PlayScene::_ParseSection_CLEARANIMATIONS(string line)
+{
+	vector<string> tokens = split(line);
+	int idClear = atoi(tokens[0].c_str());
+	CAnimations::GetInstance()->ClearAt(idClear);
+	DebugOut(L"[INFO] Cleared Animation %d!\n", idClear);
 }
 
 void PlayScene::_ParseSection_ANIMATION_SETS(string line)
@@ -1211,6 +1236,14 @@ void PlayScene::_ParseSection_ANIMATION_SETS(string line)
 	}
 
 	CAnimationSets::GetInstance()->Add(ani_set_id, s);
+}
+
+void PlayScene::_ParseSection_CLEARANIMATION_SETS(string line)
+{
+	vector<string> tokens = split(line);
+	int idClear = atoi(tokens[0].c_str());
+	CAnimationSets::GetInstance()->ClearAt(idClear);
+	DebugOut(L"[INFO] Cleared Animation Set %d!\n", idClear);
 }
 
 void PlayScene::_ParseSection_SCENEFILEPATH(string line)
@@ -1428,6 +1461,18 @@ void PlayScene::LoadSceneObjects()
 
 		if (line[0] == '#') continue;	// skip comment lines	
 
+		if (line == "[CLEARTEXTURES]") {
+			section = SCENE_SECTION_CLEARTEXTURES; continue;
+		}
+		if (line == "[CLEARSPRITES]") {
+			section = SCENE_SECTION_CLEARSPRITES; continue;
+		}
+		if (line == "[CLEARANIMATIONS]") {
+			section = SCENE_SECTION_CLEARANIMATIONS; continue;
+		}
+		if (line == "[CLEARANIMATIONSETS]") {
+			section = SCENE_SECTION_CLEARANIMATION_SETS; continue;
+		}
 		if (line == "[TEXTURES]") {
 			section = SCENE_SECTION_TEXTURES; continue;
 		}
@@ -1457,6 +1502,10 @@ void PlayScene::LoadSceneObjects()
 		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		case SCENE_SECTION_CLEARTEXTURES: _ParseSection_CLEARTEXTURES(line); break;
+		case SCENE_SECTION_CLEARSPRITES: _ParseSection_CLEARSPRITES(line); break;
+		case SCENE_SECTION_CLEARANIMATIONS: _ParseSection_CLEARANIMATIONS(line); break;
+		case SCENE_SECTION_CLEARANIMATION_SETS: _ParseSection_CLEARANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		case SCENE_SECTION_TILEMAP:	_ParseSection_TILEMAP(line); break;
 		}

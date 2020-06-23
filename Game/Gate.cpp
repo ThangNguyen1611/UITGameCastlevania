@@ -11,6 +11,7 @@ Gate::Gate(float posX, float posY, int switchId, float simonPosX, float simonPos
 	newSimonPosY = simonPosY;
 	newSimonState = simonState;
 	isNeedResetCam = rsCam;
+	isStaticObj = true;
 }
 
 Gate::~Gate(){}

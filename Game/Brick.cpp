@@ -8,6 +8,7 @@ Brick::Brick(float posX, float posY, int brickType)
 	this->posX = posX;
 	this->posY = posY;
 	this->brickType = brickType - 1;	//type = 1 su dung vi tri 0
+	isStaticObj = true;
 }
 
 Brick::~Brick() {}

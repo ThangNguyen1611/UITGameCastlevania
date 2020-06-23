@@ -36,19 +36,18 @@ class Entity
 protected:
 	float posX, posY;
 	float vX, vY;
-	float dx, dy;	// v * dt
+	float dx, dy;	// d = v * dt
 	DWORD dt;
 	int direction;	//-1 left && 1 right
 	EntityType tag;
 	int health;
 	bool isDead;
 	LPANIMATION_SET animationSet;
-	bool unsighted;	//Dat trong entity vi cac thuc the cung co the bi xet den viec co the bi nhin thay hay khong 
-	// (vd nhu bush-mechanism trong lol)
-
+	bool unsighted;	//bool return if you cant see this entity
 	int state;
 	int bbARGB;
 public:
+	bool isStaticObj; //bool return if this is a static object
 	Entity();
 	~Entity();
 

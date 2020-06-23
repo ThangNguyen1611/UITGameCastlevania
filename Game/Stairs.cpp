@@ -8,6 +8,7 @@ Stairs::Stairs(float posX, float posY, int stairDirection)
 	this->posX = posX;
 	this->posY = posY;
 	this->direction = stairDirection;
+	isStaticObj = true;
 }
 
 Stairs::~Stairs(){}

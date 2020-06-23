@@ -71,4 +71,11 @@ void CTextures::Clear()
 	textures.clear();
 }
 
+void CTextures::ClearAt(unsigned int i)
+{
+	LPDIRECT3DTEXTURE9 tex = textures[i];
+	if (tex != NULL) tex->Release();
+	textures.erase(i);
+}
+
 
