@@ -191,6 +191,7 @@
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="TheLastEverBat.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Torch.cpp" />
     <ClCompile Include="UI.cpp" />
@@ -260,6 +261,7 @@
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="TheLastEverBat.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Torch.h" />

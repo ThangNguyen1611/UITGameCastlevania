@@ -58,6 +58,8 @@ void PlayScene::ChooseMap(int whatMap)
 		//Bat Logic
 		isTimeToSpawnBat = true;
 		triggerSpawnBat = true;
+		//Boss Logic
+		triggerFightBoss = false;
 	default:
 		break;
 	}
@@ -328,6 +330,9 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 	case EntityType::RAVEN:
 		SlayEnemies(i, weapon, RAVEN_SCORE_GIVEN);
 		break;
+	case EntityType::TLEBAT:
+		SlayEnemies(i, weapon, BAT_SCORE_GIVEN);
+		break;
 	case EntityType::TORCH:
 	{
 		Torch* torch = dynamic_cast<Torch*>(listObjects[i]);	//Extension cua DropItem
@@ -389,7 +394,8 @@ void PlayScene::SetSubWeaponDone(UINT i, Weapon* weapon)
 		listObjects[i]->GetType() == EntityType::HUNCHMAN ||
 		listObjects[i]->GetType() == EntityType::GHOST ||
 		listObjects[i]->GetType() == EntityType::SKELETON ||
-		listObjects[i]->GetType() == EntityType::RAVEN)
+		listObjects[i]->GetType() == EntityType::RAVEN ||
+		listObjects[i]->GetType() == EntityType::TLEBAT)
 	{
 		if (player->GetPlayerSupWeaponType() == EntityType::DAGGER)
 			weapon->SetIsDone(true);
@@ -822,13 +828,35 @@ void PlayScene::SpawnBat()
 	}
 }
 
+void PlayScene::BossFighting()
+{
+	if (!triggerFightBoss && player->GetPosX() > ACTIVATE_BOSS_AREA_X && player->GetPosX() < ACTIVATE_BOSS_AREA_X + 10)
+	{
+		triggerFightBoss = true;
+		for (UINT i = 0; i < listObjects.size(); i++)
+		{
+			if (listObjects[i]->GetType() == EntityType::TLEBAT)
+			{
+				TheLastEverBat* bat = dynamic_cast<TheLastEverBat*>(listObjects[i]);
+				bat->waitingTimer->Start();
+				bat->waitingTrigger = true;
+			}
+		}
+	}
+	if (triggerFightBoss)
+	{
+		if (player->GetPosX() < BLOCKING_POSX_OUT_FIGHT_BOSS)
+			player->SetPosX(BLOCKING_POSX_OUT_FIGHT_BOSS);
+	}
+}
+
 void PlayScene::Update(DWORD dt)
 {
 	GetObjectFromGrid();
 #pragma region Camera
 	float cx = player->GetPosX();
 	
-	if (player->GetPosX() >= camMaxWidth)
+	if (player->GetPosX() >= camMaxWidth || triggerFightBoss)
 	{
 		cx -= SCREEN_WIDTH / 2 - (camMaxWidth - player->GetPosX());
 	}
@@ -856,11 +884,18 @@ void PlayScene::Update(DWORD dt)
 		PlayerInSightGhost();
 		PlayerCollideBone();
 	}
-	if (idStage == STAGE_4 && player->GetPosX() < 800)
+	if (idStage == STAGE_4)
 	{
-		SpawnBat();
-		CountingZombie();
-		SpawnZombie();
+		if (player->GetPosX() < 800)
+		{
+			SpawnBat();
+			CountingZombie();
+			SpawnZombie();
+		}
+		else
+		{
+			BossFighting();
+		}
 	}
 
 	if (!player->IsTimeStop())
@@ -868,7 +903,20 @@ void PlayScene::Update(DWORD dt)
 	if (gameTime->GetTime() >= SCENEGAME_GAMETIMEMAX)
 		player->AddHealth(-player->GetHealth());
 
-	gameUI->Update(cx + BLACKBOARD_DISTANCE_FROM_CAM_X, BLACKBOARD_POS_Y, player->GetHealth(), 16);	//move posX follow camera
+	if(!triggerFightBoss)
+		gameUI->Update(cx + BLACKBOARD_DISTANCE_FROM_CAM_X, BLACKBOARD_POS_Y, player->GetHealth(), 16);	//move posX follow camera
+	else
+	{
+		int bossHp = 0;	//Khoi tao = 0 de khi giet khong dynamic cast thi hp van la 0
+		for (UINT i = 0; i < listObjects.size(); i++)
+			if (listObjects[i]->GetType() == EntityType::TLEBAT)
+			{
+				TheLastEverBat* bat = dynamic_cast<TheLastEverBat*>(listObjects[i]);
+				bossHp = bat->GetHealth();
+				if (bossHp < 0) bossHp = 0;
+			}
+		gameUI->Update(cx + BLACKBOARD_DISTANCE_FROM_CAM_X, BLACKBOARD_POS_Y, player->GetHealth(), bossHp);
+	}
 
 	gameGrid->ResetGrid(listObjectsToGrid);
 
@@ -964,9 +1012,14 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 						simon->SetPosition(304, 200);
 					}
 					else
-					{
-						simon->SetPosition(304, 200);
-					}
+						if (playScene->idStage == STAGE_4)
+						{
+							simon->SetPosition(1000, 200);
+						}
+						else
+						{
+							simon->SetPosition(304, 200);
+						}
 
 		simon->SetVx(0);
 		simon->SetVy(0);
@@ -1055,7 +1108,7 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 		return;
 	}
 
-	if (Game::GetInstance()->IsKeyDown(DIK_UP) && Game::GetInstance()->IsKeyDown(DIK_X) && !simon->IsAttacking() && !simon->IsOnStairs())
+	if (Game::GetInstance()->IsKeyDown(DIK_UP) && Game::GetInstance()->IsKeyDown(DIK_X) && !simon->IsAttacking())
 	{
 		if (simon->GetPlayerSupWeaponType() != EntityType::NONE)	//Neu chua nhat duoc vu khi phu thi khong attack
 		{
@@ -1383,6 +1436,12 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	{
 		//player tao truoc nen kh sao
 		listObjectsToGrid.push_back(new Bush(x, y, player));
+		break;
+	}
+	case OBJECT_TYPE_TLEBAT:
+	{
+		//player tao truoc nen kh sao
+		listObjectsToGrid.push_back(new TheLastEverBat(x, y, player));
 		break;
 	}
 	default:

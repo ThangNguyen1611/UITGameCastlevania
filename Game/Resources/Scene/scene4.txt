@@ -33,6 +33,7 @@
 
 80	Resources/Enemies/VampireBat.png	255	0	255
 81	Resources/Enemies/Zombie.png	255	0	255
+88	Resources/Enemies/TheLastEverBat.png	255	0	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -47,6 +48,11 @@
 184	0	0	32	64	81
 185	32	0	64	64	81
 
+# TLE Bat
+203	0	0	96	46	88
+204	96	0	192	46	88
+205	192	0	288	46	88
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 
@@ -56,6 +62,10 @@
 
 # Zombie
 152	184	120	185	120
+
+# TLE Bat
+161	203	100
+162	204	120	205	120
 
 #
 # id	ani1	ani2	ani3
@@ -68,10 +78,16 @@
 # Zombie
 81	152
 
+# TLE Bat
+88	161	162
+
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 1 = Brick, 2 = Torch, 3 = Gate, 4 = Stairs
-# 7 = BB
+# type: 1 = Brick, 4 = Stairs
+# 7 = BB, 14 = TLEBAT
+
+# TLEBAT
+14	1250	150
 
 #Stairs
 4	240	249	-1	0
@@ -174,6 +190,10 @@
 1	1552	281	2
 1	1552	249	2
 1	1552	217	2
+1	1552	185	2
+1	1552	153	2
+1	1552	121	2
+1	1552	89	2
 
 #idStage -- mapFilePath -- RowMap -- ColumnMap -- tilesetFilePath -- RowTileset -- ColumnTileset
 [TILEMAP]

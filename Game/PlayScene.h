@@ -45,6 +45,7 @@
 #include "Hunchman.h"
 #include "Raven.h"
 #include "Skeleton.h"
+#include "TheLastEverBat.h"
 #include "BreakableBrick.h"
 #include "Candle.h"
 #include "MovingPlatform.h"
@@ -67,6 +68,7 @@
 #define OBJECT_TYPE_RAVEN				11
 #define OBJECT_TYPE_SKELETON			12
 #define OBJECT_TYPE_BUSH				13
+#define OBJECT_TYPE_TLEBAT				14
 
 using namespace std;
 
@@ -78,7 +80,9 @@ using namespace std;
 #define SPAWNING_BAT_DELAY					3000
 #define CROSS_RENDER_DURATION				2000
 #define GHOST_ACTIVATE_AREA_X_STAGE_3_1		1150
-#define GHOST_ACTIVATE_AREA_X_STAGE_3_2		390		
+#define GHOST_ACTIVATE_AREA_X_STAGE_3_2		390	
+#define ACTIVATE_BOSS_AREA_X				1292
+#define BLOCKING_POSX_OUT_FIGHT_BOSS		1040
 
 #define HIT_EFFECT_CUSTOMIZED_POS			8
 #define HIDDEN_CROWN_POS_X_STAGE_2_1		240
@@ -120,6 +124,7 @@ protected:
 	bool triggerSpawnBat;
 	Timer* spawningBatTimer = new Timer(SPAWNING_BAT_DELAY);
 	bool triggerSpawnGhost;
+	bool triggerFightBoss;
 	bool triggerResetGame;
 	bool triggerCrossTimer;
 
@@ -171,6 +176,7 @@ public:
 	void CountingZombie();
 	void SpawnZombie();
 	void SpawnBat();
+	void BossFighting();
 
 	std::vector<LPGAMEENTITY> GetListStairs() { return listStairs; }
 	std::vector<LPGAMEENTITY> GetListStairsEx() { return listStairsEx; }

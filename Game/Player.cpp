@@ -265,7 +265,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					e->obj->GetType() == EntityType::HUNCHMAN ||
 					e->obj->GetType() == EntityType::GHOST ||
 					e->obj->GetType() == EntityType::RAVEN ||
-					e->obj->GetType() == EntityType::SKELETON)
+					e->obj->GetType() == EntityType::SKELETON ||
+					e->obj->GetType() == EntityType::TLEBAT)
 				{
 					if (e->nx != 0 || e->ny != 0)
 					{
@@ -437,7 +438,6 @@ void Player::SetState(int state)
 		animationSet->at(state)->StartAnimation();
 		Attack(currentSupWeaponType);
 		isWalking = false;
-		isOnStairs = false;
 		break;
 	case PLAYER_STATE_HURTING:
 		if (isHurting == true)
@@ -474,7 +474,6 @@ void Player::SetState(int state)
 		vX = 0;		
 		isSitting = true;
 		isWalking = false;
-		isOnStairs = false;
 		break;
 	case PLAYER_STATE_UPGRADING:
 		if (isAttacking) isAttacking = false;
@@ -808,7 +807,7 @@ void Player::AutoWalk()
 
 void Player::PlayerUpStairs()
 {
-	if (!canMoveUp)
+	if (!canMoveUp)	//Cuoi' thang
 	{
 		if (isOnStairs)
 		{
@@ -817,29 +816,25 @@ void Player::PlayerUpStairs()
 			if (stairDirection == 1)
 				stairPosX += 20;
 			else
-				stairPosX -= 30;
+				stairPosX -= 20;
 			this->direction = stairDirection;
 			SetState(PLAYER_STATE_GOING_UP_STAIRS);
 			TriggerAutoWalk(stairPosX, PLAYER_STATE_IDLE, direction);
 		}
-
 		return;
 	}
-	if (!isOnStairs)
+	if (!isOnStairs)	//Duoi chan thang
 	{
 		float stairPosX, stairPosY, tempPlayerPosX;
 		ReceivePos(tempPlayerPosX, stairPosY);
 		stairCollided->ReceivePos(stairPosX, stairPosY);
-
 		if (stairDirection == 1)
 		{
 			stairPosX -= 16.0f;
 		}
 		else stairPosX += 20.0f;
-
 		if (stairPosX < tempPlayerPosX) direction = -1;
 		else if (stairPosX > tempPlayerPosX)  direction = 1;
-
 		vY = 0;
 		SetState(PLAYER_STATE_WALKING);
 		TriggerAutoWalk(stairPosX, PLAYER_STATE_GOING_UP_STAIRS, stairDirection);
@@ -857,7 +852,7 @@ void Player::PlayerUpStairs()
 }
 void Player::PlayerDownStairs()
 {
-	if (!canMoveDown)
+	if (!canMoveDown)	//Cuoi' thang
 	{
 		if (isOnStairs)
 			SetState(PLAYER_STATE_IDLE);
@@ -865,16 +860,14 @@ void Player::PlayerDownStairs()
 			SetState(PLAYER_STATE_SITTING);
 		return;
 	}
-	if (!isOnStairs)
+	if (!isOnStairs)	//Dinh? thang
 	{
-
 		float stairPosX, stairPosY, tempPlayerPosX;
 		ReceivePos(tempPlayerPosX, stairPosY);
 		stairCollided->ReceivePos(stairPosX, stairPosY);
 		if (stairDirection == 1)
 			stairPosX += 8.0f;
 		else stairPosX -= 8.0f;
-
 		if (stairPosX < tempPlayerPosX) direction = -1;
 		else if (stairPosX > tempPlayerPosX) direction = 1;
 		vY = 0;
@@ -894,15 +887,19 @@ void Player::PlayerDownStairs()
 }
 bool Player::PlayerStandOnStairs()
 {
-	if (state == PLAYER_STATE_GOING_UP_STAIRS || state == PLAYER_STATE_GOING_DOWN_STAIRS || state == PLAYER_STATE_UPSTARIS_ATTACK || state == PLAYER_STATE_DOWNSTAIRS_ATTACK)
+	if (state == PLAYER_STATE_GOING_UP_STAIRS || 
+		state == PLAYER_STATE_GOING_DOWN_STAIRS || 
+		state == PLAYER_STATE_UPSTARIS_ATTACK || 
+		state == PLAYER_STATE_DOWNSTAIRS_ATTACK ||
+		state == PLAYER_STATE_SUPWEAPON_ATTACK)
 	{
-		if (state == PLAYER_STATE_DOWNSTAIRS_ATTACK && !isAttacking)
-		{
-			SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
-		}
-		else if (state == PLAYER_STATE_UPSTARIS_ATTACK && !isAttacking)
+		if ((state == PLAYER_STATE_UPSTARIS_ATTACK || state == PLAYER_STATE_SUPWEAPON_ATTACK) && !isAttacking)
 		{
 			SetState(PLAYER_STATE_GOING_UP_STAIRS);
+		}
+		else if ((state == PLAYER_STATE_DOWNSTAIRS_ATTACK || state == PLAYER_STATE_SUPWEAPON_ATTACK) && !isAttacking)
+		{
+			SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
 		}
 		vX = 0;
 		vY = 0;

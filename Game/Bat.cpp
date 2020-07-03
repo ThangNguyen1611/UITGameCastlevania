@@ -23,7 +23,7 @@ Bat::~Bat(){}
 
 void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 3)
+	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 2.85f)
 	{
 		SetState(BAT_STATE_DIE);
 		return;
