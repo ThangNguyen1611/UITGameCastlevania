@@ -12,28 +12,28 @@
 
 # IntroSimon 
 # Idle
-269	0	0	60	64	104
+495	0	0	60	64	104
 # Walking
-270	60	0	120	64	104
-271	120	0	180	64	104
-272	180	0	240	64	104
+496	60	0	120	64	104
+497	120	0	180	64	104
+498	180	0	240	64	104
 # IdleFrontGate
-273	60	64	120	128	104
+499	60	64	120	128	104
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 
 # IntroSimon
 # Idle
-154	269	120
+997	495	120
 # Walking
-155	270	120	271	120	272	120
+998	496	120	497	120	498	120
 # IdleFrontGate
-156	273	120
+999	499	120
 
 # id	ani1	ani2	ani3
 # id tuan theo define
 [ANIMATION_SETS]
 
 # IntroSimon
-104	154	155	156
+104	997	998	999

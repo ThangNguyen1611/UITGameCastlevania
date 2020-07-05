@@ -87,7 +87,7 @@ void Render()
 	
 	if (d3ddv->BeginScene())
 	{
-		if(!playScene->crossTimer->IsTimeUp() && rand() % 2 == 1)
+		if(playScene != NULL && !playScene->crossTimer->IsTimeUp() && rand() % 2 == 1)
 			d3ddv->ColorFill(bb, NULL, BGColorCrossing);
 		else
 			d3ddv->ColorFill(bb, NULL, BGColor);
@@ -157,8 +157,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	game->InitKeyboard();
 
 	//Test nhanh
-	sceneManager->SetScene(new PlayScene());
-	//sceneManager->SetScene(new TitleScene());
+	//sceneManager->SetScene(new PlayScene());
+	sceneManager->SetScene(new TitleScene());
 	GameLoop();
 
 	return 0;

@@ -256,7 +256,7 @@
       <Filter>Header Files\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="TheLastEverBat.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\Object\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -465,7 +465,7 @@
       <Filter>Header Files\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="TheLastEverBat.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Object\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

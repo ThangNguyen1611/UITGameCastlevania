@@ -123,9 +123,9 @@ void IntroScene::Render()
 	introSceneSpr->Draw(-1, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
 	if (isAllowToPlayPhase3)
-		simonAniSet->at(simonState)->Render(-1, introSimonPosX, SCREEN_HEIGHT / 2 + SIMON_INIT_POS_Y_RENDER);
+		simonAniSet->at(simonState)->Render(-1, introSimonPosX, SIMON_INIT_POS_Y_RENDER);
 	else
-		simonAniSet->at(simonState)->Render(1, introSimonPosX, SCREEN_HEIGHT / 2 + SIMON_INIT_POS_Y_RENDER);
+		simonAniSet->at(simonState)->Render(1, introSimonPosX, SIMON_INIT_POS_Y_RENDER);
 }
 
 
@@ -136,10 +136,10 @@ void IntroScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_ESCAPE:
 		DestroyWindow(Game::GetInstance()->GetWindowHandle());
 		break;
-	/*case DIK_I:
-		((IntroScene*)scence)->Unload();
-		SceneManager::GetInstance()->SetScene(new PlayScene());
-		break;*/
+		/*case DIK_I:
+			((IntroScene*)scence)->Unload();
+			SceneManager::GetInstance()->SetScene(new PlayScene());
+			break;*/
 	}
 }
 
