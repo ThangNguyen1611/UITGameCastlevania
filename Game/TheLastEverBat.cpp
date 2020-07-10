@@ -17,10 +17,10 @@ TheLastEverBat::TheLastEverBat(float posX, float posY, LPGAMEENTITY target)
 	activated = false;
 	waitingTrigger = false;
 	//First move go window or not
-	/*if (rand() % 100 <= 50)
-		isPhaseWaitAtWindow = false;
-	else*/
-		isPhaseWaitAtWindow = true;
+	if (rand() % 100 <= 50)
+		process = TLEBAT_GO_TALLTOWER;
+	else
+		process = TLEBAT_GO_STAIR;
 	isDonePhaseWait = false; 
 	isDoneFlyCurve = false;
 	isGetDistanceYTarget = false;
@@ -37,7 +37,7 @@ void TheLastEverBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		return;
 	}
 
-	if (waitingTrigger && waitingTimer->IsTimeUp())
+	if (waitingTrigger && waitingTimer->IsTimeUp() && state != TLEBAT_STATE_FLYING)
 	{
 		activated = true;
 		SetState(TLEBAT_STATE_FLYING);
@@ -50,19 +50,19 @@ void TheLastEverBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if (!isDonePhaseWait)
 		{
-			if(isPhaseWaitAtWindow)
-				pos += RadialMovement(D3DXVECTOR2(TLEBAT_AT_WINDOW_POS_X, TLEBAT_AT_WINDOW_POS_Y), pos, TLEBAT_GO_WINDOW_SPEED);
-			else
-				pos += RadialMovement(D3DXVECTOR2(TLEBAT_NOTAT_WINDOW_POS_X, TLEBAT_NOTAT_WINDOW_POS_Y), pos, TLEBAT_GO_WINDOW_SPEED);
+			if (process == TLEBAT_GO_STAIR)
+				pos += RadialMovement(D3DXVECTOR2(TLEBAT_AT_STAIR_POS_X, TLEBAT_AT_STAIR_POS_Y), pos, TLEBAT_GO_PRESET_LOCATION_SPEED);
+			else if (process == TLEBAT_GO_TALLTOWER)
+				pos += RadialMovement(D3DXVECTOR2(TLEBAT_AT_TALLTOWER_POS_X, TLEBAT_AT_TALLTOWER_POS_Y), pos, TLEBAT_GO_PRESET_LOCATION_SPEED);
 
 			posX = pos.x;
 			posY = pos.y;
 
 			//Stop moving and wait
-			if ((posX == TLEBAT_AT_WINDOW_POS_X &&
-				posY == TLEBAT_AT_WINDOW_POS_Y) ||
-				(posX == TLEBAT_NOTAT_WINDOW_POS_X &&
-				posY == TLEBAT_NOTAT_WINDOW_POS_Y))
+			if ((posX == TLEBAT_AT_STAIR_POS_X &&
+				posY == TLEBAT_AT_STAIR_POS_Y) ||
+				(posX == TLEBAT_AT_TALLTOWER_POS_X &&
+				posY == TLEBAT_AT_TALLTOWER_POS_Y))
 			{
 				isDonePhaseWait = true;
 				waitingTimer->Start();
@@ -71,51 +71,108 @@ void TheLastEverBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		if (isDonePhaseWait && waitingTimer->IsTimeUp())
 		{
 			waitingTimer->Reset();
+			//Fly in 2s
 			if (!isStartFlyCurve)
 			{
 				flyCurveTimer->Start();
 				isStartFlyCurve = true;
 			}
+			//Fly until time up
 			if (isStartFlyCurve && !flyCurveTimer->IsTimeUp())
 			{
-				//Calculate to set Simon is top of parabol
-				if (!isGetDistanceYTarget)
+				if (process == TLEBAT_GO_STAIR)
 				{
-					int r = rand() % (20 + 20 + 1) - 20; //random from -20 to 20 (max - min + 1) + min
-					distanceXTarget = abs((target->GetPosY()) - posY) / 2;
-					isGetDistanceYTarget = true;
-					vX = TLEBAT_CURVE_FLY_SPEED_X * direction;
+					FlyStyle(TLEBAT_AT_STAIR_POS_Y);
 				}
-
-				//Fly curve
-				if (posY - TLEBAT_AT_WINDOW_POS_Y >= distanceXTarget)
-					directionY = -1;
-				else if (TLEBAT_AT_WINDOW_POS_Y - posY >= distanceXTarget)
-					directionY = 1;
-
-				vY += TLEBAT_CURVE_FLY_SPEED_Y * directionY;
-
-				//Stop fly curve
-				if (posX == TLEBAT_MIN_POS_X)
+				if (process == TLEBAT_GO_TALLTOWER)
+				{
+					FlyStyle(TLEBAT_AT_TALLTOWER_POS_Y);
+				}
+				if (process == TLEBAT_GO_WINDOW)
+				{
+					FlyStyle(TLEBAT_AT_WINDOW_POS_Y, 0.035, 0.004);
+				}
+				if (process == TLEBAT_GO_SHORTTOWER)
+				{
+					FlyStyle(TLEBAT_AT_SHORTTOWER_POS_Y);
+				}
+				//Reach borders
+				if (posX == TLEBAT_MIN_POS_X || posX == TLEBAT_MAX_POS_X)
 				{
 					direction *= -1;
 					vX *= -1;
 					vY = -0.02;
 				}
+				if (posY == TLEBAT_MAX_POS_Y)
+				{
+					directionY = -1;
+					vY = -0.02;
+				}
+				if (posY == TLEBAT_MIN_POS_Y)
+				{
+					directionY = 1;
+					vY = 0.02;
+				}
 			}
 			else
 			{
+				//Stop flying
 				flyCurveTimer->Reset();
 				vX = 0;
 				vY = 0;
-				//Di ve ben phai tren simon va lap lai curve
+				//And wait 2s
+				if (!waitingTrigger)
+				{
+					//Random new process
+					int newProc = rand() % 100;
+					if (newProc < 25)
+						process = TLEBAT_GO_STAIR;
+					else if (25 <= newProc && newProc < 50)
+						process = TLEBAT_GO_TALLTOWER;
+					else if (50 <= newProc && newProc < 75)
+						process = TLEBAT_GO_WINDOW;
+					else
+						process = TLEBAT_GO_SHORTTOWER;
+					waitingTrigger = true;
+					waitingTimer->Start();
+				}
 			}
-			/*else
+			if (waitingTrigger && waitingTimer->IsTimeUp() && isStartFlyCurve)
 			{
-				pos += RadialMovement(D3DXVECTOR2(target->GetPosX(), target->GetPosY()), pos, 1.25f);
+				//Fly to target base on process
+				if(process == TLEBAT_GO_STAIR)
+					pos += RadialMovement(D3DXVECTOR2(TLEBAT_AT_STAIR_POS_X, TLEBAT_AT_STAIR_POS_Y), pos, TLEBAT_GO_PRESET_LOCATION_SPEED);
+				else if (process == TLEBAT_GO_TALLTOWER)
+					pos += RadialMovement(D3DXVECTOR2(TLEBAT_AT_TALLTOWER_POS_X, TLEBAT_AT_TALLTOWER_POS_Y), pos, TLEBAT_GO_PRESET_LOCATION_SPEED);
+				else if (process == TLEBAT_GO_WINDOW)
+					pos += RadialMovement(D3DXVECTOR2(TLEBAT_AT_WINDOW_POS_X, TLEBAT_AT_WINDOW_POS_Y), pos, TLEBAT_GO_PRESET_LOCATION_SPEED);
+				else if (process == TLEBAT_GO_SHORTTOWER)
+					pos += RadialMovement(D3DXVECTOR2(TLEBAT_AT_SHORTTOWER_POS_X, TLEBAT_AT_SHORTTOWER_POS_Y), pos, TLEBAT_GO_PRESET_LOCATION_SPEED);
 				posX = pos.x;
 				posY = pos.y;
-			}*/
+
+				//Stop moving and wait
+				if ((process == TLEBAT_GO_STAIR &&
+					posX == TLEBAT_AT_STAIR_POS_X &&
+					posY == TLEBAT_AT_STAIR_POS_Y) ||
+					(process == TLEBAT_GO_TALLTOWER &&
+						posX == TLEBAT_AT_TALLTOWER_POS_X &&
+						posY == TLEBAT_AT_TALLTOWER_POS_Y) ||
+						(process == TLEBAT_GO_WINDOW &&
+							posX == TLEBAT_AT_WINDOW_POS_X &&
+							posY == TLEBAT_AT_WINDOW_POS_Y) ||
+							(process == TLEBAT_GO_SHORTTOWER &&
+								posX == TLEBAT_AT_SHORTTOWER_POS_X &&
+								posY == TLEBAT_AT_SHORTTOWER_POS_Y))
+				{
+					isStartFlyCurve = false;
+					isGetDistanceYTarget = false;
+					waitingTrigger = false;
+					waitingTimer->Reset();
+					//After wait auto fly down
+					directionY = 1;
+				}
+			}
 		}
 	}
 
@@ -133,6 +190,35 @@ void TheLastEverBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	else if (posX < TLEBAT_MIN_POS_X) posX = TLEBAT_MIN_POS_X;
 	if (posY > TLEBAT_MAX_POS_Y) posY = TLEBAT_MAX_POS_Y;
 	else if (posY < TLEBAT_MIN_POS_Y) posY = TLEBAT_MIN_POS_Y;
+}
+
+void TheLastEverBat::FlyStyle(float currentPosY, float extendSpeedX, float extendSpeedY)
+{
+	if (!isGetDistanceYTarget)
+	{
+		int r = rand() % (20 + 40 + 1) - 40; //random from -40 to 20 (max - min + 1) + min
+		distanceYTarget = abs((TLEBAT_POS_Y_AMPLITUDE_CALC) - posY + r) / 2;
+		isGetDistanceYTarget = true;
+		//some unusual case
+		if(process == TLEBAT_GO_STAIR && target->GetPosX() > posX)
+			vX = (0.165) * direction;
+		else if (process == TLEBAT_GO_WINDOW && target->GetPosX() > posX)
+			vX = (0.1) * direction;
+		else if (process == TLEBAT_GO_TALLTOWER && target->GetPosX() < posX)
+			vX = (0.1) * direction;
+		else
+			vX = (TLEBAT_CURVE_FLY_SPEED_X + extendSpeedX) * direction;
+	}
+
+	//Fly curve
+	if (posY - currentPosY >= distanceYTarget)
+		directionY = -1;
+	else if (currentPosY - posY >= distanceYTarget)
+		directionY = 1;
+	if (process == TLEBAT_GO_TALLTOWER && target->GetPosX() < posX)
+		vY += (0.01) * directionY;
+	else
+		vY += (TLEBAT_CURVE_FLY_SPEED_Y + extendSpeedY) * directionY;
 }
 
 void TheLastEverBat::Render()

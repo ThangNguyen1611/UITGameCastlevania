@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Stairs.h"
 
 Player::Player(float posX, float posY) 
 {
@@ -751,27 +752,26 @@ bool Player::SimonCollideWithStair(vector<LPGAMEENTITY>* listStairs)
 
 			stairCollided = listStairs->at(i);
 
-			if (simon_b < stair_b) canMoveDown = true;
-			if (posY >= stair_t - 32) canMoveUp = true;
-
-			float upstair_x = -99999999999, upstair_y = -99999999999; 
+			//Simon tren 1 nac thang nao do
+			if (stair_b > simon_b) canMoveDown = true;
+			//Duoi Simon co thang
+			if (posY >= stair_t - STAIRS_BBOX_WIDTH) canMoveUp = true;
 
 			for (UINT j = 0; j < listStairs->size(); j++)
 			{
 				if (i == j)
 					continue;
 
-				listStairs->at(j)->ReceivePos(upstair_x, upstair_y);
+				float nextStairX, nextStairY;
+				listStairs->at(j)->ReceivePos(nextStairX, nextStairY);
 
-				float dx = abs(upstair_x - stair_l);
-				float dy = upstair_y - stair_t;
+				float nextStairDistanceX = abs(nextStairX - stair_l);
+				float nextStairDistanceY = nextStairY - stair_t;
 
-				if (dx == 32 && dy == -32) {
+				if (nextStairDistanceX == STAIRS_BBOX_WIDTH && nextStairDistanceY == -STAIRS_BBOX_WIDTH)
 					canMoveUp = true;
-				}
-				if (dx == 32 && dy == 32) {
+				if (nextStairDistanceX == STAIRS_BBOX_WIDTH && nextStairDistanceY == STAIRS_BBOX_WIDTH)
 					canMoveDown = true;
-				}
 			}
 			return true; 
 		}
@@ -839,7 +839,6 @@ void Player::PlayerUpStairs()
 		SetState(PLAYER_STATE_WALKING);
 		TriggerAutoWalk(stairPosX, PLAYER_STATE_GOING_UP_STAIRS, stairDirection);
 		isOnStairs = true;
-
 		return;
 	}
 	else
@@ -847,7 +846,6 @@ void Player::PlayerUpStairs()
 		direction = stairDirection;
 		SetState(PLAYER_STATE_GOING_UP_STAIRS);
 	}
-
 	return;
 }
 void Player::PlayerDownStairs()
@@ -874,7 +872,6 @@ void Player::PlayerDownStairs()
 		SetState(PLAYER_STATE_WALKING);
 		TriggerAutoWalk(stairPosX, PLAYER_STATE_GOING_DOWN_STAIRS, -stairDirection);
 		isOnStairs = true;
-
 		return;
 	}
 	else
@@ -882,7 +879,6 @@ void Player::PlayerDownStairs()
 		direction = -stairDirection;
 		SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
 	}
-
 	return;
 }
 bool Player::PlayerStandOnStairs()
@@ -907,7 +903,6 @@ bool Player::PlayerStandOnStairs()
 		animationSet->at(PLAYER_STATE_GOING_UP_STAIRS)->ResetCurrentFrame();
 		return true;
 	}
-
 	return false;
 }
 

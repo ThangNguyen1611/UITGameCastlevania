@@ -12,19 +12,23 @@ GameTime::GameTime()
 {
 	currentTotalTime = 0;
 	gameTime = 0;
+	isStop = false;
 }
 
 GameTime::~GameTime() {}
 
 void GameTime::Update(DWORD dt)
 {
-	//Cu 1000ms thi +gametime len 1 lan
-	if (currentTotalTime + dt > ONE_SECOND_UNIT)
+	if (!isStop)
 	{
-		//Lay phan thua` cua dt ra
-		currentTotalTime = (currentTotalTime + dt) % ONE_SECOND_UNIT;
-		gameTime++;
+		//Cu 1000ms thi +gametime len 1 lan
+		if (currentTotalTime + dt > ONE_SECOND_UNIT)
+		{
+			//Lay phan thua` cua dt ra
+			currentTotalTime = (currentTotalTime + dt) % ONE_SECOND_UNIT;
+			gameTime++;
+		}
+		else
+			currentTotalTime += dt;
 	}
-	else
-		currentTotalTime += dt;
 }

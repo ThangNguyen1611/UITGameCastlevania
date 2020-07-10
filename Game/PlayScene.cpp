@@ -167,29 +167,21 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 			}
 			else
 				if (idCreater == 3)
-				{
 					return new ItemDagger(posX, posY);
-				}
-				else
-				{
-					RandomItem(posX, posY);
-				}
+		RandomItem(posX, posY);
 	}
 	else
 		if (createrType == EntityType::CANDLE)
 		{
 			if (idCreater == 1)
-			{
 				return new SmallHeart(posX, posY);
-			}
-			else
-			{
-				RandomItem(posX, posY);
-			}
+			RandomItem(posX, posY);
 		}
 		else
 			if (createrType == EntityType::BREAKABLEBRICK)
 			{
+				if (idStage == STAGE_4)
+					return new ExtraShot(posX, posY, EXTRASHOT_LEVEL2);
 				return new YummiChickenLeg(posX, posY);
 			}
 			else
@@ -203,6 +195,10 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 					createrType == EntityType::ZOMBIE)
 				{
 					RandomItem(posX, posY);
+				}
+				else if (createrType == EntityType::TLEBAT)
+				{
+					return new CrystalBall(posX, posY);
 				}
 				else
 					return new BigHeart(posX, posY);
@@ -331,7 +327,7 @@ void PlayScene::WeaponInteractObj(UINT i, Weapon* weapon)
 		SlayEnemies(i, weapon, RAVEN_SCORE_GIVEN);
 		break;
 	case EntityType::TLEBAT:
-		SlayEnemies(i, weapon, BAT_SCORE_GIVEN);
+		SlayEnemies(i, weapon, TLEBAT_SCORE_GIVEN);
 		break;
 	case EntityType::TORCH:
 	{
@@ -599,6 +595,37 @@ void PlayScene::PlayerCollideItem()
 				{
 					player->StartInvisible();
 					listItems[i]->SetIsDone(true);
+					break;
+				}
+				case EntityType::CRYSTALBALL:
+				{
+					player->AddScore(CRYSTALBALL_SCORE_GIVEN);
+					listItems[i]->SetIsDone(true);
+					gameTime->SetTimeStop(true);
+					bool isSub = false;
+					Timer* subTimer = new Timer(100);
+					while (SCENEGAME_GAMETIMEMAX - gameTime->GetTime() > 1)
+					{
+						/*if (!isSub)
+						{
+							subTimer->Start();
+							isSub = true;
+						}
+						if (isSub && subTimer->IsTimeUp())
+						{*/
+							gameTime->gameTime++;
+							player->AddScore(100);
+							/*subTimer->Reset();
+							isSub = false;
+						}*/
+					}
+					/*Unload();
+					gameCamera->SetCamPos(0, 0);
+					player->SetPosition(100, 100);
+					ChooseMap(STAGE_1);
+					player->SetVx(0);
+					player->SetVy(0);
+					player->SetState(PLAYER_STATE_IDLE);*/
 					break;
 				}
 				case EntityType::ITEMPOKEBALL:

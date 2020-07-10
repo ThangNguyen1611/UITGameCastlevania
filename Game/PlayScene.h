@@ -31,6 +31,7 @@
 #include "BrickExplode.h"
 #include "Crown.h"
 #include "ExtraShot.h"
+#include "CrystalBall.h"
 
 #include "Player.h"
 #include "Brick.h"
@@ -125,6 +126,8 @@ protected:
 	Timer* spawningBatTimer = new Timer(SPAWNING_BAT_DELAY);
 	bool triggerSpawnGhost;
 	bool triggerFightBoss;
+	/*bool isSub = false;
+	Timer* subTimer = new Timer(100);*/
 	bool triggerResetGame;
 	bool triggerCrossTimer;
 

@@ -258,6 +258,9 @@
     <ClCompile Include="TheLastEverBat.cpp">
       <Filter>Header Files\Object\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="CrystalBall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DarkenBat.h">
@@ -466,6 +469,9 @@
     </ClInclude>
     <ClInclude Include="TheLastEverBat.h">
       <Filter>Header Files\Object\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="CrystalBall.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -146,6 +146,7 @@
     <ClCompile Include="Candle.cpp" />
     <ClCompile Include="Cross.cpp" />
     <ClCompile Include="Crown.cpp" />
+    <ClCompile Include="CrystalBall.cpp" />
     <ClCompile Include="Dagger.cpp" />
     <ClCompile Include="DarkenBat.cpp" />
     <ClCompile Include="debug.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="Candle.h" />
     <ClInclude Include="Cross.h" />
     <ClInclude Include="Crown.h" />
+    <ClInclude Include="CrystalBall.h" />
     <ClInclude Include="Dagger.h" />
     <ClInclude Include="DarkenBat.h" />
     <ClInclude Include="debug.h" />
