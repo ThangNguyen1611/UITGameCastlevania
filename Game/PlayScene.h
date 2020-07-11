@@ -5,6 +5,8 @@
 #include <stdio.h>
 
 #include "Scene.h"
+#include "SceneManager.h"
+#include "TitleScene.h"
 #include "Game.h"
 #include "GameTime.h"
 #include "Camera.h"
@@ -94,6 +96,16 @@ using namespace std;
 #define HIDDEN_CROWN_POS_X_STAGE_3_2		885
 #define HIDDEN_CROWN_POS_Y_STAGE_3_2		345
 
+#define ENDGAME_PROCESS_ADDHEART			1
+#define ENDGAME_PROCESS_ADDSCORE_BOTIME		2
+#define ENDGAME_PROCESS_ADDSCORE_BOMANA		3
+#define ENDGAME_PROCESS_RETURN_TITLESCENE	4
+
+#define ENDGAME_DURATION_ADDHEART			250
+#define ENDGAME_DURATION_ADDSCORE_BOTIME	20
+#define ENDGAME_DURATION_ADDSCORE_BOMANA	40
+#define ENDGAME_DURATION_WAIT_RESET			3000
+
 class PlayScene : public Scene
 {
 protected:
@@ -126,8 +138,9 @@ protected:
 	Timer* spawningBatTimer = new Timer(SPAWNING_BAT_DELAY);
 	bool triggerSpawnGhost;
 	bool triggerFightBoss;
-	/*bool isSub = false;
-	Timer* subTimer = new Timer(100);*/
+	bool isEndGame;
+	int endGameProcess;
+	DWORD timeCounterEndGame;
 	bool triggerResetGame;
 	bool triggerCrossTimer;
 
@@ -180,6 +193,7 @@ public:
 	void SpawnZombie();
 	void SpawnBat();
 	void BossFighting();
+	void EndGame(DWORD dt);
 
 	std::vector<LPGAMEENTITY> GetListStairs() { return listStairs; }
 	std::vector<LPGAMEENTITY> GetListStairsEx() { return listStairsEx; }

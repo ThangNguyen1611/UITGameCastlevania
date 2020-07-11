@@ -17,7 +17,7 @@ void PlayScene::LoadBaseObjects()
 		//listObjects.push_back(player);
 		DebugOut(L"[INFO] Simon CREATED! \n");
 	}
-	gameUI = new UI(player->GetHealth(), 16);
+	gameUI = new UI(player->GetHealth(), TLEBAT_MAXHEALTH);
 	gameTime = GameTime::GetInstance();		//That ra khong can 2 buoc nay vi ca 2 deu thiet ke Singleton
 	gameCamera = Camera::GetInstance();
 	gameMap = new Map();
@@ -32,6 +32,7 @@ void PlayScene::ChooseMap(int whatMap)
 	player->ReceiveCurrentStage(idStage);
 	player->StopInvisible();
 	gameTime->ResetGameTime();
+	gameTime->SetTimeStop(false);
 	triggerCrossTimer = false;
 	crossTimer->Reset();
 
@@ -60,6 +61,9 @@ void PlayScene::ChooseMap(int whatMap)
 		triggerSpawnBat = true;
 		//Boss Logic
 		triggerFightBoss = false;
+		isEndGame = false;
+		timeCounterEndGame = 0;
+		endGameProcess = 0;
 	default:
 		break;
 	}
@@ -599,33 +603,10 @@ void PlayScene::PlayerCollideItem()
 				}
 				case EntityType::CRYSTALBALL:
 				{
-					player->AddScore(CRYSTALBALL_SCORE_GIVEN);
 					listItems[i]->SetIsDone(true);
 					gameTime->SetTimeStop(true);
-					bool isSub = false;
-					Timer* subTimer = new Timer(100);
-					while (SCENEGAME_GAMETIMEMAX - gameTime->GetTime() > 1)
-					{
-						/*if (!isSub)
-						{
-							subTimer->Start();
-							isSub = true;
-						}
-						if (isSub && subTimer->IsTimeUp())
-						{*/
-							gameTime->gameTime++;
-							player->AddScore(100);
-							/*subTimer->Reset();
-							isSub = false;
-						}*/
-					}
-					/*Unload();
-					gameCamera->SetCamPos(0, 0);
-					player->SetPosition(100, 100);
-					ChooseMap(STAGE_1);
-					player->SetVx(0);
-					player->SetVy(0);
-					player->SetState(PLAYER_STATE_IDLE);*/
+					isEndGame = true;
+					endGameProcess = ENDGAME_PROCESS_ADDHEART;
 					break;
 				}
 				case EntityType::ITEMPOKEBALL:
@@ -877,6 +858,69 @@ void PlayScene::BossFighting()
 	}
 }
 
+void PlayScene::EndGame(DWORD dt)
+{
+	if (isEndGame)
+	{
+		if (endGameProcess == ENDGAME_PROCESS_ADDHEART)
+		{
+			timeCounterEndGame += dt;
+			if (timeCounterEndGame >= ENDGAME_DURATION_ADDHEART)
+			{
+				if (player->GetHealth() < PLAYER_MAXHEALTH)
+					player->AddHealth(1);
+				else
+					endGameProcess = ENDGAME_PROCESS_ADDSCORE_BOTIME;
+				timeCounterEndGame = 0;
+			}
+		}
+		else if (endGameProcess == ENDGAME_PROCESS_ADDSCORE_BOTIME)
+		{
+			timeCounterEndGame += dt;
+			if (timeCounterEndGame >= ENDGAME_DURATION_ADDSCORE_BOTIME)
+			{
+				if (SCENEGAME_GAMETIMEMAX - gameTime->GetTime() > 1)
+				{
+					gameTime->gameTime++;
+					player->AddScore(10);
+				}
+				else
+					endGameProcess = ENDGAME_PROCESS_ADDSCORE_BOMANA;
+				timeCounterEndGame = 0;
+			}
+		}
+		else if (endGameProcess == ENDGAME_PROCESS_ADDSCORE_BOMANA)
+		{
+			timeCounterEndGame += dt;
+			if (timeCounterEndGame >= ENDGAME_DURATION_ADDSCORE_BOMANA)
+			{
+				if (player->GetMana() > 0)
+				{
+					player->AddMana(-1);
+					player->AddScore(100);
+				}
+				else
+					endGameProcess = ENDGAME_PROCESS_RETURN_TITLESCENE;
+				timeCounterEndGame = 0;
+			}
+		}
+
+		else if (endGameProcess == ENDGAME_PROCESS_RETURN_TITLESCENE)
+		{
+			timeCounterEndGame += dt;
+			if (timeCounterEndGame >= ENDGAME_DURATION_WAIT_RESET)
+			{
+				isEndGame = false;
+				endGameProcess = 0;
+				gameCamera->SetCamPos(0, 0); //OMG this made me KRAZYYYYYY
+				PlayScene* ps = dynamic_cast<PlayScene*>(this);
+				ps = NULL;
+				SceneManager::GetInstance()->SetScene(new TitleScene());
+			}
+		}
+	}
+}
+
 void PlayScene::Update(DWORD dt)
 {
 	GetObjectFromGrid();
@@ -922,6 +966,7 @@ void PlayScene::Update(DWORD dt)
 		else
 		{
 			BossFighting();
+			EndGame(dt);
 		}
 	}
 

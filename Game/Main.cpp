@@ -10,7 +10,6 @@
 #include "PlayScene.h"
 
 Game* game;
-SceneManager* sceneManager;
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -74,7 +73,7 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHe
 
 void Update(DWORD dt)
 {
-	sceneManager->Update(dt);
+	SceneManager::GetInstance()->Update(dt);
 }
 
 void Render()
@@ -94,7 +93,7 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-		sceneManager->Render();
+		SceneManager::GetInstance()->Render();
 
 		//End draw
 		spriteHandler->End();
@@ -152,13 +151,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	HWND hWnd = InitWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	game = Game::GetInstance();
-	sceneManager = SceneManager::GetInstance();
 	game->Init(hWnd);
 	game->InitKeyboard();
 
 	//Test nhanh
-	//sceneManager->SetScene(new PlayScene());
-	sceneManager->SetScene(new TitleScene());
+	//SceneManager::GetInstance()->SetScene(new PlayScene());
+	SceneManager::GetInstance()->SetScene(new TitleScene());
 	GameLoop();
 
 	return 0;

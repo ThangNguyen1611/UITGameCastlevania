@@ -54,9 +54,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Bat.cpp">
       <Filter>Header Files\Object\Enemy</Filter>
     </ClCompile>
@@ -259,6 +256,9 @@
       <Filter>Header Files\Object\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="CrystalBall.cpp">
+      <Filter>Header Files\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -471,7 +471,7 @@
       <Filter>Header Files\Object\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="CrystalBall.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Item</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
