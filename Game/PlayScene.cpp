@@ -921,6 +921,17 @@ void PlayScene::EndGame(DWORD dt)
 	}
 }
 
+void PlayScene::PlayerDead()
+{
+	if (player->IsDeadYet())
+	{
+		gameCamera->SetCamPos(0, 0); 
+		PlayScene* ps = dynamic_cast<PlayScene*>(this);
+		ps = NULL;
+		SceneManager::GetInstance()->SetScene(new TitleScene());
+	}
+}
+
 void PlayScene::Update(DWORD dt)
 {
 	GetObjectFromGrid();
@@ -996,6 +1007,7 @@ void PlayScene::Update(DWORD dt)
 		ResetGame();
 	else if (!player->IsRespawning()) 
 		triggerResetGame = false;
+	PlayerDead();
 
 	if (triggerCrossTimer && crossTimer->IsTimeUp())
 	{

@@ -194,6 +194,7 @@ public:
 	void SpawnBat();
 	void BossFighting();
 	void EndGame(DWORD dt);
+	void PlayerDead();
 
 	std::vector<LPGAMEENTITY> GetListStairs() { return listStairs; }
 	std::vector<LPGAMEENTITY> GetListStairsEx() { return listStairsEx; }
