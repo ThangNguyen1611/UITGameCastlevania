@@ -59,22 +59,23 @@ void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	if (isDonePhase1)
 	{
-		D3DXVECTOR2 pos = D3DXVECTOR2(posX, posY);
+		vY = 0;
+		/*D3DXVECTOR2 pos = D3DXVECTOR2(posX, posY);
 		pos += RadialMovement(D3DXVECTOR2(target->GetPosX(), target->GetPosY()), pos, DARKBAT_FLYING_SPEED_PHASE2);
 		posX = pos.x;
 		posY = pos.y;
 		if (target->GetPosX() < posX)
 			direction = -1;
 		else
-			direction = 1;
+			direction = 1;*/
 	}
 
 	Entity::Update(dt);
-	if (!isDonePhase1) 
-	{
+	//if (!isDonePhase1) 
+	//{
 		posX += dx;
 		posY += dy;
-	}
+	//}
 
 	SelfDestroy();
 }
