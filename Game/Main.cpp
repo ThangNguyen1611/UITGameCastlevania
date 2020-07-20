@@ -155,8 +155,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	game->InitKeyboard();
 
 	//Test nhanh
-	//SceneManager::GetInstance()->SetScene(new PlayScene());
-	SceneManager::GetInstance()->SetScene(new TitleScene());
+	SceneManager::GetInstance()->SetScene(new PlayScene());
+	//SceneManager::GetInstance()->SetScene(new TitleScene());
 	GameLoop();
 
 	return 0;

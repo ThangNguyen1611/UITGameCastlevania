@@ -7,6 +7,7 @@
 #define GHOST_CLOSED_RANGE			20
 #define GHOST_DAMAGE				3
 #define GHOST_SCORE_GIVEN			700
+#define GHOST_GO_SIMON_HEAD			20
 
 #define GHOST_BBOX_WIDTH			32
 #define GHOST_BBOX_HEIGHT			32
@@ -25,6 +26,7 @@ class Ghost : public Entity
 	int randomPosX, randomPosY;
 	int dirY;
 	bool triggerHurting;
+	bool isReachedSimon;
 	Timer* hurtingTimer = new Timer(GHOST_HURT_DELAY);
 public:
 	Ghost(float posX, float posY, LPGAMEENTITY owner);

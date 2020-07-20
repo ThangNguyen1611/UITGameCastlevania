@@ -15,6 +15,7 @@ Ghost::Ghost(float posX, float posY, LPGAMEENTITY target)
 	health = GHOST_MAXHEALTH;
 	isDead = false;
 	triggerHurting = false;
+	isReachedSimon = false;
 
 	currentTotalTime = GHOST_INIT_TOTALTIME;
 }
@@ -44,8 +45,17 @@ void Ghost::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	if (!target->IsUnsighted())
 	{
 		D3DXVECTOR2 pos = D3DXVECTOR2(posX, posY);
-		if(state == GHOST_STATE_FLYING)
-			pos += RadialMovement(D3DXVECTOR2(target->GetPosX(), target->GetPosY()), pos, GHOST_FLYING_SPEED);
+		if (!isReachedSimon)
+		{
+			if (state == GHOST_STATE_FLYING)
+				pos += RadialMovement(D3DXVECTOR2(target->GetPosX(), target->GetPosY()), pos, GHOST_FLYING_SPEED);
+		}
+		else
+		{
+			if (state == GHOST_STATE_FLYING)
+				pos += RadialMovement(D3DXVECTOR2(target->GetPosX(), target->GetPosY() - GHOST_GO_SIMON_HEAD), pos, GHOST_FLYING_SPEED);
+		}
+
 		posX = pos.x;
 		posY = pos.y;
 		if (target->GetPosX() < posX)
@@ -90,6 +100,7 @@ void Ghost::SelfDestroy()
 {
 	if (GetDistance(D3DXVECTOR2(this->posX, this->posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= GHOST_CLOSED_RANGE)
 	{
+		isReachedSimon = true;
 		Player* pl = dynamic_cast<Player*>(target);
 		if (!pl->IsImmortaling())
 		{

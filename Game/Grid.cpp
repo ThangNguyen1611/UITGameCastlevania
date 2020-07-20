@@ -43,6 +43,12 @@ void Grid::PushObjectIntoGrid(vector<LPGAMEENTITY> listObj)
 	}
 }
 
+void Grid::AddToGrid(LPGAMEENTITY Obj, int col, int row)
+{
+	if (Obj->GetHealth() > 0)
+		cells[row][col].push_back(Obj);
+}
+
 void Grid::GetObjectFromGrid(vector<LPGAMEENTITY> &listObj)
 {
 	int firstCol = (int)(Camera::GetInstance()->GetCamPosX() / GRID_CELL_WIDTH);

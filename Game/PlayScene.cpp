@@ -23,6 +23,7 @@ void PlayScene::LoadBaseObjects()
 	gameMap = new Map();
 	triggerResetGame = false;
 	triggerCrossTimer = false;
+	gameGrid = new Grid(mapWidth, mapHeight);
 }
 
 void PlayScene::ChooseMap(int whatMap)	
@@ -72,7 +73,7 @@ void PlayScene::ChooseMap(int whatMap)
 	sceneFilePath = listSceneFilePath[convertSimple - 1];
 	LoadSceneObjects();
 	gameGrid = new Grid(mapWidth, mapHeight);
-	gameGrid->PushObjectIntoGrid(listObjectsToGrid);
+	//gameGrid->PushObjectIntoGrid(listObjectsToGrid);
 }
 
 void PlayScene::GetObjectFromGrid()
@@ -731,6 +732,7 @@ void PlayScene::PlayerInSightGhost()
 			if (triggerSpawnGhost)
 			{
 				listObjectsToGrid.push_back(new Ghost(1350, 345, player));
+				gameGrid->AddToGrid(new Ghost(1350, 345, player), 5, 1);
 				triggerSpawnGhost = false;
 			}
 		}
@@ -743,6 +745,7 @@ void PlayScene::PlayerInSightGhost()
 				if (triggerSpawnGhost)
 				{
 					listObjectsToGrid.push_back(new Ghost(200, 200, player));
+					gameGrid->AddToGrid(new Ghost(200, 200, player), 0, 0);
 					triggerSpawnGhost = false;
 				}
 			}
@@ -780,14 +783,23 @@ void PlayScene::SpawnZombie()
 			{
 				int randomAbove = rand() % 100;
 				if (randomAbove <= 50)
+				{
 					listObjectsToGrid.push_back(new Zombie(SCREEN_WIDTH, SCREEN_HEIGHT - 290, -1));	//spawn o bac tren
+					gameGrid->AddToGrid(new Zombie(SCREEN_WIDTH, SCREEN_HEIGHT - 290, -1), 2, 0);
+				}
 				else
 				{
 					int randomRight = rand() % 100;
 					if (randomRight <= 50)
+					{
 						listObjectsToGrid.push_back(new Zombie(SCREEN_WIDTH, SCREEN_HEIGHT - 120, -1));	//spawn ben phai
+						gameGrid->AddToGrid(new Zombie(SCREEN_WIDTH, SCREEN_HEIGHT - 120, -1), 2, 1);
+					}
 					else
+					{
 						listObjectsToGrid.push_back(new Zombie(20, SCREEN_HEIGHT - 120, 1));	//spawn ben trai
+						gameGrid->AddToGrid(new Zombie(20, SCREEN_HEIGHT - 120, -1), 0, 1);
+					}
 				}
 				zombieCounter++;
 				if (zombieCounter >= 3)
@@ -820,10 +832,10 @@ void PlayScene::SpawnBat()
 		{
 			int randomY = rand() % 290 + 90;
 			int randomX = rand() % 100;
-			if (randomX <= 50)
+			/*if (randomX <= 50)
 				listObjectsToGrid.push_back(new Bat(SCREEN_WIDTH * 1.25f, SCREEN_HEIGHT - randomY, -1));
 			else
-				listObjectsToGrid.push_back(new Bat(1, SCREEN_HEIGHT - randomY, 1));
+				listObjectsToGrid.push_back(new Bat(1, SCREEN_HEIGHT - randomY, 1));*/
 
 			spawningBatTimer->Reset(SPAWNING_BAT_DELAY + (rand() % 3000));
 			triggerSpawnBat = true;	//Dung 1 cho thi se spawn bat mai mai, cho den khi di den khu vuc ma trigger o do = false
@@ -1436,19 +1448,32 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CANDLE:
 	{
 		int extras = atoi(tokens[3].c_str());
+
+		int gridCol = atoi(tokens[4].c_str());
+		int gridRow = atoi(tokens[5].c_str());
 		listObjectsToGrid.push_back(new Candle(x, y, extras));
+		gameGrid->AddToGrid(new Candle(x, y, extras), gridCol, gridRow);
 		break;
 	}
 	case OBJECT_TYPE_BRICK:
 	{
 		int extras = atoi(tokens[3].c_str());
+
+		int gridCol = atoi(tokens[4].c_str());
+		int gridRow = atoi(tokens[5].c_str());
 		listObjectsToGrid.push_back(new Brick(x, y, extras));
+		gameGrid->AddToGrid(new Brick(x, y, extras), gridCol, gridRow);
+		DebugOut(L"[test] add brick !\n");
 		break;
 	}
 	case OBJECT_TYPE_TORCH:
 	{
 		int extras = atoi(tokens[3].c_str());
+
+		int gridCol = atoi(tokens[4].c_str());
+		int gridRow = atoi(tokens[5].c_str());
 		listObjectsToGrid.push_back(new Torch(x, y, extras));
+		gameGrid->AddToGrid(new Torch(x, y, extras), gridCol, gridRow);
 		break; 
 	}
 	case OBJECT_TYPE_GATE:
@@ -1458,7 +1483,11 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		float extras3 = atoi(tokens[5].c_str());
 		int extras4 = atoi(tokens[6].c_str());
 		int extras5 = atoi(tokens[7].c_str());
+
+		int gridCol = atoi(tokens[8].c_str());
+		int gridRow = atoi(tokens[9].c_str());
 		listObjectsToGrid.push_back(new Gate(x, y, extras1, extras2, extras3, extras4, extras5));
+		gameGrid->AddToGrid(new Gate(x, y, extras1, extras2, extras3, extras4, extras5), gridCol, gridRow);
 		break;
 	}
 	case OBJECT_TYPE_STAIRS:
@@ -1475,31 +1504,49 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	{
 		//player tao truoc nen kh sao
 		int extras1 = atoi(tokens[3].c_str());
+
+		int gridCol = atoi(tokens[4].c_str());
+		int gridRow = atoi(tokens[5].c_str());
 		listObjectsToGrid.push_back(new DarkenBat(x, y, extras1, player));
+		gameGrid->AddToGrid(new DarkenBat(x, y, extras1, player), gridCol, gridRow);
 		break;
 	}
 	case OBJECT_TYPE_KNIGHT:
 	{
 		int extras1 = atoi(tokens[3].c_str());
 		int extras2 = atoi(tokens[4].c_str());
+
+		int gridCol = atoi(tokens[5].c_str());
+		int gridRow = atoi(tokens[6].c_str());
 		listObjectsToGrid.push_back(new Knight(x, y, extras1, extras2));
+		gameGrid->AddToGrid(new Knight(x, y, extras1, extras2), gridCol, gridRow);
 		break;
 	}
 	case OBJECT_TYPE_BREAKABLEBRICK:
 	{
 		int extras1 = atoi(tokens[3].c_str());
+
+		int gridCol = atoi(tokens[4].c_str());
+		int gridRow = atoi(tokens[5].c_str());
 		listObjectsToGrid.push_back(new BreakableBrick(x, y, extras1));
+		gameGrid->AddToGrid(new BreakableBrick(x, y, extras1), gridCol, gridRow);
 		break;
 	}
 	case OBJECT_TYPE_MOVING_PLATFORM:
 	{
+		int gridCol = atoi(tokens[3].c_str());
+		int gridRow = atoi(tokens[4].c_str());
 		listObjectsToGrid.push_back(new MovingPlatform(x, y));
+		gameGrid->AddToGrid(new MovingPlatform(x, y), gridCol, gridRow);
 		break;
 	}
 	case OBJECT_TYPE_HUNCHMAN:
 	{
+		int gridCol = atoi(tokens[3].c_str());
+		int gridRow = atoi(tokens[4].c_str());
 		//player tao truoc nen kh sao
 		listObjectsToGrid.push_back(new Hunchman(x, y, player));
+		gameGrid->AddToGrid(new Hunchman(x, y, player), gridCol, gridRow);
 		break;
 	}
 	case OBJECT_TYPE_RAVEN:
@@ -1507,25 +1554,38 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		//player tao truoc nen kh sao
 		int extras1 = atoi(tokens[3].c_str());
 		int extras2 = atoi(tokens[4].c_str());
+
+		int gridCol = atoi(tokens[5].c_str());
+		int gridRow = atoi(tokens[6].c_str());
 		listObjectsToGrid.push_back(new Raven(x, y, extras1, extras2, player));
+		gameGrid->AddToGrid(new Raven(x, y, extras1, extras2, player), gridCol, gridRow);
 		break;
 	}
 	case OBJECT_TYPE_SKELETON:
 	{
+		int gridCol = atoi(tokens[3].c_str());
+		int gridRow = atoi(tokens[4].c_str());
 		//player tao truoc nen kh sao
 		listObjectsToGrid.push_back(new Skeleton(x, y, player));
+		gameGrid->AddToGrid(new Skeleton(x, y, player), gridCol, gridRow);
 		break;
 	}
 	case OBJECT_TYPE_BUSH:
 	{
+		int gridCol = atoi(tokens[3].c_str());
+		int gridRow = atoi(tokens[4].c_str());
 		//player tao truoc nen kh sao
 		listObjectsToGrid.push_back(new Bush(x, y, player));
+		gameGrid->AddToGrid(new Bush(x, y, player), gridCol, gridRow);
 		break;
 	}
 	case OBJECT_TYPE_TLEBAT:
 	{
+		int gridCol = atoi(tokens[3].c_str());
+		int gridRow = atoi(tokens[4].c_str());
 		//player tao truoc nen kh sao
 		listObjectsToGrid.push_back(new TheLastEverBat(x, y, player));
+		gameGrid->AddToGrid(new TheLastEverBat(x, y, player), gridCol, gridRow);
 		break;
 	}
 	default:

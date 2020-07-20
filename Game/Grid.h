@@ -20,6 +20,7 @@ public:
 	void ClearGrid(int Row, int Col);
 	void ResetGrid(vector<LPGAMEENTITY> listObj);
 	void PushObjectIntoGrid(vector<LPGAMEENTITY> listObj);
+	void AddToGrid(LPGAMEENTITY Obj, int col, int row);
 	void GetObjectFromGrid(vector<LPGAMEENTITY> &listObj);
 };
 
