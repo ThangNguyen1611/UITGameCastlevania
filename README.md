@@ -4,13 +4,15 @@
 ## Giảng viên hướng dẫn
  Thầy **Đinh Nguyễn Anh Dũng**
 
-## Các kỹ thuật đã được áp dụng
+## Một vài kỹ thuật đã được áp dụng
 - Sprite, Animation
 - AABB Collision
 - Swept AABB Collision
+- Scene Management
 - Camera
 - Tilemap
 - Phân hoạch không gian bằng lưới (Grid)
+- Simple Game AI
 
 ## Một vài screenshot về game
  - Title Scene
@@ -32,4 +34,4 @@
 ![Demo Boss](/Game/Resources/Screenshots/DemoBoss.png)
 
 ## Tác giả
- **Nguyễn Minh Thắng** - [Email](erastnguyen@gmail.com) - 0836469040
+ **Nguyễn Minh Thắng** - erastnguyen@gmail.com - 0836469040
